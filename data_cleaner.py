@@ -95,7 +95,7 @@ def DataCleaner(args):
 
         homography_matrix = homography_matrix_list[homography_matrix_list['id'] == match_idx]['homography_matrix'].to_numpy()[0]
 
-        match_folder = os.path.join(data_folder, match_name)
+        match_folder = os.path.join(data_folder,'set', match_name)
         set_csv = [os.path.join(match_folder, f) for f in os.listdir(match_folder) if f.endswith('.csv')]
         
         match_data = []
