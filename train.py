@@ -17,11 +17,11 @@ def main():
     args.add_argument("--match_list_csv", type=str, default="match.csv")
     args.add_argument("--homography_matrix_list_csv", type=str, default="homography.csv")
     args.add_argument("--prepared_data_output_path", type=str, default="./data/dataset.csv")
-    args.add_argument("--already_have_data", type=int, default=0)
+    args.add_argument("--already_have_data", type=int, default=1) #if have data
     args.add_argument("--preprocessed_data_path", type=str, default="./data/dataset.csv")
     args.add_argument("--train_ratio", type=float, default=0.8)
     args.add_argument("--valid_ratio", type=float, default=0)
-    args.add_argument("--max_length", type=int, default=35)
+    args.add_argument("--max_length", type=int, default=100)
 
     # training
     args.add_argument("--seed", type=int, default=22)
@@ -37,7 +37,7 @@ def main():
     args.add_argument("--num_layer", type=int, default=2)
 
     args.add_argument("--epochs", type=int, default=100)
-    args.add_argument("--encode_length", type=int, required=True)
+    #args.add_argument("--encode_length", type=int, required=True)
     args.add_argument("--dropout", type=float, default=0.1)
 
     args.add_argument("--num_basis", type=int, default=3)
@@ -73,8 +73,7 @@ def main():
     torch.backends.cudnn.deterministic = True
 
     if args['model_folder'] == None:
-        args['model_folder'] = './model/' +  args['model_type'] + '_' + str(args['encode_length']) + '_' + str(datetime.now().strftime("%Y-%m-%d-%H:%M:%S"))
-
+        args['model_folder'] = './model/' +  args['model_type'] + '_' + str(datetime.now().strftime("%Y-%m-%d-%H:%M"))
     train_dataloader, valid_dataloader, test_dataloader, args = prepare_dataset(args)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -198,13 +197,14 @@ def main():
     total_params = sum(p.numel() for p in encoder.parameters() if p.requires_grad) + sum(p.numel() for p in decoder.parameters() if p.requires_grad)
     print(total_params)
 
-    train_loss, train_loss_location, train_loss_type = train(train_dataloader, valid_dataloader, encoder, decoder, location_criterion, shot_type_criterion, encoder_optimizer, decoder_optimizer, args, device=device)
+    best_val_loss = train(train_dataloader, valid_dataloader, encoder, decoder, location_criterion, shot_type_criterion, encoder_optimizer, decoder_optimizer, args, device=device)
     save_args_file(args)
 
     print(args['model_folder'])
-    print("total loss: {}".format(train_loss))
-    print("location loss: {}".format(train_loss_location))
-    print("type loss: {}".format(train_loss_type))
+    print("best val loss: {}".format(best_val_loss))
+    # print("total loss: {}".format(train_loss))
+    # print("location loss: {}".format(train_loss_location))
+    # print("type loss: {}".format(train_loss_type))
 
 if __name__ == "__main__":
     main()

@@ -1,0 +1,16 @@
+❯ python train.py --model_type DyMF
+15904
+  0%|                                                                           | 0/100 [00:00<?, ?it/s]Epoch 1/100 - Train Loss: 0.6971, Val Loss: 0.0000
+  ✔ New best model saved.
+  1%|▋                                                                | 1/100 [00:53<1:28:50, 53.84s/it]Epoch 2/100 - Train Loss: 0.6886, Val Loss: 0.0000
+  ⚠ No improvement for 1/5 epochs.
+  2%|█▎                                                               | 2/100 [01:48<1:28:46, 54.36s/it]Epoch 3/100 - Train Loss: 0.6884, Val Loss: 0.0000
+  ⚠ No improvement for 2/5 epochs.
+  3%|█▉                                                               | 3/100 [02:42<1:27:37, 54.20s/it]Epoch 4/100 - Train Loss: 0.6879, Val Loss: 0.0000
+  ⚠ No improvement for 3/5 epochs.
+  4%|██▌                                                              | 4/100 [03:36<1:26:15, 53.91s/it]Epoch 5/100 - Train Loss: 0.6876, Val Loss: 0.0000
+  ⚠ No improvement for 4/5 epochs.
+  5%|███▎                                                             | 5/100 [04:29<1:24:50, 53.59s/it]Epoch 6/100 - Train Loss: 0.6868, Val Loss: 0.0000
+  ⚠ No improvement for 5/5 epochs.
+🔚 Early stopping triggered.
+  5%|███▎                                                             | 5/100 [05:21<1:41:56, 64.39s/it]
