@@ -9,43 +9,42 @@ from torch.utils.data import default_collate
 from DyMF.model import initialize_adjacency_matrix
 
 def dynamic_collate(batch):
-    # batch: list of dict from BadmintonDataset.__getitem__
-    B = len(batch)
-    Ls = [item['length'] for item in batch]
-    Lmax = max(Ls)
-    Nmax = Lmax * 2  # node 數量
-    labels = torch.tensor([item['label'] for item in batch], dtype=torch.long)
+    # batch: list of (rally, target) tuples
+    rallies, label_tensors,adjs = zip(*batch)     # ← 這一步就把 batch 拆成 rallies 與 labels
+    B = len(rallies)
 
-    # 建立儲存 tensor
-    out = {
+    # 把 labels 堆起來
+    labels = torch.stack(label_tensors).long()
+
+    # 找出最長序列
+    Lmax = rallies[0][0].shape[0] 
+
+    # 準備 padded tensors
+    rally_batch = {
         'player':    torch.zeros(B, Lmax, dtype=torch.long),
         'shot_type': torch.zeros(B, Lmax, dtype=torch.long),
         'A_x':       torch.zeros(B, Lmax),
         'A_y':       torch.zeros(B, Lmax),
         'B_x':       torch.zeros(B, Lmax),
         'B_y':       torch.zeros(B, Lmax),
-        'mask':      torch.zeros(B, Lmax),           # 1 表示真實，0 表示 padding
-        #'adj':       torch.zeros(B, 13, Nmax, Nmax),  # multi-relational graph
-        'label':     labels,
-        'encode_length': torch.tensor(Lmax), 
+        'mask':      torch.zeros(B, Lmax),
+        #'encode_length': torch.tensor(Lmax),
     }
-    
-    for i, item in enumerate(batch):
-        L = item['length']
-        # copy 原始序列
-        out['player'][i, :L]    = torch.from_numpy(item['player'])
-        out['shot_type'][i, :L] = torch.from_numpy(item['shot_type'])
-        out['A_x'][i, :L]       = torch.from_numpy(item['A_x'])
-        out['A_y'][i, :L]       = torch.from_numpy(item['A_y'])
-        out['B_x'][i, :L]       = torch.from_numpy(item['B_x'])
-        out['B_y'][i, :L]       = torch.from_numpy(item['B_y'])
-        out['mask'][i, :L]      = 1
-        
-    # shot_type_tensor   = out['shot_type']  # LongTensor[B, Lmax]
-    # adjacency_batch    = initialize_adjacency_matrix(B, Lmax, shot_type_tensor) 
-    # out['adj'] = adjacency_batch
 
-    return out
+    # 單一迴圈：對每個 rally 解構、填值
+    for i, rally in enumerate(rallies):
+        player, shot_type, A_x, A_y, B_x, B_y, seq_len, mask = rally
+        seq_len = int(seq_len)
+        rally_batch['player'][i]    = torch.from_numpy(player)
+        rally_batch['shot_type'][i] = torch.from_numpy(shot_type)
+        rally_batch['A_x'][i]       = torch.from_numpy(A_x)
+        rally_batch['A_y'][i]       = torch.from_numpy(A_y)
+        rally_batch['B_x'][i]       = torch.from_numpy(B_x)
+        rally_batch['B_y'][i]       = torch.from_numpy(B_y)
+        rally_batch['mask'][i]      = torch.from_numpy(mask)
+
+    return rally_batch, labels,adjs
+
 
 def prepare_dataset(args):
     matches = DataCleaner(args)
@@ -98,8 +97,8 @@ def prepare_dataset(args):
     g = torch.Generator()
     g.manual_seed(0)
 
-    train_dataloader = DataLoader(train_dataset, batch_size=args['train_batch_size'], shuffle=True, num_workers=8)
-    valid_dataloader = DataLoader(valid_dataset, batch_size=args['valid_batch_size'], shuffle=False, num_workers=8)
-    test_dataloader = DataLoader(test_dataset, batch_size=args['test_batch_size'], shuffle=False, num_workers=8)
+    train_dataloader = DataLoader(train_dataset, batch_size=args['train_batch_size'], shuffle=True, num_workers=8,collate_fn=dynamic_collate)
+    valid_dataloader = DataLoader(valid_dataset, batch_size=args['valid_batch_size'], shuffle=False, num_workers=8,collate_fn=dynamic_collate)
+    test_dataloader = DataLoader(test_dataset, batch_size=args['test_batch_size'], shuffle=False, num_workers=8,collate_fn=dynamic_collate)
     return train_dataloader, valid_dataloader, test_dataloader, args
     

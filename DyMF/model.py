@@ -665,80 +665,9 @@ class Encoder(nn.Module):
         self.sigmoid = nn.Sigmoid()
         self.relu = nn.ReLU()
 
-        self.linear_for_dynmaic_gcn = nn.Linear(args['hidden_size'] + args['player_dim'], args['hidden_size'])
-        
-        self.win_fc = nn.Sequential(
-            nn.Linear(args['hidden_size'], args['hidden_size'] // 2),
-            nn.ReLU(),
-            nn.Linear(args['hidden_size'] // 2, 1)
-        )
-    
-#     def forward(self, player, shot_type, player_A_x, player_A_y, player_B_x, player_B_y, encode_length,mask):
-#         # get the initial(encode) adjacency matrix
-#         batch_size = player.size(0)
-#         adjacency_matrix = initialize_adjacency_matrix(batch_size, encode_length, shot_type)
-#         player_A_coordination = torch.cat((player_A_x.unsqueeze(2), player_A_y.unsqueeze(2)), dim=2).float()
-#         player_B_coordination = torch.cat((player_B_x.unsqueeze(2), player_B_y.unsqueeze(2)), dim=2).float()
-        
-#         # interleave the player and opponent location
-#         coordination_sequence = torch.stack((player_A_coordination, player_B_coordination), dim=2).view(player.size(0), -1, 2)
-#         coordination_transform = self.coordination_transform(coordination_sequence)
-#         coordination_transform = F.relu(coordination_transform)
-
-#         player = player.repeat([1, encode_length])
-#         player_embedding = self.player_embedding(player)
-
-#         rally_information = torch.cat((coordination_transform, player_embedding), dim=-1)
-        
-#         model_input = self.model_input_linear(rally_information)
-#         # fixed node embedding in decoder
-#         full_graph_node_embedding = self.rGCN( model_input, adjacency_matrix)
- 
-#         player_A_embedding = model_input[:, 0::2, :].clone()
-#         player_B_embedding = model_input[:, 1::2, :].clone()
-
-#         partial_adjacency_matrix = torch.tile(self.partial_adjacency_matrix, (batch_size, 1, 1))
-
-#         dynamic_gcn_input_A = torch.cat((player_A_embedding, player_embedding[:, 0:1, :].repeat(1, encode_length, 1)), dim=-1)
-#         dynamic_gcn_input_B = torch.cat((player_B_embedding, player_embedding[:, 1:2, :].repeat(1, encode_length, 1)), dim=-1)
-
-#         dynamic_gcn_input_A = self.linear_for_dynmaic_gcn(dynamic_gcn_input_A)
-#         dynamic_gcn_input_B = self.linear_for_dynmaic_gcn(dynamic_gcn_input_B)
-
-#         player_A_node_embedding = self.gcn(dynamic_gcn_input_A, partial_adjacency_matrix)
-#         player_B_node_embedding = self.gcn(dynamic_gcn_input_B, partial_adjacency_matrix)
-#         node_embedding = torch.zeros((full_graph_node_embedding.size(0), full_graph_node_embedding.size(1), full_graph_node_embedding.size(2))).to(player.device)
-        
-#         _, _, A_weight, B_weight = self.co_attention(player_A_node_embedding.permute(0, 2, 1), player_B_node_embedding, batch_size)
-        
-#         A_weight = self.sigmoid(self.co_attention_linear_A(A_weight))
-#         B_weight = self.sigmoid(self.co_attention_linear_B(B_weight))
-
-#         player_A_node_embedding = player_A_node_embedding + B_weight.unsqueeze(1) * player_B_node_embedding
-#         player_B_node_embedding = player_B_node_embedding + A_weight.unsqueeze(1) * player_A_node_embedding
-
-#         rgcn_embedding_A = full_graph_node_embedding[:, 0::2, :].clone()[:, -1, :].view(batch_size, -1)
-#         rgcn_embedding_B = full_graph_node_embedding[:, 1::2, :].clone()[:, -1, :].view(batch_size, -1)
-#         gcn_embedding_A = player_A_node_embedding.clone()[:, -1, :].view(batch_size, -1)
-#         gcn_embedding_B = player_B_node_embedding.clone()[:, -1, :].view(batch_size, -1)
-
-#         rgcn_weight_A = self.rgcn_weight(rgcn_embedding_A)
-#         rgcn_weight_B = self.rgcn_weight(rgcn_embedding_B)
-#         gcn_weight_A = self.gcn_weight(gcn_embedding_A)
-#         gcn_weight_B = self.gcn_weight(gcn_embedding_B)
-        
-#         w_rgcn_A = self.sigmoid(rgcn_weight_A)
-#         w_gcn_A = self.sigmoid(gcn_weight_A)
-#         w_rgcn_B = self.sigmoid(rgcn_weight_B)
-#         w_gcn_B = self.sigmoid(gcn_weight_B)
-
-#         node_embedding[:, 0::2, :] = full_graph_node_embedding[:, 0::2, :] * w_rgcn_A.unsqueeze(1) + player_A_node_embedding * w_gcn_A.unsqueeze(1)
-#         node_embedding[:, 1::2, :] = full_graph_node_embedding[:, 1::2, :] * w_rgcn_B.unsqueeze(1) + player_B_node_embedding * w_gcn_B.unsqueeze(1)
-
-#         graph_repr = node_embedding.mean(dim=1)
-#         win_logit = self.win_fc(graph_repr).squeeze(-1)
-
-#         return win_logit, graph_repr
+        self.linear_for_dynmaic_gcn = nn.Linear(2 * args['hidden_size'], args['hidden_size'])
+   
+        self.win_head = nn.Linear(2*args['hidden_size'], 1) #32,1
 
     def forward(self,
                 player,        # LongTensor[B, Lmax]
@@ -747,92 +676,138 @@ class Encoder(nn.Module):
                 player_A_y,    # FloatTensor[B, Lmax]
                 player_B_x,    # FloatTensor[B, Lmax]
                 player_B_y,    # FloatTensor[B, Lmax]
+                mask,          # FloatTensor[B, Lmax]
                 encode_length, # int scalar Lmax
-                mask           # FloatTensor[B, Lmax]
+                adjacency,
     ):
-        B, L = player.size()
-
-        # 1. Build the full PM-Graph adjacency [B, R=13, 2L, 2L]
-        adjacency = initialize_adjacency_matrix(B, encode_length, shot_type)
-
-        # 2. Mask out padding-related edges
-        edge_mask_small = mask.unsqueeze(1) * mask.unsqueeze(2)            # [B, L, L]
-        edge_mask = torch.cat([edge_mask_small, edge_mask_small], dim=2)   # [B, L, 2L]
-        edge_mask = torch.cat([edge_mask, edge_mask], dim=1)               # [B, 2L, 2L]
-        edge_mask = edge_mask.unsqueeze(1).expand(-1, adjacency.size(1), -1, -1)  # [B,13,2L,2L]
-        adjacency = adjacency.float() * edge_mask.to(adjacency.device)
-
+        B, L = player.size() 
+        #B is the batch size (how many rallies are sent in at the same time)
+        #L is the number of observed strokes of one player
+    
         # 3. Create node features by interleaving coordinates and embeddings
-        A_coord = torch.cat((player_A_x.unsqueeze(2), player_A_y.unsqueeze(2)), dim=2).float()             # [B, L, 2]
-        B_coord = torch.cat((player_B_x.unsqueeze(2), player_B_y.unsqueeze(2)), dim=2).float()             # [B, L, 2]
+        A_coord = torch.cat((player_A_x.unsqueeze(2), player_A_y.unsqueeze(2)), dim=2).float()     # [B, L, 2]
+        B_coord = torch.cat((player_B_x.unsqueeze(2), player_B_y.unsqueeze(2)), dim=2).float()     # [B, L, 2]
         coord_seq = torch.stack((A_coord, B_coord), dim=2).view(B, -1, 2)   # [B, 2L, 2]
         coordination_transform = self.coordination_transform(coord_seq)
         coordination_transform = F.relu(coordination_transform)       # [B, 2L, Hloc]
-
+        node_mask = mask.repeat_interleave(2, dim=1)    # [B, 2L]
+        coordination_transform = coordination_transform * node_mask.unsqueeze(-1)  # [32,120,16]
+ 
         player_embedding = self.player_embedding(player)
-        player_emb_repeat = player_embedding.repeat_interleave(2, dim=1)
+        player_emb_repeat = player_embedding.repeat_interleave(2, dim=1) * node_mask.unsqueeze(-1) #[32,120,16]
+        
         rally_information = torch.cat((coordination_transform, player_emb_repeat), dim=-1)
+      
+        model_input = self.model_input_linear(rally_information) #[32,120,16]
+        model_input = model_input * node_mask.unsqueeze(-1)
 
-        model_input = self.model_input_linear(rally_information)
+        # 4. Relational GCN 
+        full_emb = self.rGCN(model_input, adjacency)    #[32,120,16]           
+        full_emb = full_emb * node_mask.unsqueeze(-1)
 
-        # 4. Relational GCN on full graph
-        full_emb = self.rGCN(model_input, adjacency)                   
-
-        player_A_embedding = model_input[:, 0::2, :].clone() #id+location embedding
+        player_A_embedding = model_input[:, 0::2, :].clone() #[32,60,16]
         player_B_embedding = model_input[:, 1::2, :].clone()
+        
         # 5. Build dynamic (partial) adjacency based on encode_length
+        edge_mask = mask.unsqueeze(1) * mask.unsqueeze(2)
         partial_base = torch.ones((L, L), device=self.device)
-        partial_base = partial_base - torch.eye(L, device=self.device)
-        partial_adj = partial_base.unsqueeze(0).expand(B, L, L)    # fully connect graph   
+        partial_base.fill_diagonal_(0)  
+        partial_adj = partial_base.unsqueeze(0).expand(B, L, L)
+        partial_adj = partial_adj * edge_mask 
 
-        # 6. Dynamic GCN inputs for A/B
-        dynamic_gcn_input_A = torch.cat((player_A_embedding, player_embedding[:, 0:1, :].repeat(1, encode_length, 1)), dim=-1)
-        dynamic_gcn_input_B = torch.cat((player_B_embedding, player_embedding[:, 1:2, :].repeat(1, encode_length, 1)), dim=-1)
-
+       
+        # 6. Dynamic GCN 
+        dynamic_gcn_input_A = torch.cat((player_A_embedding, player_embedding[:, 0:1, :].repeat(1, L, 1)), dim=-1)
+        dynamic_gcn_input_B = torch.cat((player_B_embedding, player_embedding[:, 1:2, :].repeat(1, L, 1)), dim=-1)
+      
+        mask_doubled = F.pad(mask, (0, L))  #120
+        mask_A = mask_doubled[:, 0::2] #60
+        mask_B = mask_doubled[:, 1::2] #60
         dynamic_gcn_input_A = self.linear_for_dynmaic_gcn(dynamic_gcn_input_A)
-        dynamic_gcn_input_B = self.linear_for_dynmaic_gcn(dynamic_gcn_input_B)                     
+        dynamic_gcn_input_B = self.linear_for_dynmaic_gcn(dynamic_gcn_input_B) 
+     
+        dynamic_gcn_input_A = dynamic_gcn_input_A * mask_A.unsqueeze(-1)
+        dynamic_gcn_input_B = dynamic_gcn_input_B * mask_B.unsqueeze(-1)
+    
         player_A_node_embedding = self.gcn(dynamic_gcn_input_A, partial_adj)
         player_B_node_embedding = self.gcn(dynamic_gcn_input_B, partial_adj)
-
+        
         #start fusing
-        node_embedding = torch.zeros((full_emb.size(0), full_emb.size(1), full_emb.size(2))).to(player.device)
-
+        #player player fusion
         _, _, A_weight, B_weight = self.co_attention(player_A_node_embedding.permute(0, 2, 1), player_B_node_embedding, B)
         
         A_weight = self.sigmoid(self.co_attention_linear_A(A_weight))
         B_weight = self.sigmoid(self.co_attention_linear_B(B_weight))
+        print('A_weight',A_weight)
+        print('B_weight',B_weight)
+        player_A_node_embedding = (player_A_node_embedding + B_weight.unsqueeze(1) * player_B_node_embedding) #[32, 60, 16]
+        player_B_node_embedding = (player_B_node_embedding + A_weight.unsqueeze(1) * player_A_node_embedding)
+        
+        #player rally fusion
+        lengths = mask_A.sum(dim=1).long()   
+        lastA_idxs = lengths - 1    
+        lengths = mask_B.sum(dim=1).long()   
+        lastB_idxs = lengths - 1 
 
-        player_A_node_embedding = player_A_node_embedding + B_weight.unsqueeze(1) * player_B_node_embedding
-        player_B_node_embedding = player_B_node_embedding + A_weight.unsqueeze(1) * player_A_node_embedding
+        rgcn_embedding_A = full_emb[:, 0::2, :].clone() #Take the last node of rGCN on side A
+        batchA_idx = torch.arange(B, device=rgcn_embedding_A.device)
+        Last_rgcn_embedding_A =  rgcn_embedding_A[batchA_idx, lastA_idxs, :]
 
-        rgcn_embedding_A = full_emb[:, 0::2, :].clone()[:, -1, :].view(B, -1) #Take the last node of rGCN on side A
-        rgcn_embedding_B = full_emb[:, 1::2, :].clone()[:, -1, :].view(B, -1) #Take the last node of rGCN on side B
-        gcn_embedding_A = player_A_node_embedding.clone()[:, -1, :].view(B, -1) #Take the last node of dynamic GCN on side A
-        gcn_embedding_B = player_B_node_embedding.clone()[:, -1, :].view(B, -1) #Take the last node of dynamic GCN on side B
+        rgcn_embedding_B = full_emb[:, 1::2, :].clone() #Take the last node of rGCN on side B
+        batchB_idx = torch.arange(B, device=rgcn_embedding_B.device)
+        Last_rgcn_embedding_B =  rgcn_embedding_B[batchB_idx, lastB_idxs, :]
 
-        rgcn_weight_A = self.rgcn_weight(rgcn_embedding_A)
-        rgcn_weight_B = self.rgcn_weight(rgcn_embedding_B)
-        gcn_weight_A = self.gcn_weight(gcn_embedding_A)
-        gcn_weight_B = self.gcn_weight(gcn_embedding_B)
+        batchA_idx = torch.arange(B, device=player_A_node_embedding.device)
+        Last_player_A_node_embedding =  player_A_node_embedding[batchA_idx, lastA_idxs, :] 
+        batchB_idx = torch.arange(B, device=player_B_node_embedding.device)
+        Last_player_B_node_embedding =  player_B_node_embedding[batchB_idx, lastB_idxs, :]
+       
+        rgcn_weight_A = self.rgcn_weight(Last_rgcn_embedding_A)  
+        rgcn_weight_B = self.rgcn_weight(Last_rgcn_embedding_B)
+        gcn_weight_A = self.gcn_weight(Last_player_A_node_embedding)
+        gcn_weight_B = self.gcn_weight(Last_player_B_node_embedding)
         
         w_rgcn_A = self.sigmoid(rgcn_weight_A)
         w_gcn_A = self.sigmoid(gcn_weight_A)
         w_rgcn_B = self.sigmoid(rgcn_weight_B)
         w_gcn_B = self.sigmoid(gcn_weight_B)
-
-        node_embedding[:, 0::2, :] = full_emb[:, 0::2, :] * w_rgcn_A.unsqueeze(1) + player_A_node_embedding * w_gcn_A.unsqueeze(1)
-        node_embedding[:, 1::2, :] = full_emb[:, 1::2, :] * w_rgcn_B.unsqueeze(1) + player_B_node_embedding * w_gcn_B.unsqueeze(1)
-
-        # 9. Mask padding nodes
-        node_mask = mask.unsqueeze(-1).repeat_interleave(2, dim=1)  # [B,2L,1]
-        node_embedding  = node_embedding * node_mask     
+        print(w_rgcn_A)
+        lastA = Last_rgcn_embedding_A * w_rgcn_A + Last_player_A_node_embedding * w_gcn_A
+        lastB = Last_rgcn_embedding_B * w_rgcn_B + Last_player_B_node_embedding * w_gcn_B
         
-        # 10. Pooling to graph repr
-        sum_emb = node_embedding.sum(dim=1)                                # [B, H]
-        real_count = node_mask.sum(dim=1).clamp(min=1)                     # [B, 1]
-        graph_repr = sum_emb / real_count                                  # [B, H]
+        feat = torch.cat([lastA, lastB], dim=1)    # [32, 32]
+        debug_path = "feat.txt"  
+        # 把 mask 拷到 CPU 并转成 Python 列表
+        mask_list = feat.detach().cpu().tolist()  
+        with open(debug_path, "w") as f:
+            for i, row in enumerate(mask_list):
+                f.write(f"batch {i}: {row}\n")
+        logit = self.win_head(feat)   
+                 
+        return logit.squeeze(-1) 
 
-        # 11. Final prediction
-        win_logit = self.win_fc(graph_repr).squeeze(-1)  
 
-        return win_logit, graph_repr
+
+        # debug_path = "mask_debug.txt"  
+        # # 把 mask 拷到 CPU 并转成 Python 列表
+        # mask_list = mask.detach().cpu().tolist()  
+        # with open(debug_path, "w") as f:
+        #     for i, row in enumerate(mask_list):
+        #         f.write(f"batch {i}: {row}\n")
+
+        # lengths = mask_A.sum(dim=1).long()   
+        # lastA_idxs = lengths - 1    
+        # lengths = mask_B.sum(dim=1).long()   
+        # lastB_idxs = lengths - 1 
+      
+        # batchA_idx = torch.arange(B, device=player_A_node_embedding.device)
+        # Last_player_A_node_embedding =  player_A_node_embedding[batchA_idx, lastA_idxs, :] 
+        # batchB_idx = torch.arange(B, device=player_B_node_embedding.device)
+        # Last_player_B_node_embedding =  player_B_node_embedding[batchB_idx, lastB_idxs, :]
+
+        # # 5. 拼接後丟進預測層
+        # fusion = torch.cat([Last_player_A_node_embedding, Last_player_B_node_embedding], dim=-1)  #[32, 16+16]
+        # logits = self.win_head(fusion).squeeze(-1)              
+        # win_logit = torch.sigmoid(logits)                       
+ 
+        # return win_logit
