@@ -27,11 +27,12 @@ def dynamic_collate(batch):
         'A_y':       torch.zeros(B, Lmax),
         'B_x':       torch.zeros(B, Lmax),
         'B_y':       torch.zeros(B, Lmax),
+        'mask':      torch.zeros(B, Lmax),
     }
 
     # 單一迴圈：對每個 rally 解構、填值
     for i, rally in enumerate(rallies):
-        player, shot_type, A_x, A_y, B_x, B_y, seq_len = rally
+        player, shot_type, A_x, A_y, B_x, B_y, seq_len,mask = rally
         seq_len = int(seq_len)
         rally_batch['player'][i]    = torch.from_numpy(player)
         rally_batch['shot_type'][i] = torch.from_numpy(shot_type)
@@ -39,6 +40,8 @@ def dynamic_collate(batch):
         rally_batch['A_y'][i]       = torch.from_numpy(A_y)
         rally_batch['B_x'][i]       = torch.from_numpy(B_x)
         rally_batch['B_y'][i]       = torch.from_numpy(B_y)
+        rally_batch['mask'][i]      = torch.from_numpy(mask)
+
 
     return rally_batch, labels
 

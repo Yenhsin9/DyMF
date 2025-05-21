@@ -665,7 +665,14 @@ class Encoder(nn.Module):
 
         self.linear_for_dynmaic_gcn = nn.Linear(2 * args['hidden_size'], args['hidden_size'])
    
-        self.win_head = nn.Linear(2*args['hidden_size'], 1) #32,1
+        # self.win_head = nn.Linear(2*args['hidden_size'], 1) #32,1
+        self.mlp_head = nn.Sequential(
+            nn.Linear(args['hidden_size'], args['hidden_size']//2),
+            nn.ReLU(inplace=True),
+            nn.Dropout(p=0.2),
+            nn.Linear(args['hidden_size']//2, 1),
+            nn.Sigmoid()       
+        )
 
     def forward(self,
                 player,        # LongTensor[B, Lmax]
@@ -675,15 +682,21 @@ class Encoder(nn.Module):
                 player_B_x,    # FloatTensor[B, Lmax]
                 player_B_y,    # FloatTensor[B, Lmax]
                 encode_length, # int scalar Lmax
+                mask,
     ):
         
     # get the initial(encode) adjacency matrix
         batch_size = player.size(0)
-        
         adjacency_matrix = initialize_adjacency_matrix(batch_size, encode_length, shot_type)
         player_A_coordination = torch.cat((player_A_x.unsqueeze(2), player_A_y.unsqueeze(2)), dim=2).float()
         player_B_coordination = torch.cat((player_B_x.unsqueeze(2), player_B_y.unsqueeze(2)), dim=2).float()
 
+        debug_path = "player.txt"  
+        # 把 mask 拷到 CPU 并转成 Python 列表
+        mask_list = player.detach().cpu().tolist()  
+        with open(debug_path, "w") as f:
+            for i, row in enumerate(mask_list):
+                f.write(f"batch {i}: {row}\n")
 
         # interleave the player and opponent location
         coordination_sequence = torch.stack((player_A_coordination, player_B_coordination), dim=2).view(player.size(0), -1, 2)
@@ -750,17 +763,28 @@ class Encoder(nn.Module):
         w_rgcn_B = self.sigmoid(rgcn_weight_B)
         w_gcn_B = self.sigmoid(gcn_weight_B)
 
-        node_embedding[:, 0::2, :] = full_graph_node_embedding[:, 0::2, :] * w_rgcn_A.unsqueeze(1) + player_A_node_embedding * w_gcn_A.unsqueeze(1)
-        node_embedding[:, 1::2, :] = full_graph_node_embedding[:, 1::2, :] * w_rgcn_B.unsqueeze(1) + player_B_node_embedding * w_gcn_B.unsqueeze(1)
-        
-        idx = (thisRallyL).squeeze(-1).long()   # shape [32]
-        batch_idx = torch.arange(node_embedding.size(0), device=node_embedding.device)  # [32]
-        lastNode1 = node_embedding[batch_idx, idx-1, :]
-        lastNode2 = node_embedding[batch_idx, idx-2, :]
-        combineLast = torch.cat([lastNode1, lastNode2], dim=-1)
-        logits = self.win_head(combineLast).squeeze(-1)                                   
 
-        return logits
+        node_embedding[:, 0::2, :] = (full_graph_node_embedding[:, 0::2, :] * w_rgcn_A.unsqueeze(1) + player_A_node_embedding * w_gcn_A.unsqueeze(1))*mask.unsqueeze(-1)
+        node_embedding[:, 1::2, :] = (full_graph_node_embedding[:, 1::2, :] * w_rgcn_B.unsqueeze(1) + player_B_node_embedding * w_gcn_B.unsqueeze(1))*mask.unsqueeze(-1)
+        
+        debug_path = "node_embedding.txt"  
+        # 把 mask 拷到 CPU 并转成 Python 列表
+        mask_list = node_embedding.detach().cpu().tolist()  
+        with open(debug_path, "w") as f:
+            for i, row in enumerate(mask_list):
+                f.write(f"batch {i}: {row}\n")
+
+        pooled = node_embedding.sum(dim=1) / thisRallyL
+        prob = self.mlp_head(pooled).squeeze(-1)                                
+
+        debug_path = "prob.txt"  
+        # 把 mask 拷到 CPU 并转成 Python 列表
+        mask_list = prob.detach().cpu().tolist()  
+        with open(debug_path, "w") as f:
+            for i, row in enumerate(mask_list):
+                f.write(f"batch {i}: {row}\n")
+
+        return prob
 
 
 

@@ -4,7 +4,7 @@ import torch
 from tqdm import tqdm
 import torch.nn.functional as F
 import torch.distributions.multivariate_normal as torchdist
-from torch.nn import BCEWithLogitsLoss
+from torch.nn import BCELoss
 
 PAD = 0
 
@@ -43,7 +43,7 @@ def train(train_dataloader, valid_dataloader, encoder, decoder,
           location_criterion, shot_type_criterion, 
           encoder_optimizer, decoder_optimizer, args, device="cpu"):
 
-    bce_loss = BCEWithLogitsLoss()
+    bce_loss = BCELoss()
     best_val_loss = float('inf')
     patience = args.get('patience', 5)
     no_improve = 0
@@ -63,6 +63,7 @@ def train(train_dataloader, valid_dataloader, encoder, decoder,
                 rally_batch['B_x'].to(device),
                 rally_batch['B_y'].to(device),
                 max_length,
+                rally_batch['mask'].to(device),
             )
             
             loss = bce_loss(win_logit, target)
@@ -91,6 +92,8 @@ def train(train_dataloader, valid_dataloader, encoder, decoder,
                     rally_batch['B_x'].to(device),
                     rally_batch['B_y'].to(device),
                     valid_max_length,
+                    rally_batch['mask'].to(device),
+
                 )
                 l = bce_loss(win_logit, target)
                 val_loss += l.item() * rally_batch['player'].size(0)

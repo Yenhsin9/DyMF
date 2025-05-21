@@ -46,7 +46,10 @@ class BadmintonDataset(Dataset):
             player_x = np.pad(player_x, (0, self.encode_length - seqence_length), 'constant', constant_values=(0))
             player_y = np.pad(player_y, (0, self.encode_length - seqence_length), 'constant', constant_values=(0))
             opponent_x = np.pad(opponent_x, (0, self.encode_length - seqence_length), 'constant', constant_values=(0))
-            opponent_y = np.pad(opponent_y, (0, self.encode_length - seqence_length), 'constant', constant_values=(0))           
+            opponent_y = np.pad(opponent_y, (0, self.encode_length - seqence_length), 'constant', constant_values=(0))      
+
+            mask = np.concatenate([np.ones(seqence_length, dtype=np.float32),
+                                   np.zeros(self.encode_length - seqence_length, dtype=np.float32)])
             
             player_A_x = np.empty((self.encode_length,), dtype=float)
             player_A_x[0::2] = player_x[0::2]
@@ -62,7 +65,7 @@ class BadmintonDataset(Dataset):
             player_B_y[0::2] = opponent_y[0::2]
             player_B_y[1::2] = player_y[1::2]
 
-            self.player_sequence.append([player, shot_type, player_A_x, player_A_y, player_B_x, player_B_y, seqence_length])
+            self.player_sequence.append([player, shot_type, player_A_x, player_A_y, player_B_x, player_B_y, seqence_length,mask])
           
             # predict target
             last_point = one_rally['getpoint_player'].iloc[-1]
