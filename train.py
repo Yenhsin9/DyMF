@@ -19,8 +19,8 @@ def main():
     args.add_argument("--prepared_data_output_path", type=str, default="./data/dataset.csv")
     args.add_argument("--already_have_data", type=int, default=1) #if have data
     args.add_argument("--preprocessed_data_path", type=str, default="./data/dataset.csv")
-    args.add_argument("--train_ratio", type=float, default=0.8)
-    args.add_argument("--valid_ratio", type=float, default=0.1)
+    args.add_argument("--train_ratio", type=float, default=0.7)
+    args.add_argument("--valid_ratio", type=float, default=0.15)
     args.add_argument("--max_length", type=int, default=100)
 
     # training
@@ -30,7 +30,7 @@ def main():
     args.add_argument("--test_batch_size", type=int, default=1)
     args.add_argument("--hidden_size", type=int, default=16)
     args.add_argument("--model_type", type=str, required=True)
-    args.add_argument("--lr", type=float, default=0.001)
+    args.add_argument("--lr", type=float, default=0.01)
     args.add_argument("--player_dim", type=int, default=16)
     args.add_argument("--type_dim", type=int, default=16)
     args.add_argument("--location_dim", type=int, default=16)

@@ -48,9 +48,6 @@ class BadmintonDataset(Dataset):
             opponent_x = np.pad(opponent_x, (0, self.encode_length - seqence_length), 'constant', constant_values=(0))
             opponent_y = np.pad(opponent_y, (0, self.encode_length - seqence_length), 'constant', constant_values=(0))           
             
-            mask = np.concatenate([np.ones(seqence_length, dtype=np.float32),
-                                   np.zeros(self.encode_length - seqence_length, dtype=np.float32)])
-            
             player_A_x = np.empty((self.encode_length,), dtype=float)
             player_A_x[0::2] = player_x[0::2]
             player_A_x[1::2] = opponent_x[1::2]
@@ -65,11 +62,8 @@ class BadmintonDataset(Dataset):
             player_B_y[0::2] = opponent_y[0::2]
             player_B_y[1::2] = player_y[1::2]
 
-            shot_tensor = torch.from_numpy(shot_type).long().unsqueeze(0)
-            adj = initialize_adjacency_matrix(1, self.encode_length, shot_tensor)
-            adj = adj.squeeze(0)  # → [13, 2*L, 2*L]
-            self.player_sequence.append([player, shot_type, player_A_x, player_A_y, player_B_x, player_B_y, seqence_length,mask])
-            self.adj.append(adj)
+            self.player_sequence.append([player, shot_type, player_A_x, player_A_y, player_B_x, player_B_y, seqence_length])
+          
             # predict target
             last_point = one_rally['getpoint_player'].iloc[-1]
             label = 1 if last_point == 'A' else 0
@@ -81,5 +75,4 @@ class BadmintonDataset(Dataset):
     def __getitem__(self, index):
         rally = self.player_sequence[index]  
         target = torch.tensor(self.target_sequence[index], dtype=torch.float32)
-        adj = self.adj[index]
-        return rally,target,adj
+        return rally,target

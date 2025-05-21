@@ -52,10 +52,9 @@ def train(train_dataloader, valid_dataloader, encoder, decoder,
         train_loss = 0.0
         n_train    = 0
         encoder.train() 
-        for rally_batch, target,adj in train_dataloader:
+        for rally_batch, target in train_dataloader:
             encoder_optimizer.zero_grad()
             target = target.to(device).float()
-            adj_batch = torch.stack(adj, dim=0).to(device)
             win_logit  = encoder(
                 rally_batch['player'].to(device),
                 rally_batch['shot_type'].to(device),
@@ -63,16 +62,9 @@ def train(train_dataloader, valid_dataloader, encoder, decoder,
                 rally_batch['A_y'].to(device),
                 rally_batch['B_x'].to(device),
                 rally_batch['B_y'].to(device),
-                rally_batch['mask'].to(device),
                 max_length,
-                adj_batch,
             )
-            debug_path = "win_logit.txt"  
-            # 把 mask 拷到 CPU 并转成 Python 列表
-            mask_list = win_logit.detach().cpu().tolist()  
-            with open(debug_path, "w") as f:
-                for i, row in enumerate(mask_list):
-                    f.write(f"batch {i}: {row}\n")
+            
             loss = bce_loss(win_logit, target)
             loss.backward()
             encoder_optimizer.step()
@@ -89,9 +81,8 @@ def train(train_dataloader, valid_dataloader, encoder, decoder,
         with torch.no_grad():
             val_loss = 0.0
             n_val = 0
-            for rally_batch, target,adj in valid_dataloader:
+            for rally_batch, target in valid_dataloader:
                 target = target.to(device).float()
-                adj_batch = torch.stack(adj, dim=0).to(device)
                 win_logit = encoder(
                     rally_batch['player'].to(device),
                     rally_batch['shot_type'].to(device),
@@ -99,9 +90,7 @@ def train(train_dataloader, valid_dataloader, encoder, decoder,
                     rally_batch['A_y'].to(device),
                     rally_batch['B_x'].to(device),
                     rally_batch['B_y'].to(device),
-                    rally_batch['mask'].to(device),
                     valid_max_length,
-                    adj_batch,
                 )
                 l = bce_loss(win_logit, target)
                 val_loss += l.item() * rally_batch['player'].size(0)
@@ -116,7 +105,10 @@ def train(train_dataloader, valid_dataloader, encoder, decoder,
             best_val_loss = avg_val_loss
             no_improve = 0
             # Save best model
-            torch.save(encoder.state_dict(), args['model_folder'])
+            output_folder_name = args['model_folder']
+            if not os.path.exists(output_folder_name):
+                os.makedirs(output_folder_name)
+            torch.save(encoder.state_dict(), output_folder_name + '/encoder')
             print("  ✔ New best model saved.")
         else:
             no_improve += 1

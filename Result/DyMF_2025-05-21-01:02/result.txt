@@ -1,0 +1,75 @@
+change learning to 0.01
+
+❯ python train.py --model_type DyMF
+15792
+  0%|                                                                           | 0/100 [00:00<?, ?it/s]avg_train_loss 0.6886227343740966
+Epoch 1/100 - Train Loss: 0.6886, Val Loss: 0.6508
+  ✔ New best model saved.
+  1%|▋                                                                  | 1/100 [00:22<36:35, 22.18s/it]avg_train_loss 0.6367328778234423
+Epoch 2/100 - Train Loss: 0.6367, Val Loss: 0.6115
+  ✔ New best model saved.
+  2%|█▎                                                                 | 2/100 [00:42<34:05, 20.87s/it]avg_train_loss 0.6078168962343123
+Epoch 3/100 - Train Loss: 0.6078, Val Loss: 0.6059
+  ✔ New best model saved.
+  3%|██                                                                 | 3/100 [01:02<33:07, 20.49s/it]avg_train_loss 0.6029057609647941
+Epoch 4/100 - Train Loss: 0.6029, Val Loss: 0.6227
+  ⚠ No improvement for 1/5 epochs.
+  4%|██▋                                                                | 4/100 [01:23<33:11, 20.75s/it]avg_train_loss 0.6001363427097205
+Epoch 5/100 - Train Loss: 0.6001, Val Loss: 0.6238
+  ⚠ No improvement for 2/5 epochs.
+  5%|███▎                                                               | 5/100 [01:43<32:31, 20.54s/it]avg_train_loss 0.5834157497658256
+Epoch 6/100 - Train Loss: 0.5834, Val Loss: 0.6059
+  ⚠ No improvement for 3/5 epochs.
+  6%|████                                                               | 6/100 [02:03<31:43, 20.25s/it]avg_train_loss 0.580903289450046
+Epoch 7/100 - Train Loss: 0.5809, Val Loss: 0.6223
+  ⚠ No improvement for 4/5 epochs.
+  7%|████▋                                                              | 7/100 [02:22<31:10, 20.11s/it]avg_train_loss 0.5761967925964485
+Epoch 8/100 - Train Loss: 0.5762, Val Loss: 0.6360
+  ⚠ No improvement for 5/5 epochs.
+🔚 Early stopping triggered.
+  7%|████▋                                                              | 7/100 [02:42<36:03, 23.27s/it]
+./model/DyMF_2025-05-21-01:02
+best val loss: 0.6058615577935074
+
+
+
+Training 2
+❯ python train.py --model_type DyMF
+15792
+  0%|                                                                           | 0/100 [00:00<?, ?it/s]avg_train_loss 0.685889338284004
+Epoch 1/100 - Train Loss: 0.6859, Val Loss: 0.6466
+  ✔ New best model saved.
+  1%|▋                                                                | 1/100 [01:37<2:41:19, 97.78s/it]avg_train_loss 0.6446891648013418
+Epoch 2/100 - Train Loss: 0.6447, Val Loss: 0.6050
+  ✔ New best model saved.
+  2%|█▎                                                               | 2/100 [03:15<2:39:51, 97.87s/it]avg_train_loss 0.6140574100540905
+Epoch 3/100 - Train Loss: 0.6141, Val Loss: 0.6129
+  ⚠ No improvement for 1/5 epochs.
+  3%|█▉                                                               | 3/100 [04:53<2:38:15, 97.89s/it]avg_train_loss 0.605170281195059
+Epoch 4/100 - Train Loss: 0.6052, Val Loss: 0.6138
+  ⚠ No improvement for 2/5 epochs.
+  4%|██▌                                                              | 4/100 [06:31<2:36:42, 97.94s/it]avg_train_loss 0.5816013469928648
+Epoch 5/100 - Train Loss: 0.5816, Val Loss: 0.5783
+  ✔ New best model saved.
+  5%|███▎                                                             | 5/100 [08:09<2:35:06, 97.97s/it]avg_train_loss 0.5811761292015634
+Epoch 6/100 - Train Loss: 0.5812, Val Loss: 0.5759
+  ✔ New best model saved.
+  6%|███▉                                                             | 6/100 [09:47<2:33:29, 97.98s/it]avg_train_loss 0.5707887120363189
+Epoch 7/100 - Train Loss: 0.5708, Val Loss: 0.5986
+  ⚠ No improvement for 1/5 epochs.
+  7%|████▌                                                            | 7/100 [11:25<2:31:49, 97.95s/it]avg_train_loss 0.5620641990405757
+Epoch 8/100 - Train Loss: 0.5621, Val Loss: 0.5868
+  ⚠ No improvement for 2/5 epochs.
+  8%|█████▏                                                           | 8/100 [13:03<2:30:14, 97.98s/it]avg_train_loss 0.5501145060469464
+Epoch 9/100 - Train Loss: 0.5501, Val Loss: 0.6305
+  ⚠ No improvement for 3/5 epochs.
+  9%|█████▊                                                           | 9/100 [14:41<2:28:38, 98.00s/it]avg_train_loss 0.5628336947138717
+Epoch 10/100 - Train Loss: 0.5628, Val Loss: 0.6219
+  ⚠ No improvement for 4/5 epochs.
+ 10%|██████▍                                                         | 10/100 [16:19<2:27:00, 98.01s/it]avg_train_loss 0.5544526633692951
+Epoch 11/100 - Train Loss: 0.5545, Val Loss: 0.6031
+  ⚠ No improvement for 5/5 epochs.
+🔚 Early stopping triggered.
+ 10%|██████▎                                                        | 10/100 [17:57<2:41:39, 107.77s/it]
+./model/DyMF_2025-05-21-11:43
+best val loss: 0.5759171416112304
