@@ -1,0 +1,30 @@
+❯ python train.py --model_type DyMF
+16880
+  0%|                                                                           | 0/100 [00:00<?, ?it/s]avg_train_loss 0.6926669533659772
+Epoch 1/100 - Train Loss: 0.6927, Val Loss: 0.6860, Brier Score: 0.2464
+  ✔ New best model saved.
+  1%|▋                                                                | 1/100 [01:37<2:40:49, 97.47s/it]avg_train_loss 0.687826934674891
+Epoch 2/100 - Train Loss: 0.6878, Val Loss: 0.6808, Brier Score: 0.2439
+  ✔ New best model saved.
+  2%|█▎                                                               | 2/100 [03:15<2:39:15, 97.51s/it]avg_train_loss 0.6866956283406513
+Epoch 3/100 - Train Loss: 0.6867, Val Loss: 0.6891, Brier Score: 0.2480
+  ⚠ No improvement for 1/5 epochs.
+  3%|█▉                                                               | 3/100 [04:52<2:37:43, 97.56s/it]avg_train_loss 0.686477971658474
+Epoch 4/100 - Train Loss: 0.6865, Val Loss: 0.6811, Brier Score: 0.2440
+  ⚠ No improvement for 2/5 epochs.
+  4%|██▌                                                              | 4/100 [06:30<2:36:09, 97.60s/it]avg_train_loss 0.6856954911860024
+Epoch 5/100 - Train Loss: 0.6857, Val Loss: 0.6786, Brier Score: 0.2428
+  ✔ New best model saved.
+  5%|███▎                                                             | 5/100 [08:07<2:34:33, 97.61s/it]avg_train_loss 0.6800608227892619
+Epoch 6/100 - Train Loss: 0.6801, Val Loss: 0.6832, Brier Score: 0.2449
+  ⚠ No improvement for 1/5 epochs.
+  6%|███▉                                                             | 6/100 [09:45<2:32:53, 97.59s/it]avg_train_loss 0.679574747201873
+Epoch 7/100 - Train Loss: 0.6796, Val Loss: 0.6688, Brier Score: 0.2382
+  ✔ New best model saved.
+  7%|████▌                                                            | 7/100 [11:23<2:31:14, 97.58s/it]avg_train_loss 0.6789139224261772
+Epoch 8/100 - Train Loss: 0.6789, Val Loss: 0.6827, Brier Score: 0.2448
+  ⚠ No improvement for 1/5 epochs.
+  8%|█████▏                                                           | 8/100 [13:00<2:29:35, 97.56s/it]avg_train_loss 0.681632208242649
+Epoch 9/100 - Train Loss: 0.6816, Val Loss: 0.6863, Brier Score: 0.2466
+  ⚠ No improvement for 2/5 epochs.
+  9%|█████▊                                                           | 9/100 [14:38<2:27:58, 97.57s/it]avg_train_loss 0.6884187701271801

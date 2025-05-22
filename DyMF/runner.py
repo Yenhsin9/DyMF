@@ -64,6 +64,8 @@ def train(train_dataloader, valid_dataloader, encoder, decoder,
                 rally_batch['B_y'].to(device),
                 max_length,
                 rally_batch['mask'].to(device),
+                rally_batch['score_diff'].to(device),
+                rally_batch['conpoint'].to(device),
             )
             
             loss = bce_loss(win_logit, target)
@@ -81,6 +83,7 @@ def train(train_dataloader, valid_dataloader, encoder, decoder,
         encoder.eval()
         with torch.no_grad():
             val_loss = 0.0
+            brier_loss = 0.0
             n_val = 0
             for rally_batch, target in valid_dataloader:
                 target = target.to(device).float()
@@ -93,15 +96,23 @@ def train(train_dataloader, valid_dataloader, encoder, decoder,
                     rally_batch['B_y'].to(device),
                     valid_max_length,
                     rally_batch['mask'].to(device),
+                    rally_batch['score_diff'].to(device),
+                    rally_batch['conpoint'].to(device),
 
                 )
                 l = bce_loss(win_logit, target)
+                batch_brier = (win_logit - target)**2
+                brier_loss  += batch_brier.sum().item()
                 val_loss += l.item() * rally_batch['player'].size(0)
+    
                 n_val += rally_batch['player'].size(0)
 
         avg_val_loss = val_loss / n_val if n_val else 0.0
+        avg_brier_score = brier_loss / n_val
         print(f"Epoch {epoch+1}/{args['epochs']} - "
-              f"Train Loss: {avg_train_loss:.4f}, Val Loss: {avg_val_loss:.4f}")
+          f"Train Loss: {avg_train_loss:.4f}, "
+          f"Val Loss: {avg_val_loss:.4f}, "
+          f"Brier Score: {avg_brier_score:.4f}")
 
         # Early stopping
         if avg_val_loss < best_val_loss:

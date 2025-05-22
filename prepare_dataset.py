@@ -28,11 +28,13 @@ def dynamic_collate(batch):
         'B_x':       torch.zeros(B, Lmax),
         'B_y':       torch.zeros(B, Lmax),
         'mask':      torch.zeros(B, Lmax),
+        'score_diff':torch.zeros(B, 1),
+        'conpoint':torch.zeros(B, 1),
     }
 
     # 單一迴圈：對每個 rally 解構、填值
     for i, rally in enumerate(rallies):
-        player, shot_type, A_x, A_y, B_x, B_y, seq_len,mask = rally
+        player, shot_type, A_x, A_y, B_x, B_y, seq_len,mask,score_diff,conpoint = rally
         seq_len = int(seq_len)
         rally_batch['player'][i]    = torch.from_numpy(player)
         rally_batch['shot_type'][i] = torch.from_numpy(shot_type)
@@ -41,6 +43,8 @@ def dynamic_collate(batch):
         rally_batch['B_x'][i]       = torch.from_numpy(B_x)
         rally_batch['B_y'][i]       = torch.from_numpy(B_y)
         rally_batch['mask'][i]      = torch.from_numpy(mask)
+        rally_batch['score_diff'][i]      = score_diff
+        rally_batch['conpoint'][i]      = conpoint
 
 
     return rally_batch, labels
@@ -54,7 +58,7 @@ def prepare_dataset(args):
     'player_location_x','player_location_y',
     'opponent_location_x','opponent_location_y',
     'ball_round','set','match_id',
-    'getpoint_player'    
+    'getpoint_player','roundscore_A','roundscore_B'
     ]
 
     matches = matches[used_column]
