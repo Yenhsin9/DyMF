@@ -660,7 +660,15 @@ class Encoder(nn.Module):
         self.relu = nn.ReLU()
 
         self.linear_for_dynmaic_gcn = nn.Linear(2 * args['hidden_size'], args['hidden_size'])
-        self.win_head = nn.Linear(2*args['hidden_size'], 1) #32,1
+        self.win_head = nn.Linear(3*args['hidden_size'], 1) #32,1
+        self.pos_linear = nn.Linear(1, args['hidden_size'])
+        self.multihead_attn = nn.MultiheadAttention(
+            embed_dim=args['hidden_size'],
+            num_heads=4,
+            dropout=0.1,
+            batch_first=True)
+        self.attn_pool = nn.Linear(args['hidden_size'], 1)
+        #self.win_head = nn.Linear(args['hidden_size'], 1)
 
     def forward(self,
                 player,        # LongTensor[B, Lmax]
@@ -722,6 +730,7 @@ class Encoder(nn.Module):
         player_B_node_embedding = self.gcn(dynamic_gcn_input_B, partial_adjacency_matrix)
         node_embedding = torch.zeros((full_graph_node_embedding.size(0), full_graph_node_embedding.size(1), full_graph_node_embedding.size(2))).to(player.device)
         
+        #player player fusion
         _, _, A_weight, B_weight = self.co_attention(player_A_node_embedding.permute(0, 2, 1), player_B_node_embedding, batch_size)
         
         A_weight = self.sigmoid(self.co_attention_linear_A(A_weight))
@@ -730,6 +739,7 @@ class Encoder(nn.Module):
         player_A_node_embedding = player_A_node_embedding + B_weight.unsqueeze(1) * player_B_node_embedding
         player_B_node_embedding = player_B_node_embedding + A_weight.unsqueeze(1) * player_A_node_embedding
 
+        #player rally fusion
         rgcn_embedding_A = full_graph_node_embedding[:, 0::2, :].clone()[:, -1, :].view(batch_size, -1)
         rgcn_embedding_B = full_graph_node_embedding[:, 1::2, :].clone()[:, -1, :].view(batch_size, -1)
         gcn_embedding_A = player_A_node_embedding.clone()[:, -1, :].view(batch_size, -1)
@@ -748,18 +758,52 @@ class Encoder(nn.Module):
         node_embedding[:, 0::2, :] = full_graph_node_embedding[:, 0::2, :] * w_rgcn_A.unsqueeze(1) + player_A_node_embedding * w_gcn_A.unsqueeze(1)
         node_embedding[:, 1::2, :] = full_graph_node_embedding[:, 1::2, :] * w_rgcn_B.unsqueeze(1) + player_B_node_embedding * w_gcn_B.unsqueeze(1)
         
-        idx = (thisRallyL).squeeze(-1).long()   # shape [32]
-        batch_idx = torch.arange(node_embedding.size(0), device=node_embedding.device)  # [32]
-        lastNode1 = node_embedding[batch_idx, idx-1, :] #[32,60,16]
-        lastNode2 = node_embedding[batch_idx, idx-2, :] #[32,60,16]
-        combineLast = torch.cat([lastNode1, lastNode2], dim=-1) #[32,60,32]
-        logits = self.win_head(combineLast).squeeze(-1)  
-        win_logit = torch.sigmoid(logits)                                 
+        # idx = (thisRallyL).squeeze(-1).long()   # shape [32]
+        # batch_idx = torch.arange(node_embedding.size(0), device=node_embedding.device)  # [32]
+        # lastNode1 = node_embedding[batch_idx, idx-1, :] #[32,60,16]
+        # lastNode2 = node_embedding[batch_idx, idx-2, :] #[32,60,16]
+        # combineLast = torch.cat([lastNode1, lastNode2], dim=-1) #[32,60,32]
+        # logits = self.win_head(combineLast).squeeze(-1)  
+        # win_logit = torch.sigmoid(logits)   
+        B, L, H = node_embedding.shape
+        device = node_embedding.device
+        shot_idx = torch.arange(1, L+1, device=device).float()  # [L]
 
-        return win_logit
+        # 2) 拓展成 [B, L, 1]
+        shot_idx = shot_idx.unsqueeze(0).unsqueeze(-1).expand(B, L, 1)
+
+        # 3) 線性投射到 H 維
+        pos_feat = self.pos_linear(shot_idx)  # [B, L, H]
+
+        # 4) 加回原本的 node_embedding
+        x = node_embedding + pos_feat 
+             
+        attn_out, _ = self.multihead_attn(
+            x, x, x
+        )  # attn_out: [B, L, H]                   
+
+        scores = self.attn_pool(attn_out).squeeze(-1)      # [B, L]
+        weights = torch.softmax(scores, dim=-1)           # [B, L]
+        seq_repr = (attn_out * weights.unsqueeze(-1)).sum(dim=1)  # [B, H]
+
+        # 取最後兩拍的節點
+        last1 = node_embedding[:, -1, :]    # [B, H]  —— 取最后一个节点
+        last2 = node_embedding[:, -2, :]    # [B, H]  —— 取倒数第二个节点
+
+        # 然后 concat 就没问题了
+        last_feats = torch.cat([last1, last2], dim=-1)   # [B, 2H]
+
+        # 把 seq_repr ∥ last_feats ∥ score_diff 組合
+               
+        read = torch.cat([seq_repr, last_feats], dim=-1)       # [B, 3H]
+
+        # 小型 MLP + Dropout
+        # h = self.readout_mlp(read)                                  # [B, H]
+        logits   = self.win_head(read).squeeze(-1)                     # [B]
+        win_prob = torch.sigmoid(logits)
 
 
-
+        return win_prob
 
 
 
