@@ -5,6 +5,8 @@ from tqdm import tqdm
 import torch.nn.functional as F
 import torch.distributions.multivariate_normal as torchdist
 from torch.nn import BCEWithLogitsLoss
+from sklearn.metrics import roc_auc_score, brier_score_loss, accuracy_score
+from torch.nn import BCELoss
 
 PAD = 0
 
@@ -38,12 +40,11 @@ def Gaussian2D_loss(V_pred, V_trgt):
     result = torch.sum(result)
     
     return result
-
 def train(train_dataloader, valid_dataloader, encoder, decoder, 
           location_criterion, shot_type_criterion, 
           encoder_optimizer, decoder_optimizer, args, device="cpu"):
 
-    bce_loss = BCEWithLogitsLoss()
+    bce_loss = BCELoss()
     best_val_loss = float('inf')
     patience = args.get('patience', 5)
     no_improve = 0
@@ -56,12 +57,12 @@ def train(train_dataloader, valid_dataloader, encoder, decoder,
             encoder_optimizer.zero_grad()
             target = target.to(device).float()
             win_logit  = encoder(
-                rally_batch['player'].to(device),
-                rally_batch['shot_type'].to(device),
-                rally_batch['A_x'].to(device),
-                rally_batch['A_y'].to(device),
-                rally_batch['B_x'].to(device),
-                rally_batch['B_y'].to(device),
+                rally_batch[0].to(device),
+                rally_batch[1].to(device),
+                rally_batch[2].to(device),
+                rally_batch[3].to(device),
+                rally_batch[4].to(device),
+                rally_batch[5].to(device),
                 max_length,
             )
             
@@ -69,8 +70,8 @@ def train(train_dataloader, valid_dataloader, encoder, decoder,
             loss.backward()
             encoder_optimizer.step()
 
-            train_loss += loss.item() * rally_batch['player'].size(0)
-            n_train += rally_batch['player'].size(0)
+            train_loss += loss.item() * rally_batch[0].size(0)
+            n_train += rally_batch[0].size(0)
 
         avg_train_loss = train_loss / n_train if n_train else 0.0
         print('avg_train_loss',avg_train_loss)
@@ -81,24 +82,43 @@ def train(train_dataloader, valid_dataloader, encoder, decoder,
         with torch.no_grad():
             val_loss = 0.0
             n_val = 0
+            y_true, y_prob = [], []
             for rally_batch, target in valid_dataloader:
                 target = target.to(device).float()
                 win_logit = encoder(
-                    rally_batch['player'].to(device),
-                    rally_batch['shot_type'].to(device),
-                    rally_batch['A_x'].to(device),
-                    rally_batch['A_y'].to(device),
-                    rally_batch['B_x'].to(device),
-                    rally_batch['B_y'].to(device),
+                    rally_batch[0].to(device),
+                    rally_batch[1].to(device),
+                    rally_batch[2].to(device),
+                    rally_batch[3].to(device),
+                    rally_batch[4].to(device),
+                    rally_batch[5].to(device),
                     valid_max_length,
                 )
+                y_prob.extend(win_logit.cpu().numpy())
+                y_true.extend(target.cpu().numpy())
+
                 l = bce_loss(win_logit, target)
-                val_loss += l.item() * rally_batch['player'].size(0)
-                n_val += rally_batch['player'].size(0)
+                val_loss += l.item() * rally_batch[0].size(0)
+                n_val += rally_batch[0].size(0)
 
         avg_val_loss = val_loss / n_val if n_val else 0.0
-        print(f"Epoch {epoch+1}/{args['epochs']} - "
-              f"Train Loss: {avg_train_loss:.4f}, Val Loss: {avg_val_loss:.4f}")
+        y_pred = [1 if p >= 0.5 else 0 for p in y_prob]
+        acc = accuracy_score(y_true, y_pred)
+        try:
+            auc = roc_auc_score(y_true, y_prob)
+        except ValueError:
+            auc = float('nan')
+        # 計算 Brier score
+        brier = brier_score_loss(y_true, y_prob)
+
+        print(
+            f"Epoch {epoch+1}/{args['epochs']} - "
+            f"Train Loss: {avg_train_loss:.4f}, "
+            f"Val Loss: {avg_val_loss:.4f}, "
+            f"Acc: {acc:.4f}, "
+            f"Val AUC: {auc:.4f}, "
+            f"Brier: {brier:.4f}"
+        )
 
         # Early stopping
         if avg_val_loss < best_val_loss:
@@ -118,6 +138,85 @@ def train(train_dataloader, valid_dataloader, encoder, decoder,
                 break
 
     return best_val_loss
+# def train(train_dataloader, valid_dataloader, encoder, decoder, 
+#           location_criterion, shot_type_criterion, 
+#           encoder_optimizer, decoder_optimizer, args, device="cpu"):
+
+#     bce_loss = BCEWithLogitsLoss()
+#     best_val_loss = float('inf')
+#     patience = args.get('patience', 5)
+#     no_improve = 0
+#     max_length = train_dataloader.dataset.encode_length
+#     for epoch in tqdm(range(args['epochs'])):
+#         train_loss = 0.0
+#         n_train    = 0
+#         encoder.train() 
+#         for rally_batch, target in train_dataloader:
+#             encoder_optimizer.zero_grad()
+#             target = target.to(device).float()
+#             win_logit  = encoder(
+#                 rally_batch['player'].to(device),
+#                 rally_batch['shot_type'].to(device),
+#                 rally_batch['A_x'].to(device),
+#                 rally_batch['A_y'].to(device),
+#                 rally_batch['B_x'].to(device),
+#                 rally_batch['B_y'].to(device),
+#                 max_length,
+#             )
+            
+#             loss = bce_loss(win_logit, target)
+#             loss.backward()
+#             encoder_optimizer.step()
+
+#             train_loss += loss.item() * rally_batch['player'].size(0)
+#             n_train += rally_batch['player'].size(0)
+
+#         avg_train_loss = train_loss / n_train if n_train else 0.0
+#         print('avg_train_loss',avg_train_loss)
+
+#         valid_max_length = valid_dataloader.dataset.encode_length
+#         # Validation phase
+#         encoder.eval()
+#         with torch.no_grad():
+#             val_loss = 0.0
+#             n_val = 0
+#             for rally_batch, target in valid_dataloader:
+#                 target = target.to(device).float()
+#                 win_logit = encoder(
+#                     rally_batch['player'].to(device),
+#                     rally_batch['shot_type'].to(device),
+#                     rally_batch['A_x'].to(device),
+#                     rally_batch['A_y'].to(device),
+#                     rally_batch['B_x'].to(device),
+#                     rally_batch['B_y'].to(device),
+#                     valid_max_length,
+#                 )
+#                 l = bce_loss(win_logit, target)
+#                 val_loss += l.item() * rally_batch['player'].size(0)
+#                 n_val += rally_batch['player'].size(0)
+
+#         avg_val_loss = val_loss / n_val if n_val else 0.0
+#         print(f"Epoch {epoch+1}/{args['epochs']} - "
+#               f"Train Loss: {avg_train_loss:.4f}, Val Loss: {avg_val_loss:.4f}")
+
+#         # Early stopping
+#         if avg_val_loss < best_val_loss:
+#             best_val_loss = avg_val_loss
+#             no_improve = 0
+#             # Save best model
+#             output_folder_name = args['model_folder']
+#             if not os.path.exists(output_folder_name):
+#                 os.makedirs(output_folder_name)
+#             torch.save(encoder.state_dict(), output_folder_name + '/encoder')
+#             print("  ✔ New best model saved.")
+#         else:
+#             no_improve += 1
+#             print(f"  ⚠ No improvement for {no_improve}/{patience} epochs.")
+#             if no_improve >= patience:
+#                 print("🔚 Early stopping triggered.")
+#                 break
+
+#     return best_val_loss
 # def train(train_dataloader, valid_dataloader, encoder, decoder, location_criterion, shot_type_criterion, encoder_optimizer, decoder_optimizer, args, device="cpu"):
     
 #     encode_length = args['encode_length']    

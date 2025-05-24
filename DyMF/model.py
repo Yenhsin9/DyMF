@@ -633,13 +633,9 @@ class Encoder(nn.Module):
         super(Encoder, self).__init__()
         player_num = args['player_num']
         player_dim = args['player_dim']
-
         type_num = args['type_num']
-
         location_dim = args['location_dim']
-
         hidden_size = args['hidden_size']
-
         num_layer = args['num_layer']
         
         self.device = device
@@ -647,7 +643,7 @@ class Encoder(nn.Module):
 
         self.player_embedding = nn.Embedding(player_num, player_dim)
         self.coordination_transform = nn.Linear(2, location_dim)
-        
+
         self.model_input_linear = nn.Linear(player_dim + location_dim , hidden_size)
 
         self.rGCN = relational_GCN(hidden_size, type_num, args['num_basis'], num_layer, device) # into 2 type (passive and active) and padding
@@ -664,7 +660,6 @@ class Encoder(nn.Module):
         self.relu = nn.ReLU()
 
         self.linear_for_dynmaic_gcn = nn.Linear(2 * args['hidden_size'], args['hidden_size'])
-   
         self.win_head = nn.Linear(2*args['hidden_size'], 1) #32,1
 
     def forward(self,
@@ -755,12 +750,13 @@ class Encoder(nn.Module):
         
         idx = (thisRallyL).squeeze(-1).long()   # shape [32]
         batch_idx = torch.arange(node_embedding.size(0), device=node_embedding.device)  # [32]
-        lastNode1 = node_embedding[batch_idx, idx-1, :]
-        lastNode2 = node_embedding[batch_idx, idx-2, :]
-        combineLast = torch.cat([lastNode1, lastNode2], dim=-1)
-        logits = self.win_head(combineLast).squeeze(-1)                                   
+        lastNode1 = node_embedding[batch_idx, idx-1, :] #[32,60,16]
+        lastNode2 = node_embedding[batch_idx, idx-2, :] #[32,60,16]
+        combineLast = torch.cat([lastNode1, lastNode2], dim=-1) #[32,60,32]
+        logits = self.win_head(combineLast).squeeze(-1)  
+        win_logit = torch.sigmoid(logits)                                 
 
-        return logits
+        return win_logit
 
 
 

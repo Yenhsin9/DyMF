@@ -29,10 +29,11 @@ def dynamic_collate(batch):
         'B_y':       torch.zeros(B, Lmax),
     }
 
-    # 單一迴圈：對每個 rally 解構、填值
+    # 單一迴dlly 解構、填值
     for i, rally in enumerate(rallies):
         player, shot_type, A_x, A_y, B_x, B_y, seq_len = rally
         seq_len = int(seq_len)
+        print(seq_len)
         rally_batch['player'][i]    = torch.from_numpy(player)
         rally_batch['shot_type'][i] = torch.from_numpy(shot_type)
         rally_batch['A_x'][i]       = torch.from_numpy(A_x)
@@ -94,8 +95,8 @@ def prepare_dataset(args):
     g = torch.Generator()
     g.manual_seed(0)
 
-    train_dataloader = DataLoader(train_dataset, batch_size=args['train_batch_size'], shuffle=True, num_workers=8,collate_fn=dynamic_collate)
-    valid_dataloader = DataLoader(valid_dataset, batch_size=args['valid_batch_size'], shuffle=False, num_workers=8,collate_fn=dynamic_collate)
-    test_dataloader = DataLoader(test_dataset, batch_size=args['test_batch_size'], shuffle=False, num_workers=8,collate_fn=dynamic_collate)
+    train_dataloader = DataLoader(train_dataset, batch_size=args['train_batch_size'], shuffle=True, num_workers=8)
+    valid_dataloader = DataLoader(valid_dataset, batch_size=args['valid_batch_size'], shuffle=False, num_workers=8)
+    test_dataloader = DataLoader(test_dataset, batch_size=args['test_batch_size'], shuffle=False, num_workers=8)
     return train_dataloader, valid_dataloader, test_dataloader, args
     
