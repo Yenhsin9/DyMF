@@ -7,6 +7,7 @@ import torch.distributions.multivariate_normal as torchdist
 from torch.nn import BCEWithLogitsLoss
 from sklearn.metrics import roc_auc_score, brier_score_loss, accuracy_score
 from torch.nn import BCELoss
+from DyMF.draw_plot import draw_plot
 
 PAD = 0
 
@@ -49,9 +50,15 @@ def train(train_dataloader, valid_dataloader, encoder, decoder,
     patience = args.get('patience', 5)
     no_improve = 0
     max_length = train_dataloader.dataset.encode_length
+    train_auc_list=[]
+    val_auc_list=[]  
+    train_brier_list=[]  
+    val_brier_list=[]  
+  
     for epoch in tqdm(range(args['epochs'])):
         train_loss = 0.0
         n_train    = 0
+        x_true, x_prob = [], []
         encoder.train() 
         for rally_batch, target in train_dataloader:
             encoder_optimizer.zero_grad()
@@ -65,7 +72,8 @@ def train(train_dataloader, valid_dataloader, encoder, decoder,
                 rally_batch[5].to(device),
                 max_length,
             )
-            
+            x_prob.extend(win_logit.detach().cpu().numpy())
+            x_true.extend(target.detach().cpu().numpy())
             loss = bce_loss(win_logit, target)
             loss.backward()
             encoder_optimizer.step()
@@ -74,6 +82,16 @@ def train(train_dataloader, valid_dataloader, encoder, decoder,
             n_train += rally_batch[0].size(0)
 
         avg_train_loss = train_loss / n_train if n_train else 0.0
+        x_pred = [1 if p >= 0.5 else 0 for p in x_prob]
+        acc = accuracy_score(x_true, x_pred)
+        try:
+            auc = roc_auc_score(x_true, x_prob)
+        except ValueError:
+            auc = float('nan')
+        # 計算 Brier score
+        brier = brier_score_loss(x_true, x_prob)
+        train_auc_list.append(auc)
+        train_brier_list.append(brier)
         print('avg_train_loss',avg_train_loss)
 
         valid_max_length = valid_dataloader.dataset.encode_length
@@ -110,7 +128,8 @@ def train(train_dataloader, valid_dataloader, encoder, decoder,
             auc = float('nan')
         # 計算 Brier score
         brier = brier_score_loss(y_true, y_prob)
-
+        val_auc_list.append(auc)
+        val_brier_list.append(brier)
         print(
             f"Epoch {epoch+1}/{args['epochs']} - "
             f"Train Loss: {avg_train_loss:.4f}, "
@@ -136,7 +155,7 @@ def train(train_dataloader, valid_dataloader, encoder, decoder,
             if no_improve >= patience:
                 print("🔚 Early stopping triggered.")
                 break
-
+    draw_plot(train_auc_list,val_auc_list,train_brier_list,val_brier_list)
     return best_val_loss
 # def train(train_dataloader, valid_dataloader, encoder, decoder, 
 #           location_criterion, shot_type_criterion, 
