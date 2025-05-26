@@ -651,7 +651,7 @@ class Encoder(nn.Module):
         self.score_diff_fc    = nn.Linear(1, location_dim)
         self.consec_score_fc  = nn.Linear(1, location_dim)
 
-        self.model_input_linear = nn.Linear(player_dim + location_dim*3 , hidden_size)
+        self.model_input_linear = nn.Linear(player_dim + location_dim , hidden_size)
 
         self.rGCN = relational_GCN(hidden_size, type_num, args['num_basis'], num_layer, device) # into 2 type (passive and active) and padding
         self.gcn = GCN(args['hidden_size'], args['hidden_size'], 0.1, num_layer, args, device)
@@ -670,10 +670,10 @@ class Encoder(nn.Module):
    
         #self.win_head = nn.Linear(4*args['hidden_size'], 1) #32,1
         self.mlp_head = nn.Sequential(
-            nn.Linear(2*args['hidden_size'], args['hidden_size']),
-            nn.ReLU(inplace=True),
+            nn.Linear(4*args['hidden_size'], 2*args['hidden_size']),
+            # nn.ReLU(inplace=True),
             nn.Dropout(p=0.2),
-            nn.Linear(args['hidden_size'], 1),
+            nn.Linear(2*args['hidden_size'], 1),
             nn.Sigmoid()       
         )
 
@@ -718,13 +718,13 @@ class Encoder(nn.Module):
         player = out
         player_embedding = self.player_embedding(player)
 
-        sd = self.score_diff_fc(score_diff)     
-        sd   = sd.unsqueeze(1).expand(-1, 2*encode_length, -1)
+        # sd = self.score_diff_fc(score_diff)     
+        # sd   = sd.unsqueeze(1).expand(-1, 2*encode_length, -1)
         
-        cs   = self.consec_score_fc(conpoint)      
-        cs   = cs.unsqueeze(1).expand(-1, 2*encode_length, -1)
+        # cs   = self.consec_score_fc(conpoint)      
+        # cs   = cs.unsqueeze(1).expand(-1, 2*encode_length, -1)
 
-        rally_information = torch.cat((coordination_transform, player_embedding,sd,cs), dim=-1)
+        rally_information = torch.cat((coordination_transform, player_embedding), dim=-1)
         
         model_input = self.model_input_linear(rally_information)
         # fixed node embedding in decoder
@@ -771,12 +771,15 @@ class Encoder(nn.Module):
         node_embedding[:, 0::2, :] = full_graph_node_embedding[:, 0::2, :] * w_rgcn_A.unsqueeze(1) + player_A_node_embedding * w_gcn_A.unsqueeze(1)
         node_embedding[:, 1::2, :] = full_graph_node_embedding[:, 1::2, :] * w_rgcn_B.unsqueeze(1) + player_B_node_embedding * w_gcn_B.unsqueeze(1)
         
+        sd = self.score_diff_fc(score_diff)     
+        cs   = self.consec_score_fc(conpoint)      
+
         idx = (thisRallyL).squeeze(-1).long()   # shape [32]
         batch_idx = torch.arange(node_embedding.size(0), device=node_embedding.device)  # [32]
         lastNode1 = node_embedding[batch_idx, idx-1, :]
         lastNode2 = node_embedding[batch_idx, idx-2, :]
    
-        combineLast = torch.cat([lastNode1, lastNode2], dim=-1)
+        combineLast = torch.cat([lastNode1, lastNode2,sd,cs], dim=-1)
         logits = self.mlp_head(combineLast).squeeze(-1) 
         # logits = self.win_head(combineLast).squeeze(-1)  
         # win_logit = torch.sigmoid(logits)

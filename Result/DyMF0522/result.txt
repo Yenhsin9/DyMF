@@ -1,3 +1,5 @@
+wrong self.mlp_head
+
 ❯ python train.py --model_type DyMF
 16880
   0%|                                                                           | 0/100 [00:00<?, ?it/s]avg_train_loss 0.6926669533659772
