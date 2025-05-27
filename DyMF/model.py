@@ -634,6 +634,7 @@ class Encoder(nn.Module):
         player_num = args['player_num']
         player_dim = args['player_dim']
         type_num = args['type_num']
+        type_dim = args['type_dim']
         location_dim = args['location_dim']
         hidden_size = args['hidden_size']
         num_layer = args['num_layer']
@@ -643,6 +644,7 @@ class Encoder(nn.Module):
 
         self.player_embedding = nn.Embedding(player_num, player_dim)
         self.coordination_transform = nn.Linear(2, location_dim)
+        self.shot_embedding= nn.Embedding(type_num,type_dim)
 
         self.model_input_linear = nn.Linear(player_dim + location_dim , hidden_size)
 
@@ -660,7 +662,7 @@ class Encoder(nn.Module):
         self.relu = nn.ReLU()
 
         self.linear_for_dynmaic_gcn = nn.Linear(2 * args['hidden_size'], args['hidden_size'])
-        self.win_head = nn.Linear(2*args['hidden_size'], 1) #32,1
+        self.win_head = nn.Linear(3*args['hidden_size'], 1) #32,1
 
     def forward(self,
                 player,        # LongTensor[B, Lmax]
@@ -679,7 +681,8 @@ class Encoder(nn.Module):
         player_A_coordination = torch.cat((player_A_x.unsqueeze(2), player_A_y.unsqueeze(2)), dim=2).float()
         player_B_coordination = torch.cat((player_B_x.unsqueeze(2), player_B_y.unsqueeze(2)), dim=2).float()
 
-
+        shotEmbedding = self.shot_embedding(shot_type)
+        
         # interleave the player and opponent location
         coordination_sequence = torch.stack((player_A_coordination, player_B_coordination), dim=2).view(player.size(0), -1, 2)
         coordination_transform = self.coordination_transform(coordination_sequence)
@@ -750,9 +753,12 @@ class Encoder(nn.Module):
         
         idx = (thisRallyL).squeeze(-1).long()   # shape [32]
         batch_idx = torch.arange(node_embedding.size(0), device=node_embedding.device)  # [32]
-        lastNode1 = node_embedding[batch_idx, idx-1, :] #[32,60,16]
-        lastNode2 = node_embedding[batch_idx, idx-2, :] #[32,60,16]
-        combineLast = torch.cat([lastNode1, lastNode2], dim=-1) #[32,60,32]
+        lastNode1 = node_embedding[batch_idx, idx-1, :] 
+        lastNode2 = node_embedding[batch_idx, idx-2, :] 
+        lastShotType = shotEmbedding[batch_idx,(idx//2)-1,:]
+        
+        combineLast = torch.cat([lastNode1, lastNode2,lastShotType], dim=-1) 
+        
         logits = self.win_head(combineLast).squeeze(-1)  
         win_logit = torch.sigmoid(logits)                                 
 
