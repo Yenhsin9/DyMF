@@ -1,36 +1,40 @@
 ❯ python train.py --model_type DyMF
 15792
-  0%|                                                                                                    | 0/100 [00:00<?, ?it/s]avg_train_loss 0.6859880956207833
-Epoch 1/100 - Val Loss: 0.6468, Acc: 0.6361, Train AUC: 0.5528, Val AUC: 0.6839, Train Brier: 0.2465Val Brier: 0.2272
+  0%|                                                                           | 0/100 [00:00<?, ?it/s]avg_train_loss 0.6859880956207833
+Epoch 1/100 - processed 1640 rallies: Val Loss: 0.6468, Acc: 0.6361, Train AUC: 0.5528, Val AUC: 0.6839, Train Brier: 0.2465, Val Brier: 0.2272
   ✔ New best model saved.
-  1%|▉                                                                                         | 1/100 [01:38<2:41:51, 98.10s/it]avg_train_loss 0.64379244315915
-Epoch 2/100 - Val Loss: 0.6083, Acc: 0.6953, Train AUC: 0.6704, Val AUC: 0.7191, Train Brier: 0.2264Val Brier: 0.2096
+  1%|▋                                                                  | 1/100 [00:20<33:08, 20.08s/it]avg_train_loss 0.64379244315915
+Epoch 2/100 - processed 1640 rallies: Val Loss: 0.6083, Acc: 0.6953, Train AUC: 0.6704, Val AUC: 0.7191, Train Brier: 0.2264, Val Brier: 0.2096
   ✔ New best model saved.
-  2%|█▊                                                                                        | 2/100 [03:16<2:40:17, 98.14s/it]avg_train_loss 0.6147970734572992
-Epoch 3/100 - Val Loss: 0.6147, Acc: 0.6746, Train AUC: 0.7176, Val AUC: 0.7260, Train Brier: 0.2129Val Brier: 0.2131
+  2%|█▎                                                                 | 2/100 [00:38<31:13, 19.11s/it]avg_train_loss 0.6147970734572992
+Epoch 3/100 - processed 1640 rallies: Val Loss: 0.6147, Acc: 0.6746, Train AUC: 0.7176, Val AUC: 0.7260, Train Brier: 0.2129, Val Brier: 0.2131
   ⚠ No improvement for 1/5 epochs.
-  3%|██▋                                                                                       | 3/100 [04:54<2:38:41, 98.16s/it]avg_train_loss 0.6083389180462535
-Epoch 4/100 - Val Loss: 0.6140, Acc: 0.6568, Train AUC: 0.7260, Val AUC: 0.7403, Train Brier: 0.2099Val Brier: 0.2129
+  3%|██                                                                 | 3/100 [00:56<30:22, 18.79s/it]avg_train_loss 0.6083389180462535
+Epoch 4/100 - processed 1640 rallies: Val Loss: 0.6140, Acc: 0.6568, Train AUC: 0.7260, Val AUC: 0.7403, Train Brier: 0.2099, Val Brier: 0.2129
   ⚠ No improvement for 2/5 epochs.
-  4%|███▌                                                                                      | 4/100 [06:32<2:37:06, 98.19s/it]avg_train_loss 0.5844941793418512
-Epoch 5/100 - Val Loss: 0.5739, Acc: 0.7219, Train AUC: 0.7582, Val AUC: 0.7580, Train Brier: 0.1989Val Brier: 0.1928
+  4%|██▋                                                                | 4/100 [01:16<30:14, 18.90s/it]avg_train_loss 0.5844941793418512
+Epoch 5/100 - processed 1640 rallies: Val Loss: 0.5739, Acc: 0.7219, Train AUC: 0.7582, Val AUC: 0.7580, Train Brier: 0.1989, Val Brier: 0.1928
   ✔ New best model saved.
-  5%|████▌                                                                                     | 5/100 [08:12<2:36:15, 98.68s/it]avg_train_loss 0.5817480756015312
-Epoch 6/100 - Val Loss: 0.5740, Acc: 0.7574, Train AUC: 0.7584, Val AUC: 0.7585, Train Brier: 0.1982Val Brier: 0.1924
+  5%|███▎                                                               | 5/100 [01:35<30:20, 19.16s/it]avg_train_loss 0.5817480756015312
+Epoch 6/100 - processed 1640 rallies: Val Loss: 0.5740, Acc: 0.7574, Train AUC: 0.7584, Val AUC: 0.7585, Train Brier: 0.1982, Val Brier: 0.1924
   ⚠ No improvement for 1/5 epochs.
-  6%|█████▍                                                                                    | 6/100 [09:50<2:34:27, 98.59s/it]avg_train_loss 0.5689351439476014
-Epoch 7/100 - Val Loss: 0.5936, Acc: 0.7071, Train AUC: 0.7720, Val AUC: 0.7385, Train Brier: 0.1934Val Brier: 0.2028
+  6%|████                                                               | 6/100 [01:55<30:39, 19.57s/it]avg_train_loss 0.5689351439476014
+Epoch 7/100 - processed 1640 rallies: Val Loss: 0.5936, Acc: 0.7071, Train AUC: 0.7720, Val AUC: 0.7385, Train Brier: 0.1934, Val Brier: 0.2028
   ⚠ No improvement for 2/5 epochs.
-  7%|██████▎                                                                                   | 7/100 [11:28<2:32:40, 98.50s/it]avg_train_loss 0.5607915500315225
-Epoch 8/100 - Val Loss: 0.5954, Acc: 0.7012, Train AUC: 0.7817, Val AUC: 0.7350, Train Brier: 0.1894Val Brier: 0.2030
+  7%|████▋                                                              | 7/100 [02:15<30:17, 19.54s/it]avg_train_loss 0.5607915500315225
+Epoch 8/100 - processed 1640 rallies: Val Loss: 0.5954, Acc: 0.7012, Train AUC: 0.7817, Val AUC: 0.7350, Train Brier: 0.1894, Val Brier: 0.2030
   ⚠ No improvement for 3/5 epochs.
-  8%|███████▏                                                                                  | 8/100 [13:08<2:31:30, 98.81s/it]avg_train_loss 0.5588351089779924
-Epoch 9/100 - Val Loss: 0.6136, Acc: 0.6627, Train AUC: 0.7842, Val AUC: 0.7196, Train Brier: 0.1884Val Brier: 0.2115
+  8%|█████▎                                                             | 8/100 [02:34<29:50, 19.46s/it]avg_train_loss 0.5588351089779924
+Epoch 9/100 - processed 1640 rallies: Val Loss: 0.6136, Acc: 0.6627, Train AUC: 0.7842, Val AUC: 0.7196, Train Brier: 0.1884, Val Brier: 0.2115
   ⚠ No improvement for 4/5 epochs.
-  9%|████████                                                                                  | 9/100 [14:46<2:29:41, 98.70s/it]avg_train_loss 0.5617378298829242
-Epoch 10/100 - Val Loss: 0.5916, Acc: 0.6834, Train AUC: 0.7809, Val AUC: 0.7559, Train Brier: 0.1897Val Brier: 0.2022
+  9%|██████                                                             | 9/100 [02:53<29:19, 19.33s/it]avg_train_loss 0.5617378298829242
+Epoch 10/100 - processed 1640 rallies: Val Loss: 0.5916, Acc: 0.6834, Train AUC: 0.7809, Val AUC: 0.7559, Train Brier: 0.1897, Val Brier: 0.2022
   ⚠ No improvement for 5/5 epochs.
 🔚 Early stopping triggered.
-  9%|████████                                                                                 | 9/100 [16:25<2:46:00, 109.46s/it]
-./model/DyMF_2025-05-27-13:09
+  9%|██████                                                             | 9/100 [03:12<32:29, 21.43s/it]
+./model/DyMF_2025-05-28-14:37
 best val loss: 0.5738862776059723
+
+
+❯  python evaluate.py ./model/DyMF_2025-05-28-14:37
+Test Loss: 0.5980 | Acc: 0.5914 | AUC: 0.7317 | Brier: 0.2274

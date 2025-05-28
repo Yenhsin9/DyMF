@@ -12,10 +12,10 @@ import os
 
 def main():
     model_folder = sys.argv[1]
-    sample_num = sys.argv[2]
+    #sample_num = sys.argv[2]
 
     args = load_args_file(model_folder)
-    args['sample_num'] = int(sample_num)
+    #args['sample_num'] = int(sample_num)
 
     np.random.seed(args['seed'])
     random.seed(args['seed'])
@@ -140,20 +140,11 @@ def main():
         encoder.player_embedding.weight = decoder.player_embedding.weight
         encoder.coordination_transform.weight = decoder.coordination_transform.weight
 
-    location_MSE_criterion = nn.MSELoss(reduction='sum')
-    location_MAE_criterion = nn.L1Loss(reduction='sum')
-    shot_type_criterion = nn.CrossEntropyLoss()
+    encoder.load_state_dict(torch.load(args['model_folder'] + '/encoder'))
 
+    encoder.to(device)
 
-    encoder.load_state_dict(torch.load(args['model_folder'] + '/encoder')), decoder.load_state_dict(torch.load(args['model_folder'] + '/decoder'))
-
-    encoder.to(device), decoder.to(device), location_MSE_criterion.to(device), location_MAE_criterion.to(device), shot_type_criterion.to(device)
-
-    test_loss, test_loss_MSE_location, test_loss_MAE_location, test_loss_type = evaluate(test_dataloader, encoder, decoder, location_MSE_criterion, location_MAE_criterion, shot_type_criterion, args, device=device)
-    print("total loss: {:.4f}".format(test_loss))
-    print("location MSE loss: {:.4f}".format(test_loss_MSE_location))
-    print("location MAE loss: {:.4f}".format(test_loss_MAE_location))
-    print("type loss: {:.4f}".format(test_loss_type))
+    avg_loss, acc, auc, brier = evaluate(test_dataloader, encoder, args, device=device)
 
 if __name__ == "__main__":
     main()
