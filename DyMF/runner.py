@@ -85,13 +85,13 @@ def train(train_dataloader, valid_dataloader, encoder, decoder,
         x_pred = [1 if p >= 0.5 else 0 for p in x_prob]
         acc = accuracy_score(x_true, x_pred)
         try:
-            auc = roc_auc_score(x_true, x_prob)
+            T_auc = roc_auc_score(x_true, x_prob)
         except ValueError:
-            auc = float('nan')
+            T_auc = float('nan')
         # 計算 Brier score
-        brier = brier_score_loss(x_true, x_prob)
-        train_auc_list.append(auc)
-        train_brier_list.append(brier)
+        T_brier = brier_score_loss(x_true, x_prob)
+        train_auc_list.append(T_auc)
+        train_brier_list.append(T_brier)
         print('avg_train_loss',avg_train_loss)
 
         valid_max_length = valid_dataloader.dataset.encode_length
@@ -132,10 +132,11 @@ def train(train_dataloader, valid_dataloader, encoder, decoder,
         val_brier_list.append(brier)
         print(
             f"Epoch {epoch+1}/{args['epochs']} - "
-            f"Train Loss: {avg_train_loss:.4f}, "
             f"Val Loss: {avg_val_loss:.4f}, "
             f"Acc: {acc:.4f}, "
+            f"Train AUC: {T_auc:.4f}, "
             f"Val AUC: {auc:.4f}, "
+            f"Train Brier: {T_brier:.4f}, "
             f"Brier: {brier:.4f}"
         )
 
