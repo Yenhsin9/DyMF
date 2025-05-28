@@ -62,7 +62,11 @@ class BadmintonDataset(Dataset):
             player_B_y[0::2] = opponent_y[0::2]
             player_B_y[1::2] = player_y[1::2]
 
-            self.player_sequence.append([player, shot_type, player_A_x, player_A_y, player_B_x, player_B_y, seqence_length])
+            shot_tensor = torch.from_numpy(shot_type).long().unsqueeze(0)
+            adj = initialize_adjacency_matrix(1, self.encode_length, shot_tensor)
+            adj = adj.squeeze(0)  # → [13, 2*L, 2*L]
+            self.player_sequence.append([player, shot_type, player_A_x, player_A_y, player_B_x, player_B_y, seqence_length,adj])
+
           
             # predict target
             last_point = one_rally['getpoint_player'].iloc[-1]

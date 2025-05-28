@@ -669,13 +669,14 @@ class Encoder(nn.Module):
                 player_A_y,    # FloatTensor[B, Lmax]
                 player_B_x,    # FloatTensor[B, Lmax]
                 player_B_y,    # FloatTensor[B, Lmax]
+                adjacency_matrix,
                 encode_length, # int scalar Lmax
     ):
         
     # get the initial(encode) adjacency matrix
         batch_size = player.size(0)
         
-        adjacency_matrix = initialize_adjacency_matrix(batch_size, encode_length, shot_type)
+        #adjacency_matrix = initialize_adjacency_matrix(batch_size, encode_length, shot_type)
         player_A_coordination = torch.cat((player_A_x.unsqueeze(2), player_A_y.unsqueeze(2)), dim=2).float()
         player_B_coordination = torch.cat((player_B_x.unsqueeze(2), player_B_y.unsqueeze(2)), dim=2).float()
 
@@ -750,9 +751,9 @@ class Encoder(nn.Module):
         
         idx = (thisRallyL).squeeze(-1).long()   # shape [32]
         batch_idx = torch.arange(node_embedding.size(0), device=node_embedding.device)  # [32]
-        lastNode1 = node_embedding[batch_idx, idx-1, :] #[32,60,16]
-        lastNode2 = node_embedding[batch_idx, idx-2, :] #[32,60,16]
-        combineLast = torch.cat([lastNode1, lastNode2], dim=-1) #[32,60,32]
+        lastNode1 = node_embedding[batch_idx, idx-1, :] #[32,16]
+        lastNode2 = node_embedding[batch_idx, idx-2, :] #[3216]
+        combineLast = torch.cat([lastNode1, lastNode2], dim=-1) #[32,32]
         logits = self.win_head(combineLast).squeeze(-1)  
         win_logit = torch.sigmoid(logits)                                 
 
