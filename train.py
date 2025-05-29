@@ -202,9 +202,6 @@ def main():
 
     print(args['model_folder'])
     print("best val loss: {}".format(best_val_loss))
-    # print("total loss: {}".format(train_loss))
-    # print("location loss: {}".format(train_loss_location))
-    # print("type loss: {}".format(train_loss_type))
 
 if __name__ == "__main__":
     main()

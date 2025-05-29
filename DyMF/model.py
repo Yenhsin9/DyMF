@@ -671,13 +671,14 @@ class Encoder(nn.Module):
                 player_A_y,    # FloatTensor[B, Lmax]
                 player_B_x,    # FloatTensor[B, Lmax]
                 player_B_y,    # FloatTensor[B, Lmax]
+                adjacency_matrix,
                 encode_length, # int scalar Lmax
     ):
         
     # get the initial(encode) adjacency matrix
         batch_size = player.size(0)
         
-        adjacency_matrix = initialize_adjacency_matrix(batch_size, encode_length, shot_type)
+        #adjacency_matrix = initialize_adjacency_matrix(batch_size, encode_length, shot_type)
         player_A_coordination = torch.cat((player_A_x.unsqueeze(2), player_A_y.unsqueeze(2)), dim=2).float()
         player_B_coordination = torch.cat((player_B_x.unsqueeze(2), player_B_y.unsqueeze(2)), dim=2).float()
 

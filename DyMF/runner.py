@@ -70,6 +70,7 @@ def train(train_dataloader, valid_dataloader, encoder, decoder,
                 rally_batch[3].to(device),
                 rally_batch[4].to(device),
                 rally_batch[5].to(device),
+                rally_batch[7].to(device),
                 max_length,
             )
             x_prob.extend(win_logit.detach().cpu().numpy())
@@ -83,14 +84,14 @@ def train(train_dataloader, valid_dataloader, encoder, decoder,
 
         avg_train_loss = train_loss / n_train if n_train else 0.0
         x_pred = [1 if p >= 0.5 else 0 for p in x_prob]
-        acc = accuracy_score(x_true, x_pred)
+        T_acc = accuracy_score(x_true, x_pred)
         try:
-            T_auc = roc_auc_score(x_true, x_prob)
+            T_acc = roc_auc_score(x_true, x_prob)
         except ValueError:
-            T_auc = float('nan')
+            T_acc = float('nan')
         # 計算 Brier score
         T_brier = brier_score_loss(x_true, x_prob)
-        train_auc_list.append(T_auc)
+        train_auc_list.append(T_acc)
         train_brier_list.append(T_brier)
         print('avg_train_loss',avg_train_loss)
 
@@ -110,6 +111,7 @@ def train(train_dataloader, valid_dataloader, encoder, decoder,
                     rally_batch[3].to(device),
                     rally_batch[4].to(device),
                     rally_batch[5].to(device),
+                    rally_batch[7].to(device),
                     valid_max_length,
                 )
                 y_prob.extend(win_logit.cpu().numpy())
@@ -132,12 +134,13 @@ def train(train_dataloader, valid_dataloader, encoder, decoder,
         val_brier_list.append(brier)
         print(
             f"Epoch {epoch+1}/{args['epochs']} - "
+            f"processed {n_train} rallies: "
             f"Val Loss: {avg_val_loss:.4f}, "
             f"Acc: {acc:.4f}, "
-            f"Train AUC: {T_auc:.4f}, "
+            f"Train AUC: {T_acc:.4f}, "
             f"Val AUC: {auc:.4f}, "
             f"Train Brier: {T_brier:.4f}, "
-            f"Brier: {brier:.4f}"
+            f"Val Brier: {brier:.4f}"
         )
 
         # Early stopping
@@ -158,328 +161,63 @@ def train(train_dataloader, valid_dataloader, encoder, decoder,
                 break
     draw_plot(train_auc_list,val_auc_list,train_brier_list,val_brier_list)
     return best_val_loss
-# def train(train_dataloader, valid_dataloader, encoder, decoder, 
-#           location_criterion, shot_type_criterion, 
-#           encoder_optimizer, decoder_optimizer, args, device="cpu"):
 
-#     bce_loss = BCEWithLogitsLoss()
-#     best_val_loss = float('inf')
-#     patience = args.get('patience', 5)
-#     no_improve = 0
-#     max_length = train_dataloader.dataset.encode_length
-#     for epoch in tqdm(range(args['epochs'])):
-#         train_loss = 0.0
-#         n_train    = 0
-#         encoder.train() 
-#         for rally_batch, target in train_dataloader:
-#             encoder_optimizer.zero_grad()
-#             target = target.to(device).float()
-#             win_logit  = encoder(
-#                 rally_batch['player'].to(device),
-#                 rally_batch['shot_type'].to(device),
-#                 rally_batch['A_x'].to(device),
-#                 rally_batch['A_y'].to(device),
-#                 rally_batch['B_x'].to(device),
-#                 rally_batch['B_y'].to(device),
-#                 max_length,
-#             )
-            
-#             loss = bce_loss(win_logit, target)
-#             loss.backward()
-#             encoder_optimizer.step()
+def evaluate(test_dataloader,
+             encoder,
+             args,
+             device="cpu"):
+ 
+    encoder.eval()
+    y_true, y_prob = [], []
+    total_loss = 0.0
+    total_n = 0
+    bce_loss = BCELoss()
 
-#             train_loss += loss.item() * rally_batch['player'].size(0)
-#             n_train += rally_batch['player'].size(0)
-
-#         avg_train_loss = train_loss / n_train if n_train else 0.0
-#         print('avg_train_loss',avg_train_loss)
-
-#         valid_max_length = valid_dataloader.dataset.encode_length
-#         # Validation phase
-#         encoder.eval()
-#         with torch.no_grad():
-#             val_loss = 0.0
-#             n_val = 0
-#             for rally_batch, target in valid_dataloader:
-#                 target = target.to(device).float()
-#                 win_logit = encoder(
-#                     rally_batch['player'].to(device),
-#                     rally_batch['shot_type'].to(device),
-#                     rally_batch['A_x'].to(device),
-#                     rally_batch['A_y'].to(device),
-#                     rally_batch['B_x'].to(device),
-#                     rally_batch['B_y'].to(device),
-#                     valid_max_length,
-#                 )
-#                 l = bce_loss(win_logit, target)
-#                 val_loss += l.item() * rally_batch['player'].size(0)
-#                 n_val += rally_batch['player'].size(0)
-
-#         avg_val_loss = val_loss / n_val if n_val else 0.0
-#         print(f"Epoch {epoch+1}/{args['epochs']} - "
-#               f"Train Loss: {avg_train_loss:.4f}, Val Loss: {avg_val_loss:.4f}")
-
-#         # Early stopping
-#         if avg_val_loss < best_val_loss:
-#             best_val_loss = avg_val_loss
-#             no_improve = 0
-#             # Save best model
-#             output_folder_name = args['model_folder']
-#             if not os.path.exists(output_folder_name):
-#                 os.makedirs(output_folder_name)
-#             torch.save(encoder.state_dict(), output_folder_name + '/encoder')
-#             print("  ✔ New best model saved.")
-#         else:
-#             no_improve += 1
-#             print(f"  ⚠ No improvement for {no_improve}/{patience} epochs.")
-#             if no_improve >= patience:
-#                 print("🔚 Early stopping triggered.")
-#                 break
-
-#     return best_val_loss
-# def train(train_dataloader, valid_dataloader, encoder, decoder, location_criterion, shot_type_criterion, encoder_optimizer, decoder_optimizer, args, device="cpu"):
-    
-#     encode_length = args['encode_length']    
-#     best_loss = 1e6
-#     best_loss_location = 1e6
-#     best_loss_type = 1e6
-#     for epoch in tqdm(range(args['epochs'])):
-#         encoder.train(), decoder.train()
-#         for rally, target in train_dataloader:
-#             encoder_optimizer.zero_grad()
-#             decoder_optimizer.zero_grad()
-            
-#             # rally information
-#             player = rally[0].to(device).long()
-#             shot_type = rally[1].to(device).long()
-#             player_A_x = rally[2].to(device)
-#             player_A_y = rally[3].to(device)
-#             player_B_x = rally[4].to(device)
-#             player_B_y  = rally[5].to(device)
-            
-#             # target information
-#             target_A_x = target[0].to(device)
-#             target_A_y = target[1].to(device)
-#             target_B_x = target[2].to(device)
-#             target_B_y = target[3].to(device)
-#             target_type = target[4].to(device)
-            
-#             encoder_player = player[:, 0:2]
-#             encoder_shot_type = shot_type[:, :encode_length-1]
-#             encoder_player_A_x = player_A_x[:, :encode_length]
-#             encoder_player_A_y = player_A_y[:, :encode_length]
-#             encoder_player_B_x = player_B_x[:, :encode_length]
-#             encoder_player_B_y = player_B_y[:, :encode_length]
-
-#             encode_node_embedding, original_embedding, adjacency_matrix = encoder(encoder_player, encoder_shot_type, encoder_player_A_x, encoder_player_A_y, encoder_player_B_x, encoder_player_B_y, encode_length)
-
-#             all_A_predictions = []
-#             all_B_predictions = []
-#             all_shot_type_predictions = []
-#             decode_node_embedding = encode_node_embedding.clone()
-
-#             decoder_player = player[:, 0:2]
-
-#             first = True
-#             for step in range(encode_length, args['max_length']+1):
-#                 decoder_shot_type = shot_type[:, step-1:step]
-#                 decoder_player_A_x = player_A_x[:, step-1:step]
-#                 decoder_player_A_y = player_A_y[:, step-1:step]
-#                 decoder_player_B_x = player_B_x[:, step-1:step]
-#                 decoder_player_B_y = player_B_y[:, step-1:step]
-                
-#                 predict_xy, predict_shot_type_logit, adjacency_matrix, decode_node_embedding, original_embedding = decoder(decoder_player, step+1, decode_node_embedding, original_embedding, adjacency_matrix, 
-#                                                                                                             decoder_player_A_x, decoder_player_A_y, decoder_player_B_x, decoder_player_B_y,
-#                                                                                                             shot_type=decoder_shot_type, train=True, first=first)
-#                 all_A_predictions.append(predict_xy[:, 0, :])
-#                 all_B_predictions.append(predict_xy[:, 1, :])
-#                 all_shot_type_predictions.append(predict_shot_type_logit)
-#                 first = False
-            
-#             predict_A_xy = torch.stack(all_A_predictions, dim=1)
-#             predict_B_xy = torch.stack(all_B_predictions, dim=1)            
-#             predict_shot_type_logit = torch.stack(all_shot_type_predictions, dim=1)
-
-#             target_A_x = target_A_x[:, encode_length-1:]
-#             target_A_y = target_A_y[:, encode_length-1:]
-#             target_B_x = target_B_x[:, encode_length-1:]
-#             target_B_y = target_B_y[:, encode_length-1:]
-#             target_type = target_type[:, encode_length-2:-1]
-
-#             pad_mask = (target_type!=PAD)
-#             predict_A_xy  = predict_A_xy[pad_mask]
-#             predict_B_xy  = predict_B_xy[pad_mask]
-#             predict_shot_type_logit = predict_shot_type_logit[pad_mask]
-
-#             target_A_x = target_A_x[pad_mask]
-#             target_A_y = target_A_y[pad_mask]
-#             target_B_x = target_B_x[pad_mask]
-#             target_B_y = target_B_y[pad_mask]
-#             target_type = target_type[pad_mask]
-
-#             gold_A_xy = torch.cat((target_A_x.unsqueeze(-1), target_A_y.unsqueeze(-1)), dim=-1).to(device, dtype=torch.float)
-#             gold_B_xy = torch.cat((target_B_x.unsqueeze(-1), target_B_y.unsqueeze(-1)), dim=-1).to(device, dtype=torch.float)
-                       
-#             loss_type = shot_type_criterion(predict_shot_type_logit, target_type)
-#             loss_location = (Gaussian2D_loss(predict_A_xy, gold_A_xy) + Gaussian2D_loss(predict_B_xy, gold_B_xy)) / 2
-#             loss = loss_location + loss_type
-#             loss.backward()            
-#             encoder_optimizer.step()
-#             decoder_optimizer.step()
-
-#         # evaluate_loss, loss_location, loss_type = evaluate(valid_dataloader, encoder, decoder, location_criterion, shot_type_criterion, args, device=device)
-#         if loss < best_loss:
-#             best_loss = loss
-#             best_loss_location = loss_location
-#             best_loss_type = loss_type
-#         # if evaluate_loss < best_loss:
-#         #     best_loss = evaluate_loss
-#         #     best_loss_location = loss_location
-#         #     best_loss_type = loss_type
-#         #     save(encoder, decoder, args)
-#     save(encoder, decoder, args)
-#     return best_loss, best_loss_location, best_loss_type
-
-
-def evaluate(test_dataloader, encoder, decoder, location_MSE_criterion, location_MAE_criterion, shot_type_criterion, args, device="cpu"):
-    encode_length = args['encode_length']
-    encoder.eval(), decoder.eval()
-
-    total_instance = 0
-    total_loss = 0
-    total_loss_MSE_location = 0
-    total_loss_MAE_location = 0
-    total_loss_type = 0
+    max_length = test_dataloader.dataset.encode_length
 
     with torch.no_grad():
-        for rally, target in tqdm(test_dataloader):
-            best_loss = 1e9
-            best_location_MSE_loss = 0
-            best_location_MAE_loss = 0
-            best_type_loss = 0            
-            for sample_index in range(args['sample_num']):
-                tmp_rally_location_MSE_loss = 0
-                tmp_rally_location_MAE_loss = 0
-                tmp_rally_type_loss = 0
+        for rally_batch, target in test_dataloader:
+            target = target.to(device).float()
 
-                # rally information
-                player = rally[0].to(device).long()
-                shot_type = rally[1].to(device).long()
-                player_A_x = rally[2].to(device)
-                player_A_y = rally[3].to(device)
-                player_B_x = rally[4].to(device)
-                player_B_y  = rally[5].to(device)
-                length = rally[6]
+            # forward
+            win_logit = encoder(
+                rally_batch[0].to(device),  # player
+                rally_batch[1].to(device),  # shot_type
+                rally_batch[2].to(device),  # player_A_x
+                rally_batch[3].to(device),  # player_A_y
+                rally_batch[4].to(device),  # player_B_x
+                rally_batch[5].to(device),  # player_B_y
+                rally_batch[7].to(device),  # （如果有其他輸入）
+                max_length,                # encode 長度
+            )
 
-                # target information
-                target_A_x = target[0].to(device)
-                target_A_y = target[1].to(device)
-                target_B_x = target[2].to(device)
-                target_B_y = target[3].to(device)
-                target_type = target[4].to(device)
+            # loss
+            loss = bce_loss(win_logit, target)
+            batch_size = target.size(0)
+            total_loss += loss.item() * batch_size
+            total_n += batch_size
 
-                encoder_player = player[:, 0:2]
-                encoder_shot_type = shot_type[:, :encode_length-1]
-                encoder_player_A_x = player_A_x[:, :encode_length]
-                encoder_player_A_y = player_A_y[:, :encode_length]
-                encoder_player_B_x = player_B_x[:, :encode_length]
-                encoder_player_B_y = player_B_y[:, :encode_length]
+            # 收集機率、label
+            prob = torch.sigmoid(win_logit).cpu().numpy()
+            y_prob.extend(prob.tolist())
+            y_true.extend(target.cpu().numpy().tolist())
 
-                encode_node_embedding, original_embedding, adjacency_matrix = encoder(encoder_player, encoder_shot_type, encoder_player_A_x, encoder_player_A_y, encoder_player_B_x, encoder_player_B_y, encode_length)
-                    
-                decoder_node_embedding = encode_node_embedding.clone()
-                            
-                decoder_player = player[:, 0:2]
+    # 平均 loss
+    avg_loss = total_loss / total_n if total_n else float("nan")
 
-                decoder_player_A_x = player_A_x[:, encode_length-1:encode_length]
-                decoder_player_A_y = player_A_y[:, encode_length-1:encode_length]
-                decoder_player_B_x = player_B_x[:, encode_length-1:encode_length]
-                decoder_player_B_y = player_B_y[:, encode_length-1:encode_length]
-                
-                first = True
-                for sequence_index in range(encode_length, length[0]+1):
-                    predict_xy, predict_shot_type_logit, adjacency_matrix, decoder_node_embedding, original_embedding = decoder(decoder_player, sequence_index+1, decoder_node_embedding, original_embedding, adjacency_matrix, 
-                                                                                                                            decoder_player_A_x, decoder_player_A_y, decoder_player_B_x, decoder_player_B_y,
-                                                                                                                            shot_type=None, train=False, first=first)
+    # classification metrics
+    y_pred = [1 if p >= 0.5 else 0 for p in y_prob]
+    acc = accuracy_score(y_true, y_pred)
+    try:
+        auc = roc_auc_score(y_true, y_prob)
+    except ValueError:
+        auc = float("nan")
+    brier = brier_score_loss(y_true, y_prob)
 
-                    predict_A_xy = predict_xy[:, 0:1, :]
-                    predict_B_xy = predict_xy[:, 1:2, :]
-                    
-                    sx = torch.exp(predict_A_xy[:, -1, 2]) #sx
-                    sy = torch.exp(predict_A_xy[:, -1, 3]) #sy
-                    corr = torch.tanh(predict_A_xy[:, -1, 4]) #corr                
+    # 列印
+    print(f"Test Loss: {avg_loss:.4f} | Acc: {acc:.4f} | AUC: {auc:.4f} | Brier: {brier:.4f}")
 
-                    cov = torch.zeros(2, 2).to(player.device)
-                    cov[0, 0]= sx * sx
-                    cov[0, 1]= corr * sx * sy
-                    cov[1, 0]= corr * sx * sy
-                    cov[1, 1]= sy * sy
-                    mean = predict_A_xy[:, -1, 0:2]
-                    
-                    mvnormal = torchdist.MultivariateNormal(mean, cov)
-                    predict_A_xy = mvnormal.sample().unsqueeze(0)
-
-                    sx = torch.exp(predict_B_xy[:, -1, 2]) #sx
-                    sy = torch.exp(predict_B_xy[:, -1, 3]) #sy
-                    corr = torch.tanh(predict_B_xy[:, -1, 4]) #corr                
-
-                    cov = torch.zeros(2, 2).to(player.device)
-                    cov[0, 0]= sx * sx
-                    cov[0, 1]= corr * sx * sy
-                    cov[1, 0]= corr * sx * sy
-                    cov[1, 1]= sy * sy
-                    mean = predict_B_xy[:, -1, 0:2]
-                    
-                    mvnormal = torchdist.MultivariateNormal(mean, cov)
-                    predict_B_xy = mvnormal.sample().unsqueeze(0)                
-
-                    decoder_target_A_x = target_A_x[:, sequence_index-1:sequence_index]
-                    decoder_target_A_y = target_A_y[:, sequence_index-1:sequence_index]
-                    decoder_target_B_x = target_B_x[:, sequence_index-1:sequence_index]
-                    decoder_target_B_y = target_B_y[:, sequence_index-1:sequence_index]
-                    decoder_target_type = target_type[:, sequence_index-2]
-
-                    gold_A_xy = torch.cat((decoder_target_A_x.unsqueeze(-1), decoder_target_A_y.unsqueeze(-1)), dim=-1).to(device, dtype=torch.float)
-                    gold_B_xy = torch.cat((decoder_target_B_x.unsqueeze(-1), decoder_target_B_y.unsqueeze(-1)), dim=-1).to(device, dtype=torch.float)
-                    
-                    loss_MSE_A = location_MSE_criterion(predict_A_xy, gold_A_xy)
-                    loss_MSE_B = location_MSE_criterion(predict_B_xy, gold_B_xy)
-                    loss_MAE_A = location_MAE_criterion(predict_A_xy, gold_A_xy)
-                    loss_MAE_B = location_MAE_criterion(predict_B_xy, gold_B_xy)
-                    
-                    loss_MSE_location = loss_MSE_A + loss_MSE_B
-                    loss_MAE_location = loss_MAE_A + loss_MAE_B
-
-                    loss_type = shot_type_criterion(predict_shot_type_logit, decoder_target_type)
-                    if sample_index == 0:
-                        total_instance += 1
-                    tmp_rally_location_MSE_loss += loss_MSE_location.item()
-                    tmp_rally_location_MAE_loss += loss_MAE_location.item()
-                    tmp_rally_type_loss += loss_type.item()
-
-                    decoder_player_A_x = predict_A_xy[:, 0, 0:1]
-                    decoder_player_A_y = predict_A_xy[:, 0, 1:2]
-                    decoder_player_B_x = predict_B_xy[:, 0, 0:1]
-                    decoder_player_B_y = predict_B_xy[:, 0, 1:2]
-
-                    first = False
-                if (tmp_rally_location_MSE_loss + tmp_rally_location_MAE_loss + tmp_rally_type_loss) < best_loss:
-                    best_location_MSE_loss = tmp_rally_location_MSE_loss
-                    best_location_MAE_loss = tmp_rally_location_MAE_loss
-                    best_type_loss = tmp_rally_type_loss
-                    best_loss = tmp_rally_location_MSE_loss + tmp_rally_location_MAE_loss + tmp_rally_type_loss
-                    
-            total_loss_MSE_location += best_location_MSE_loss
-            total_loss_MAE_location += best_location_MAE_loss
-            total_loss_type += best_type_loss
-            total_loss += best_loss
-
-    total_loss = round(total_loss / total_instance, 4)
-    total_loss_type = round(total_loss_type / total_instance, 4)
-    total_loss_MSE_location = round(total_loss_MSE_location / total_instance, 4)
-    total_loss_MAE_location = round(total_loss_MAE_location / total_instance, 4)
-
-    return total_loss, total_loss_MSE_location, total_loss_MAE_location, total_loss_type
+    return avg_loss, acc, auc, brier
 
 def predict(all_dataloader, encoder, decoder, args, device="cpu"):
     encode_length = args['encode_length']
