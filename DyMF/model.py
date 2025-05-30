@@ -642,9 +642,9 @@ class Encoder(nn.Module):
         self.device = device
         self.player_num = player_num
 
-        self.player_embedding = nn.Embedding(player_num, player_dim)
+        self.player_embedding = nn.Embedding(player_num, player_dim, padding_idx=0)
         self.coordination_transform = nn.Linear(2, location_dim)
-        self.shot_embedding= nn.Embedding(type_num,type_dim)
+        self.shot_embedding= nn.Embedding(type_num,type_dim, padding_idx=0)
 
         self.model_input_linear = nn.Linear(player_dim + location_dim , hidden_size)
 
