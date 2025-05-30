@@ -35,7 +35,9 @@ def main():
     args.add_argument("--type_dim", type=int, default=16)
     args.add_argument("--location_dim", type=int, default=16)
     args.add_argument("--num_layer", type=int, default=2)
-
+    args.add_argument("--score_range",type=int,default=0)
+    args.add_argument("--maxSequenceEM",type=int,default=0)
+    
     args.add_argument("--epochs", type=int, default=100)
     #args.add_argument("--encode_length", type=int, required=True)
     args.add_argument("--dropout", type=float, default=0.1)
@@ -75,6 +77,13 @@ def main():
     if args['model_folder'] == None:
         args['model_folder'] = './model/' +  args['model_type'] + '_' + str(datetime.now().strftime("%Y-%m-%d-%H:%M"))
     train_dataloader, valid_dataloader, test_dataloader, args = prepare_dataset(args)
+
+    train_max_length = train_dataloader.dataset.encode_length
+    valid_max_length = valid_dataloader.dataset.encode_length
+    args['maxSequenceEM'] = max(train_max_length,valid_max_length)
+    train_scoreRange  = train_dataloader.dataset.score_range
+    valid_scoreRange = valid_dataloader.dataset.score_range
+    args['score_range'] = max(train_scoreRange,valid_scoreRange)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 

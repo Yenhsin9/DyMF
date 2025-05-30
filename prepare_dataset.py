@@ -7,6 +7,7 @@ from dataset import BadmintonDataset
 from torch.utils.data import DataLoader
 from torch.utils.data import default_collate
 from DyMF.model import initialize_adjacency_matrix
+from functools import partial
 
 def dynamic_collate(batch):
     # batch: list of (rally, target) tuples
@@ -15,10 +16,8 @@ def dynamic_collate(batch):
 
     # 把 labels 堆起來
     labels = torch.stack(label_tensors).long()
-
-    # 找出最長序列
-    Lmax = rallies[0][0].shape[0] 
-
+    Lmax = rallies[0][9]
+    
     # 準備 padded tensors
     rally_batch = {
         'player':    torch.zeros(B, Lmax, dtype=torch.long),
@@ -27,19 +26,24 @@ def dynamic_collate(batch):
         'A_y':       torch.zeros(B, Lmax),
         'B_x':       torch.zeros(B, Lmax),
         'B_y':       torch.zeros(B, Lmax),
+        'adj':        torch.zeros(B,13,2*Lmax,2*Lmax),
+        'score_diff':torch.zeros(B, 1, dtype=torch.long),
+        'conpoint':torch.zeros(B, 1, dtype=torch.long),
     }
 
-    # 單一迴dlly 解構、填值
+    # 單一迴圈：對每個 rally 解構、填值
     for i, rally in enumerate(rallies):
-        player, shot_type, A_x, A_y, B_x, B_y, seq_len = rally
-        seq_len = int(seq_len)
-        print(seq_len)
-        rally_batch['player'][i]    = torch.from_numpy(player)
-        rally_batch['shot_type'][i] = torch.from_numpy(shot_type)
-        rally_batch['A_x'][i]       = torch.from_numpy(A_x)
-        rally_batch['A_y'][i]       = torch.from_numpy(A_y)
-        rally_batch['B_x'][i]       = torch.from_numpy(B_x)
-        rally_batch['B_y'][i]       = torch.from_numpy(B_y)
+        player, shot_type, A_x, A_y, B_x, B_y, seq_len,scoreDiff,conpoint,maxLen,adj = rally
+        L = int(seq_len)
+        rally_batch['player'][i] = torch.tensor(player, dtype=torch.long)
+        rally_batch['shot_type'][i] = torch.tensor(shot_type, dtype=torch.long)
+        rally_batch['A_x'][i] = torch.tensor(A_x)
+        rally_batch['A_y'][i] = torch.tensor(A_y)
+        rally_batch['B_x'][i] = torch.tensor(B_x)
+        rally_batch['B_y'][i] = torch.tensor(B_y)
+        rally_batch['adj'][i] = adj.clone()
+        rally_batch['score_diff'][i] = torch.tensor(scoreDiff, dtype=torch.long)
+        rally_batch['conpoint'][i]   = torch.tensor(conpoint, dtype=torch.long)
 
     return rally_batch, labels
 
@@ -52,7 +56,7 @@ def prepare_dataset(args):
     'player_location_x','player_location_y',
     'opponent_location_x','opponent_location_y',
     'ball_round','set','match_id',
-    'getpoint_player'    
+    'getpoint_player','roundscore_A','roundscore_B'    
     ]
 
     matches = matches[used_column]
@@ -95,8 +99,8 @@ def prepare_dataset(args):
     g = torch.Generator()
     g.manual_seed(0)
 
-    train_dataloader = DataLoader(train_dataset, batch_size=args['train_batch_size'], shuffle=True, num_workers=8)
-    valid_dataloader = DataLoader(valid_dataset, batch_size=args['valid_batch_size'], shuffle=False, num_workers=8)
-    test_dataloader = DataLoader(test_dataset, batch_size=args['test_batch_size'], shuffle=False, num_workers=8)
+    train_dataloader = DataLoader(train_dataset, batch_size=args['train_batch_size'], shuffle=True, num_workers=8,collate_fn=dynamic_collate)
+    valid_dataloader = DataLoader(valid_dataset, batch_size=args['valid_batch_size'], shuffle=False, num_workers=8,collate_fn=dynamic_collate)
+    test_dataloader = DataLoader(test_dataset, batch_size=args['test_batch_size'], shuffle=False, num_workers=8,collate_fn=dynamic_collate)
     return train_dataloader, valid_dataloader, test_dataloader, args
     

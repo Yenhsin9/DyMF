@@ -638,14 +638,16 @@ class Encoder(nn.Module):
         location_dim = args['location_dim']
         hidden_size = args['hidden_size']
         num_layer = args['num_layer']
-        
+        score_range = args['score_range']
+        max_seq = args['maxSequenceEM']
+
         self.device = device
         self.player_num = player_num
 
-        self.player_embedding = nn.Embedding(player_num, player_dim, padding_idx=0)
+        self.player_embedding = nn.Embedding(player_num, player_dim, padding_idx=None)
         self.coordination_transform = nn.Linear(2, location_dim)
-        self.shot_embedding= nn.Embedding(type_num,type_dim, padding_idx=0)
-
+        self.shot_embedding= nn.Embedding(type_num,type_dim, padding_idx=None)
+        
         self.model_input_linear = nn.Linear(player_dim + location_dim , hidden_size)
 
         self.rGCN = relational_GCN(hidden_size, type_num, args['num_basis'], num_layer, device) # into 2 type (passive and active) and padding
@@ -661,8 +663,18 @@ class Encoder(nn.Module):
         self.sigmoid = nn.Sigmoid()
         self.relu = nn.ReLU()
 
+        self.ctx_bn  = nn.BatchNorm1d(2)         # 2 個 scalar 特徵
+        self.ctx_mlp = nn.Sequential(
+            nn.Linear(2, 16),
+            nn.ReLU(),
+            nn.Dropout(0.1),
+        )
+
+        self.score_emb = nn.Embedding(score_range+1, 16, padding_idx=None)
+        self.len_emb   = nn.Embedding(max_seq+1,   16, padding_idx=None)
+
         self.linear_for_dynmaic_gcn = nn.Linear(2 * args['hidden_size'], args['hidden_size'])
-        self.win_head = nn.Linear(3*args['hidden_size'], 1) #32,1
+        self.win_head = nn.Linear(4*args['hidden_size'], 1) #32,1
 
     def forward(self,
                 player,        # LongTensor[B, Lmax]
@@ -671,6 +683,8 @@ class Encoder(nn.Module):
                 player_A_y,    # FloatTensor[B, Lmax]
                 player_B_x,    # FloatTensor[B, Lmax]
                 player_B_y,    # FloatTensor[B, Lmax]
+                scoreDiff,
+                continuePoint,
                 adjacency_matrix,
                 encode_length, # int scalar Lmax
     ):
@@ -757,8 +771,14 @@ class Encoder(nn.Module):
         lastNode1 = node_embedding[batch_idx, idx-1, :] 
         lastNode2 = node_embedding[batch_idx, idx-2, :] 
         lastShotType = shotEmbedding[batch_idx,(idx//2)-1,:]
+        # raw_feats: (B,2)，分別是 score_diff, seq_len
+        raw_feats = torch.cat([scoreDiff, thisRallyL//2], dim=1)   # (B,2)
+        raw_feats = raw_feats.float()  
+        normed    = self.ctx_bn(raw_feats)                   # BatchNorm 處理尺度
+        v_ctx     = self.ctx_mlp(normed)                     # (B,ctx_dim)
+
         
-        combineLast = torch.cat([lastNode1, lastNode2,lastShotType], dim=-1) 
+        combineLast = torch.cat([lastNode1, lastNode2,lastShotType,v_ctx], dim=-1) 
         
         logits = self.win_head(combineLast).squeeze(-1)  
         win_logit = torch.sigmoid(logits)                                 

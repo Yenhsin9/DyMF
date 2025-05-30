@@ -34,13 +34,15 @@ def train(train_dataloader, valid_dataloader, encoder, decoder,
             encoder_optimizer.zero_grad()
             target = target.to(device).float()
             win_logit  = encoder(
-                rally_batch[0].to(device),
-                rally_batch[1].to(device),
-                rally_batch[2].to(device),
-                rally_batch[3].to(device),
-                rally_batch[4].to(device),
-                rally_batch[5].to(device),
-                rally_batch[7].to(device),
+                rally_batch['player'].to(device),
+                rally_batch['shot_type'].to(device),
+                rally_batch['A_x'].to(device),
+                rally_batch['A_y'].to(device),
+                rally_batch['B_x'].to(device),
+                rally_batch['B_y'].to(device),
+                rally_batch['score_diff'].to(device),
+                rally_batch['conpoint'].to(device),
+                rally_batch['adj'].to(device),
                 max_length,
             )
             x_prob.extend(win_logit.detach().cpu().numpy())
@@ -49,8 +51,8 @@ def train(train_dataloader, valid_dataloader, encoder, decoder,
             loss.backward()
             encoder_optimizer.step()
 
-            train_loss += loss.item() * rally_batch[0].size(0)
-            n_train += rally_batch[0].size(0)
+            train_loss += loss.item() * rally_batch['player'].size(0)
+            n_train += rally_batch['player'].size(0)
 
         avg_train_loss = train_loss / n_train if n_train else 0.0
         x_pred = [1 if p >= 0.5 else 0 for p in x_prob]
@@ -75,21 +77,23 @@ def train(train_dataloader, valid_dataloader, encoder, decoder,
             for rally_batch, target in valid_dataloader:
                 target = target.to(device).float()
                 win_logit = encoder(
-                    rally_batch[0].to(device),
-                    rally_batch[1].to(device),
-                    rally_batch[2].to(device),
-                    rally_batch[3].to(device),
-                    rally_batch[4].to(device),
-                    rally_batch[5].to(device),
-                    rally_batch[7].to(device),
+                    rally_batch['player'].to(device),
+                    rally_batch['shot_type'].to(device),
+                    rally_batch['A_x'].to(device),
+                    rally_batch['A_y'].to(device),
+                    rally_batch['B_x'].to(device),
+                    rally_batch['B_y'].to(device),
+                    rally_batch['score_diff'].to(device),
+                    rally_batch['conpoint'].to(device),
+                    rally_batch['adj'].to(device),
                     valid_max_length,
                 )
                 y_prob.extend(win_logit.cpu().numpy())
                 y_true.extend(target.cpu().numpy())
 
                 l = bce_loss(win_logit, target)
-                val_loss += l.item() * rally_batch[0].size(0)
-                n_val += rally_batch[0].size(0)
+                val_loss += l.item() * rally_batch['player'].size(0)
+                n_val += rally_batch['player'].size(0)
 
         avg_val_loss = val_loss / n_val if n_val else 0.0
         y_pred = [1 if p >= 0.5 else 0 for p in y_prob]
