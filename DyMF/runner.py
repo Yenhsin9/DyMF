@@ -71,6 +71,8 @@ def train(train_dataloader, valid_dataloader, encoder, decoder,
                 rally_batch[4].to(device),
                 rally_batch[5].to(device),
                 rally_batch[7].to(device),
+                rally_batch[8].to(device),
+                rally_batch[9].to(device),
                 max_length,
             )
             x_prob.extend(win_logit.detach().cpu().numpy())
@@ -112,6 +114,8 @@ def train(train_dataloader, valid_dataloader, encoder, decoder,
                     rally_batch[4].to(device),
                     rally_batch[5].to(device),
                     rally_batch[7].to(device),
+                    rally_batch[8].to(device),
+                    rally_batch[9].to(device),
                     valid_max_length,
                 )
                 y_prob.extend(win_logit.cpu().numpy())

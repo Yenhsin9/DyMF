@@ -52,7 +52,7 @@ def prepare_dataset(args):
     'player_location_x','player_location_y',
     'opponent_location_x','opponent_location_y',
     'ball_round','set','match_id',
-    'getpoint_player'    
+    'getpoint_player','roundscore_A','roundscore_B'    
     ]
 
     matches = matches[used_column]

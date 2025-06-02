@@ -75,7 +75,9 @@ def main():
     if args['model_folder'] == None:
         args['model_folder'] = './model/' +  args['model_type'] + '_' + str(datetime.now().strftime("%Y-%m-%d-%H:%M"))
     train_dataloader, valid_dataloader, test_dataloader, args = prepare_dataset(args)
-
+    TrainMAXlength = train_dataloader.dataset.encode_length
+    ValMAXlength = valid_dataloader.dataset.encode_length
+    args['max_length']=max(ValMAXlength,TrainMAXlength)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     if args['model_type'] == 'DNRI':

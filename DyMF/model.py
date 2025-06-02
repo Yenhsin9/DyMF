@@ -634,17 +634,23 @@ class Encoder(nn.Module):
         player_num = args['player_num']
         player_dim = args['player_dim']
         type_num = args['type_num']
+        type_dim = args['type_dim']
         location_dim = args['location_dim']
         hidden_size = args['hidden_size']
         num_layer = args['num_layer']
-        
+        max_len =  args['max_length']
+
         self.device = device
         self.player_num = player_num
 
         self.player_embedding = nn.Embedding(player_num, player_dim)
         self.coordination_transform = nn.Linear(2, location_dim)
+        self.time_emb = nn.Embedding(max_len + 1,8)
+        self.shot_emb   = nn.Embedding(type_num, type_dim)
+        self.shot_mu = nn.Linear(type_dim,16)
+        self.shot_theta = nn.Linear(type_dim,16)
 
-        self.model_input_linear = nn.Linear(player_dim + location_dim , hidden_size)
+        self.model_input_linear = nn.Linear(player_dim + location_dim+type_dim , hidden_size)
 
         self.rGCN = relational_GCN(hidden_size, type_num, args['num_basis'], num_layer, device) # into 2 type (passive and active) and padding
         self.gcn = GCN(args['hidden_size'], args['hidden_size'], 0.1, num_layer, args, device)
@@ -661,6 +667,12 @@ class Encoder(nn.Module):
 
         self.linear_for_dynmaic_gcn = nn.Linear(2 * args['hidden_size'], args['hidden_size'])
         self.win_head = nn.Linear(2*args['hidden_size'], 1) #32,1
+        # self.win_head = nn.Sequential(
+        #     nn.Linear(2*args['hidden_size'], args['hidden_size']),    
+        #     nn.ReLU(),
+        #     nn.Linear(args['hidden_size'], 1),
+        # )
+
 
     def forward(self,
                 player,        # LongTensor[B, Lmax]
@@ -670,10 +682,11 @@ class Encoder(nn.Module):
                 player_B_x,    # FloatTensor[B, Lmax]
                 player_B_y,    # FloatTensor[B, Lmax]
                 adjacency_matrix,
+                score_diff,
+                conpoint,
                 encode_length, # int scalar Lmax
     ):
         
-    # get the initial(encode) adjacency matrix
         batch_size = player.size(0)
         
         #adjacency_matrix = initialize_adjacency_matrix(batch_size, encode_length, shot_type)
@@ -686,7 +699,16 @@ class Encoder(nn.Module):
         coordination_transform = self.coordination_transform(coordination_sequence)
         coordination_transform = F.relu(coordination_transform)
 
+
+        shot_type = shot_type.repeat_interleave(2, dim=1)
+        shot_emb = self.shot_emb(shot_type)  # [32,120,16]
+        shot_mu = self.shot_mu(shot_emb)
+        shot_theta = self.shot_theta(shot_emb)
+       # print('shotmu: ',shot_mu.size())
+
+
         out = player.new_zeros((batch_size, 2*encode_length))
+        time_out = player.new_zeros((batch_size, 2*encode_length))
         thisRallyL = player.new_zeros((batch_size, 1))
         for i in range(batch_size):
             row = player[i]
@@ -695,21 +717,47 @@ class Encoder(nn.Module):
             k = (row != 0).sum().item()
             thisRallyL[i]=2*k
             prenum =row[:k].repeat(2)
+            pretime = row[:k].repeat(2)
+            num=1
+            for j in range(0,2*k,2):
+                pretime[j] = num/encode_length
+                pretime[j+1] = num/encode_length
+                num+=1
+            j=0
             for j in range(0,2*k,2):
                 prenum[j] = A_id
                 prenum[j+1] = B_id
             j=0
             out[i, :2*k] = prenum
+            time_out[i, :2*k] = pretime
         player = out
         player_embedding = self.player_embedding(player)
-        rally_information = torch.cat((coordination_transform, player_embedding), dim=-1)
+        # time_embedding = self.time_emb(time_out) # [32,120,8]  
+        time_out = time_out.unsqueeze(-1)
+
+        # μn * τn
+        shotEnhanced = torch.mul(shot_mu , time_out)
+        #print('μn * τn: ',shotEnhanced.size())
+        # θn + μn * τn
+        shotEnhanced = torch.add(shot_theta, shotEnhanced)
+        #print('θn + μn * τn: ',shotEnhanced.size())
+        # δn = sigmoid(θn + μn * τn)
+        shotEnhanced = self.sigmoid(shotEnhanced)
+       # print('δn = sigmoid(θn + μn * τn): ',shotEnhanced.size())
+
+        enhanced_shot_features = torch.mul(shot_emb , shotEnhanced)
+        #print('enhace shot',enhanced_shot_features.size())
         
+
+        rally_information = torch.cat((coordination_transform, player_embedding,enhanced_shot_features), dim=-1)
+
         model_input = self.model_input_linear(rally_information)
+
         # fixed node embedding in decoder
         full_graph_node_embedding = self.rGCN( model_input, adjacency_matrix)
- 
-        player_A_embedding = model_input[:, 0::2, :].clone()
-        player_B_embedding = model_input[:, 1::2, :].clone()
+
+        player_A_embedding = full_graph_node_embedding[:, 0::2, :].clone()
+        player_B_embedding = full_graph_node_embedding[:, 1::2, :].clone()
 
         partial_adjacency_matrix = torch.ones((encode_length, encode_length), dtype=int) - torch.eye(encode_length, dtype=int)
 
@@ -760,6 +808,17 @@ class Encoder(nn.Module):
         return win_logit
 
 
+
+
+        # idx = (thisRallyL).squeeze(-1).long()   # shape [32]
+        # batch_idx = torch.arange(full_graph_node_embedding.size(0), device=full_graph_node_embedding.device)  # [32]
+        # lastNode1 = full_graph_node_embedding[batch_idx, idx-1, :] #[32,16]
+        # lastNode2 = full_graph_node_embedding[batch_idx, idx-2, :] #[3216]
+        # sd = score_diff.unsqueeze(1)   
+        # cp = conpoint.unsqueeze(1)
+        # combineLast = torch.cat([lastNode1, lastNode2,sd,cp], dim=-1) #[32,32]
+        # logits = self.win_head(combineLast).squeeze(-1)  
+        # win_logit = torch.sigmoid(logits)  
 
 
 
