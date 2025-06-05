@@ -30,7 +30,7 @@ def main():
     args.add_argument("--test_batch_size", type=int, default=8)
     args.add_argument("--hidden_size", type=int, default=16)
     args.add_argument("--model_type", type=str, required=True)
-    args.add_argument("--lr", type=float, default=0.005)
+    args.add_argument("--lr", type=float, default=0.003)
     args.add_argument("--player_dim", type=int, default=16)
     args.add_argument("--type_dim", type=int, default=16)
     args.add_argument("--location_dim", type=int, default=16)
@@ -38,7 +38,7 @@ def main():
 
     args.add_argument("--epochs", type=int, default=100)
     #args.add_argument("--encode_length", type=int, required=True)
-    args.add_argument("--dropout", type=float, default=0.1)
+    args.add_argument("--dropout", type=float, default=0.25)
 
     args.add_argument("--num_basis", type=int, default=3)
 
@@ -182,7 +182,10 @@ def main():
         encoder.player_embedding.weight = decoder.player_embedding.weight
         encoder.coordination_transform.weight = decoder.coordination_transform.weight
 
-    encoder_optimizer = torch.optim.Adam(encoder.parameters(), lr=args['lr'])
+    encoder_optimizer = torch.optim.Adam(encoder.parameters(),
+    lr=args['lr'],
+    #weight_decay=1e-4
+    )
 
     location_criterion = nn.MSELoss()
     shot_type_criterion = nn.CrossEntropyLoss()

@@ -635,10 +635,10 @@ class Encoder(nn.Module):
         
         combineLast = torch.cat([lastNode1, lastNode2], dim=-1) #[32,32]
         logits = self.win_head(combineLast).squeeze(-1)  
-        win_logit = torch.sigmoid(logits)             
+        #win_logit = torch.sigmoid(logits)             
                                
 
-        return win_logit
+        return logits
 
 
 

@@ -33,118 +33,89 @@ def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     if args['model_type'] == 'DNRI':
-        from DNRI.model import Encoder, Decoder
+        from DNRI.model import Encoder
         from DNRI.runner import evaluate
         encoder = Encoder(args)
-        decoder = Decoder(args)
-        encoder.player_embedding.weight = decoder.player_embedding.weight
-        encoder.coordination_transform.weight = decoder.coordination_transform.weight
 
     if args['model_type'] == 'LSTM':
-        from LSTM.model import Encoder, Decoder
+        from LSTM.model import Encoder
         from LSTM.runner import evaluate
         encoder = Encoder(args)
-        decoder = Decoder(args)
-        encoder.player_embedding.weight = decoder.player_embedding.weight
-        encoder.type_embedding.weight = decoder.type_embedding.weight
-        encoder.coordination_transform.weight = decoder.coordination_transform.weight
 
     if args['model_type'] == 'DyMF':
         if args['use_complete_graph'] == 1:
-            from DyMF.model_complete import Encoder, Decoder
+            from DyMF.model_complete import Encoder
             from DyMF.runner import evaluate
         elif args['without_dynamic_gcn'] == 1:
-            from DyMF.model_without_dynamic_gcn import Encoder, Decoder
+            from DyMF.model_without_dynamic_gcn import Encoder
             from DyMF.runner import evaluate
         elif args['without_tactical_fusion'] == 1:
-            from DyMF.model_without_tactical_fusion import Encoder, Decoder
+            from DyMF.model_without_tactical_fusion import Encoder
             from DyMF.runner import evaluate
         elif args['without_player_style_fusion'] == 1:
-            from DyMF.model_without_player_style_fusion import Encoder, Decoder
+            from DyMF.model_without_player_style_fusion import Encoder
             from DyMF.runner import evaluate
         elif args['without_rally_fusion'] == 1:
-            from DyMF.model_without_rally_fusion import Encoder, Decoder
+            from DyMF.model_without_rally_fusion import Encoder
             from DyMF.runner import evaluate
         elif args['without_style_fusion'] == 1:
-            from DyMF.model_without_style_fusion import Encoder, Decoder
+            from DyMF.model_without_style_fusion import Encoder
             from DyMF.runner import evaluate
         else:
-            from DyMF.model import Encoder, Decoder
+            from DyMF.model import Encoder
             from DyMF.runner import evaluate
 
         encoder = Encoder(args, device)
-        decoder = Decoder(args, device)
-        encoder.player_embedding.weight = decoder.player_embedding.weight
-        encoder.coordination_transform.weight = decoder.coordination_transform.weight
-        # encoder.rGCN.type_embedding.weight = decoder.rGCN.type_embedding.weight
+
 
     if args['model_type'] == 'GCN':
         if args['use_complete_graph'] == 1:
-            from GCN.model_complete import Encoder, Decoder
+            from GCN.model_complete import Encoder
         else:
-            from GCN.model import Encoder, Decoder
+            from GCN.model import Encoder
         from GCN.runner import evaluate
         encoder = Encoder(args)
-        decoder = Decoder(args)
-        encoder.player_embedding.weight = decoder.player_embedding.weight
-        encoder.coordination_transform.weight = decoder.coordination_transform.weight
 
     if args['model_type'] == 'ShuttleNet':
         from ShuttleNet.ShuttleNet import ShotGenEncoder, ShotGenPredictor
         from ShuttleNet.runner import evaluate
         encoder = ShotGenEncoder(args)
-        decoder = ShotGenPredictor(args)
-        encoder.player_embedding.weight = decoder.shotgen_decoder.player_embedding.weight
-        encoder.type_embedding.weight = decoder.shotgen_decoder.type_embedding.weight
-        encoder.coordination_transform.weight = decoder.shotgen_decoder.coordination_transform.weight
 
     if args['model_type'] == 'rGCN':
         if args['use_complete_graph'] == 1:
-            from rGCN.model_complete import Encoder, Decoder
+            from rGCN.model_complete import Encoder
         else:
-            from rGCN.model import Encoder, Decoder
+            from rGCN.model import Encoder
         from rGCN.runner import evaluate
         encoder = Encoder(args, device)
-        decoder = Decoder(args, device)
-        encoder.player_embedding.weight = decoder.player_embedding.weight
-        encoder.coordination_transform.weight = decoder.coordination_transform.weight
+    
 
     if args['model_type'] == 'Transformer':
         from Transformer.transformer import TransformerEncoder, TransformerPredictor
         from Transformer.runner import evaluate
         encoder = TransformerEncoder(args)
-        decoder = TransformerPredictor(args)
-        encoder.player_embedding.weight = decoder.transformer_decoder.player_embedding.weight
-        encoder.type_embedding.weight = decoder.transformer_decoder.type_embedding.weight
-        encoder.coordination_transform.weight = decoder.transformer_decoder.coordination_transform.weight
 
     if args['model_type'] == 'GCN_d':
         if args['use_complete_graph'] == 1:
-            from GCN_dynamic.model_complete import Encoder, Decoder
+            from GCN_dynamic.model_complete import Encoder
         else:
-            from GCN_dynamic.model import Encoder, Decoder
+            from GCN_dynamic.model import Encoder
         from GCN_dynamic.runner import evaluate
         encoder = Encoder(args, device)
-        decoder = Decoder(args, device)
-        encoder.player_embedding.weight = decoder.player_embedding.weight
-        encoder.coordination_transform.weight = decoder.coordination_transform.weight
 
     if args['model_type'] == 'eGCN':
         if args['use_complete_graph'] == 1:
-            from eGCN.model_complete import Encoder, Decoder
+            from eGCN.model_complete import Encoder
         else:
-            from eGCN.model import Encoder, Decoder
+            from eGCN.model import Encoder
         from eGCN.runner import evaluate
         encoder = Encoder(args)
-        decoder = Decoder(args)
-        encoder.player_embedding.weight = decoder.player_embedding.weight
-        encoder.coordination_transform.weight = decoder.coordination_transform.weight
 
     encoder.load_state_dict(torch.load(args['model_folder'] + '/encoder'))
 
     encoder.to(device)
 
-    avg_loss, acc, auc, brier = evaluate(test_dataloader, encoder, args, device=device)
+    avg_loss, auc, brier = evaluate(test_dataloader, encoder, args, device=device)
 
 if __name__ == "__main__":
     main()
