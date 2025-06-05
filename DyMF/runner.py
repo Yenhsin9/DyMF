@@ -41,13 +41,13 @@ def Gaussian2D_loss(V_pred, V_trgt):
     result = torch.sum(result)
     
     return result
-def train(train_dataloader, valid_dataloader, encoder, decoder, 
+def train(train_dataloader, valid_dataloader, encoder,
           location_criterion, shot_type_criterion, 
-          encoder_optimizer, decoder_optimizer, args, device="cpu"):
+          encoder_optimizer, args, device="cpu"):
 
     bce_loss = BCELoss()
     best_val_loss = float('inf')
-    patience = args.get('patience', 5)
+    patience = args.get('patience', 10)
     no_improve = 0
     max_length = train_dataloader.dataset.encode_length
     train_auc_list=[]
@@ -73,6 +73,9 @@ def train(train_dataloader, valid_dataloader, encoder, decoder,
                 rally_batch[7].to(device),
                 rally_batch[8].to(device),
                 rally_batch[9].to(device),
+                rally_batch[10].to(device),
+                rally_batch[11].to(device),
+                rally_batch[12].to(device),
                 max_length,
             )
             x_prob.extend(win_logit.detach().cpu().numpy())
@@ -116,6 +119,9 @@ def train(train_dataloader, valid_dataloader, encoder, decoder,
                     rally_batch[7].to(device),
                     rally_batch[8].to(device),
                     rally_batch[9].to(device),
+                    rally_batch[10].to(device),
+                    rally_batch[11].to(device),
+                    rally_batch[12].to(device),
                     valid_max_length,
                 )
                 y_prob.extend(win_logit.cpu().numpy())

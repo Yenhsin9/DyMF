@@ -19,18 +19,18 @@ def main():
     args.add_argument("--prepared_data_output_path", type=str, default="./data/dataset.csv")
     args.add_argument("--already_have_data", type=int, default=1) #if have data
     args.add_argument("--preprocessed_data_path", type=str, default="./data/dataset.csv")
-    args.add_argument("--train_ratio", type=float, default=0.7)
-    args.add_argument("--valid_ratio", type=float, default=0.15)
+    args.add_argument("--train_ratio", type=float, default=0.8)
+    args.add_argument("--valid_ratio", type=float, default=0.2)
     args.add_argument("--max_length", type=int, default=100)
 
     # training
     args.add_argument("--seed", type=int, default=22)
     args.add_argument("--train_batch_size", type=int, default=32)
-    args.add_argument("--valid_batch_size", type=int, default=1)
-    args.add_argument("--test_batch_size", type=int, default=1)
+    args.add_argument("--valid_batch_size", type=int, default=8)
+    args.add_argument("--test_batch_size", type=int, default=8)
     args.add_argument("--hidden_size", type=int, default=16)
     args.add_argument("--model_type", type=str, required=True)
-    args.add_argument("--lr", type=float, default=0.01)
+    args.add_argument("--lr", type=float, default=0.005)
     args.add_argument("--player_dim", type=int, default=16)
     args.add_argument("--type_dim", type=int, default=16)
     args.add_argument("--location_dim", type=int, default=16)
@@ -81,12 +81,9 @@ def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     if args['model_type'] == 'DNRI':
-        from DNRI.model import Encoder, Decoder
+        from DNRI.model import Encoder
         from DNRI.runner import train
         encoder = Encoder(args)
-        decoder = Decoder(args)
-        encoder.player_embedding.weight = decoder.player_embedding.weight
-        encoder.coordination_transform.weight = decoder.coordination_transform.weight 
 
     if args['model_type'] == 'LSTM':
         from LSTM.model import Encoder, Decoder
@@ -99,31 +96,28 @@ def main():
 
     if args['model_type'] == 'DyMF':
         if args['use_complete_graph'] == 1:
-            from DyMF.model_complete import Encoder, Decoder
+            from DyMF.model_complete import Encoder
             from DyMF.runner import train
         elif args['without_dynamic_gcn'] == 1:
-            from DyMF.model_without_dynamic_gcn import Encoder, Decoder
+            from DyMF.model_without_dynamic_gcn import Encoder
             from DyMF.runner import train
         elif args['without_tactical_fusion'] == 1:
-            from DyMF.model_without_tactical_fusion import Encoder, Decoder
+            from DyMF.model_without_tactical_fusion import Encoder
             from DyMF.runner import train
         elif args['without_player_style_fusion'] == 1:
-            from DyMF.model_without_player_style_fusion import Encoder, Decoder
+            from DyMF.model_without_player_style_fusion import Encoder
             from DyMF.runner import train
         elif args['without_rally_fusion'] == 1:
-            from DyMF.model_without_rally_fusion import Encoder, Decoder
+            from DyMF.model_without_rally_fusion import Encoder
             from DyMF.runner import train
         elif args['without_style_fusion'] == 1:
-            from DyMF.model_without_style_fusion import Encoder, Decoder
+            from DyMF.model_without_style_fusion import Encoder
             from DyMF.runner import train
         else:
-            from DyMF.model import Encoder, Decoder
+            from DyMF.model import Encoder
             from DyMF.runner import train
         
         encoder = Encoder(args, device)
-        decoder = Decoder(args, device)
-        encoder.player_embedding.weight = decoder.player_embedding.weight
-        encoder.coordination_transform.weight = decoder.coordination_transform.weight
         # encoder.rGCN.type_embedding.weight = decoder.rGCN.type_embedding.weight
     
     if args['model_type'] == 'GCN':
@@ -189,17 +183,16 @@ def main():
         encoder.coordination_transform.weight = decoder.coordination_transform.weight
 
     encoder_optimizer = torch.optim.Adam(encoder.parameters(), lr=args['lr'])
-    decoder_optimizer = torch.optim.Adam(decoder.parameters(), lr=args['lr'])
 
     location_criterion = nn.MSELoss()
     shot_type_criterion = nn.CrossEntropyLoss()
 
-    encoder.to(device), decoder.to(device), location_criterion.to(device), shot_type_criterion.to(device)
+    encoder.to(device), location_criterion.to(device), shot_type_criterion.to(device)
 
-    total_params = sum(p.numel() for p in encoder.parameters() if p.requires_grad) + sum(p.numel() for p in decoder.parameters() if p.requires_grad)
+    total_params = sum(p.numel() for p in encoder.parameters() if p.requires_grad) 
     print(total_params)
 
-    best_val_loss = train(train_dataloader, valid_dataloader, encoder, decoder, location_criterion, shot_type_criterion, encoder_optimizer, decoder_optimizer, args, device=device)
+    best_val_loss = train(train_dataloader, valid_dataloader, encoder, location_criterion, shot_type_criterion, encoder_optimizer, args, device=device)
     save_args_file(args)
 
     print(args['model_folder'])

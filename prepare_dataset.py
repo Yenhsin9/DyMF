@@ -49,6 +49,8 @@ def prepare_dataset(args):
     
     used_column = [
     'rally_id','player','type',
+    'player_location_area','opponent_location_area',
+    'hit_area',
     'player_location_x','player_location_y',
     'opponent_location_x','opponent_location_y',
     'ball_round','set','match_id',
@@ -72,7 +74,7 @@ def prepare_dataset(args):
     for match_id in matches['match_id'].unique():
         match = matches[matches['match_id']==match_id]
         rally_index = match['rally_id'].unique()
-
+        np.random.shuffle(rally_index) 
         train_num = int(len(rally_index) * args['train_ratio'])
         valid_num = int(len(rally_index) * args['valid_ratio'])
 

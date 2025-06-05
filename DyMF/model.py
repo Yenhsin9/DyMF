@@ -225,14 +225,18 @@ class GCNDynamicLayer(nn.Module):
         self.dropout = nn.Dropout(args['dropout'])
         self.lstm = nn.LSTM(args['hidden_size'], args['hidden_size'], num_layers=1, batch_first=True)
         self.conv1d = nn.Conv1d(args['hidden_size'], args['hidden_size'], 3, padding=1)
-
-    def forward(self, node_embedding, adjacency_matrix, activation_function=None):
-        if node_embedding.size(1) < self.hidden_size:
-            padding = torch.zeros((node_embedding.size(0), self.hidden_size - node_embedding.size(1), node_embedding.size(2))).to(node_embedding.device)
-            # padding = node_embedding[:, -1:, :].repeat([1, self.hidden_size - node_embedding.size(1), 1])
-            dynamic_filter_input = torch.cat((node_embedding, padding), dim=1)
-        else:
-            dynamic_filter_input = node_embedding[:, node_embedding.size(1)-self.hidden_size:, :]
+        self.transformer_block = RGCDynamicTransformerBlock(
+            D=args['hidden_size'],        # 和你 R-GCN / Dynamic-GCN 的輸出維度相同
+            num_heads=1,         # 例如用 4 個頭
+            ffn_hidden_dim=args['hidden_size'] * 2  # FFN 中間層可以設定成 2*D、D 或 D/2 等
+        )
+    def forward(self, node_embedding, adjacency_matrix,maskMHA, activation_function=None):
+        # if node_embedding.size(1) < self.hidden_size:
+        #     padding = torch.zeros((node_embedding.size(0), self.hidden_size - node_embedding.size(1), node_embedding.size(2))).to(node_embedding.device)
+        #     # padding = node_embedding[:, -1:, :].repeat([1, self.hidden_size - node_embedding.size(1), 1])
+        #     dynamic_filter_input = torch.cat((node_embedding, padding), dim=1)
+        # else:
+        #     dynamic_filter_input = node_embedding[:, node_embedding.size(1)-self.hidden_size:, :]
 
         #dynamic_filter_input = node_embedding.view(node_embedding.size(0), -1)
     
@@ -240,8 +244,19 @@ class GCNDynamicLayer(nn.Module):
         #weight_generate_weights = self.weight_generate_weights[:dynamic_filter_input.size(1), :]
 
         #dynamic_filter = torch.matmul(dynamic_filter_input, weight_generate_weights).view(node_embedding.size(0), -1, node_embedding.size(2))
-        dynamic_filter = self.conv1d(dynamic_filter_input)
+        conv_in = node_embedding.permute(0, 2, 1)# (B, D, 60)
+        dynamic_filter = self.conv1d(conv_in)
+        conv_out = dynamic_filter.permute(0, 2, 1) # (B, 60, 16)
+        conv_out = conv_out * maskMHA
+        
+        lengths = maskMHA.sum(dim=1).squeeze(-1)
 
+        packed_input = torch.nn.utils.rnn.pack_padded_sequence(
+            conv_out,         # (B, seq_len=60, D)
+            lengths.cpu(),     # 需要 .cpu()，告诉它每个样本到底有多长
+            batch_first=True,
+            enforce_sorted=False  # 如果 lengths 没有经过排序，就设 False
+        )
         hidden = torch.zeros((1, node_embedding.size(0), self.hidden_size))
         # hidden = torch.empty(1, node_embedding.size(0), self.hidden_size)
         # hidden = nn.init.xavier_uniform_(hidden, gain=nn.init.calculate_gain('relu'))
@@ -251,10 +266,19 @@ class GCNDynamicLayer(nn.Module):
         # cell = nn.init.xavier_uniform_(cell, gain=nn.init.calculate_gain('relu'))
         cell = cell.to(self.device)
 
-        linear_weights, (hidden, cell) = self.lstm(dynamic_filter, (hidden, cell))        
+        linear_weights, (hidden, cell) = self.lstm(packed_input, (hidden, cell)) 
+        lstm_out, _ = torch.nn.utils.rnn.pad_packed_sequence(
+            linear_weights,
+            batch_first=True,
+            total_length=node_embedding.size(1)
+        )
+        # dynamic_filter = dynamic_filter.permute(0, 2, 1)  
+        # H3, pooled, attn_w = self.transformer_block(dynamic_filter,key_padding_mask=maskMHA)     
+        # linear_weights = H3
         node_embedding = torch.matmul(adjacency_matrix, node_embedding)
-
-        output = torch.matmul(node_embedding, linear_weights)
+        
+        # output = torch.matmul(node_embedding,lstm_out)
+        output = node_embedding * lstm_out
         output = activation_function(output)
         output = self.dropout(output)
 
@@ -268,14 +292,14 @@ class GCN(nn.Module):
         self.hidden_activation_function = nn.ReLU()
         self.output_activation_function = nn.Sigmoid()
 
-    def forward(self, node_embedding, adjacency_matrix):
+    def forward(self, node_embedding, adjacency_matrix,maskMHA):
 
         adjacency_matrix = preprocess_adj(adjacency_matrix).float().to(node_embedding.device)
         for i, gcn_dynamic_layer in enumerate(self.gcn_dynamic_layer_list):
             if i == len(self.gcn_dynamic_layer_list) - 1:
-                node_embedding = gcn_dynamic_layer(node_embedding, adjacency_matrix, self.output_activation_function)
+                node_embedding = gcn_dynamic_layer(node_embedding, adjacency_matrix,maskMHA, self.output_activation_function)
             else:
-                node_embedding = gcn_dynamic_layer(node_embedding, adjacency_matrix, self.hidden_activation_function)
+                node_embedding = gcn_dynamic_layer(node_embedding, adjacency_matrix,maskMHA, self.hidden_activation_function)
         return node_embedding
 
 class relational_GCN_layer(nn.Module):
@@ -335,298 +359,91 @@ class relational_GCN(nn.Module):
                 node_embedding = rgcn_layer(node_embedding, adjacency_matrix, self.hidden_activation_function)
         return node_embedding     
 
-class Decoder(nn.Module):
-    def __init__(self, args, device):
-        super(Decoder, self).__init__()
-        player_num = args['player_num']
-        player_dim = args['player_dim']
+class RGCDynamicTransformerBlock(nn.Module):
+    def __init__(self, D, num_heads, ffn_hidden_dim):
+        """
+        Args:
+            D:       R-GCN & Dynamic-GCN 輸出隱藏維度 (也就是 Transformer 裡 embedding 的維度)
+            num_heads: MultiheadAttention 的頭數
+            ffn_hidden_dim: FFN 中間層的隱藏維度
+        """
+        super().__init__()
+        # ---- 1. Multi-Head Attention 層 ----
+        # PyTorch 要求的形狀為 (T, B, D)，因此後面要轉一下維度
+        self.mha = nn.MultiheadAttention(embed_dim=D, num_heads=num_heads, batch_first=False)
 
-        type_num = args['type_num']
+        # ---- 2. LayerNorm (加在 attention 的 residual 之後) ----
+        self.norm1 = nn.LayerNorm(D)
 
-        location_dim = args['location_dim']
+        # ---- 3. Feed-Forward Network (FFN) ----
+        # 最簡單的設計：Linear(D → ffn_hidden_dim) + ReLU + Linear(ffn_hidden_dim → D)
+        self.ffn = nn.Sequential(
+            nn.Linear(D, ffn_hidden_dim),
+            nn.ReLU(),
+            nn.Linear(ffn_hidden_dim, D)
+        )
 
-        hidden_size = args['hidden_size']
+        # ---- 4. 第二層 LayerNorm (加在 FFN 的 residual 之後) ----
+        self.norm2 = nn.LayerNorm(D)
 
-        num_layer = args['num_layer']
+    def forward(self, H, key_padding_mask=None):
+        """
+        Args:
+            H: torch.Tensor, shape = (B, T, D)
+               （已經是 R-GCN + Dynamic-GCN 相加後的結果）
+        Returns:
+            pooled: torch.Tensor, shape = (B, D)   # Pooling 後拿來做下游預測
+            attn_weights: torch.Tensor, shape = (B, T, T)  # 如果你想觀察 Attention 的注意力矩陣（可選）
+        """
+        B, T, D = H.shape
 
-        self.player_num = args['player_num']
-        self.type_num = args['type_num']
+        # ===== 1. Multi-Head Attention =====
+        # nn.MultiheadAttention 預設輸入 shape = (L, N, E)，
+        # 其中 L = 序列長度, N = batch_size, E = embed_dim(D)。
+        # 所以先把 H: (B, T, D) → (T, B, D)：
+        H_t_first = H.transpose(0, 1)  # (T, B, D)
 
-        self.player_embedding = nn.Embedding(player_num, player_dim)
-        self.coordination_transform = nn.Linear(2, location_dim)
+        # Self-Attention 的 Q, K, V 都是同一個 H_t_first
+        # attn_output shape = (T, B, D)
+        # attn_weights shape = (B, num_heads, T, T) （若 batch_first=False）
+        attn_output, attn_weights = self.mha(
+            query=H_t_first,
+            key=H_t_first,
+            value=H_t_first,
+            need_weights=True,  # 如果你想拿到注意力權重矩陣
+            key_padding_mask=key_padding_mask
+        )
 
-        self.model_input_linear = nn.Linear(player_dim + location_dim, hidden_size)
+        # 把 attn_output (T, B, D) → (B, T, D)：
+        attn_output = attn_output.transpose(0, 1)  # (B, T, D)
 
-        self.rGCN = relational_GCN(hidden_size, type_num, args['num_basis'], num_layer, device)
-        self.gcn = GCN(args['hidden_size'], args['hidden_size'], 0.1, num_layer, args, device)
+        # ===== 2. Add & Norm after Attention =====
+        # 殘差連接：attn_output + H
+        # 然後對 D 維度做 LayerNorm
+        H2 = self.norm1(H + attn_output)  # (B, T, D)
 
-        self.predict_shot_type = nn.Linear(hidden_size * 2, type_num)
-        self.predict_xy = nn.Linear(hidden_size*2, 10)
+        # ===== 3. Feed-Forward Network =====
+        # FFN 作用在最後一個維度 D
+        # 先展開 (B*T, D) 再丟到 ffn → (B*T, D)，再 reshape 回 (B, T, D)
+        H2_flat = H2.view(B*T, D)          # (B*T, D)
+        ffn_out = self.ffn(H2_flat)        # (B*T, D)
+        ffn_out = ffn_out.view(B, T, D)    # (B, T, D)
 
-        self.rgcn_weight = nn.Linear(args['hidden_size'], 1)
-        self.gcn_weight = nn.Linear(args['hidden_size'], 1)
+        # ===== 4. Add & Norm after FFN =====
+        H3 = self.norm2(H2 + ffn_out)      # (B, T, D)
 
-        self.partial_adjacency_matrix = torch.ones((args['max_length']+1, args['max_length']+1), dtype=int) - torch.eye(args['max_length']+1, dtype=int)
+        # ===== 5. Pooling =====
+        # 圖片上顯示「Pooling」，這裡給兩種常見作法：
+        #  (a) 全局平均池化：把時間維度上求平均 → (B, D)
+        #pooled = torch.mean(H3, dim=1)      # (B, D)
+        #  (b) 如果想用「取最後一個 time-step」作為 Pooling，也可以：
+        pooled = H3[:, -1, :]             # (B, D)
 
-        self.sigmoid = nn.Sigmoid()
-        
-        self.co_attention = ParallelCoAttentionNetwork(args['hidden_size'], args['hidden_size'], src_length_masking=False)
-        self.co_attention_linear_A = nn.Linear(args['hidden_size'], 1)
-        self.co_attention_linear_B = nn.Linear(args['hidden_size'], 1)
+        # 如果你用 need_weights=True 取得 attn_weights，注意 attn_weights shape 可能是 (B, num_heads, T, T)
+        # 你可以根據需求把它 reshape 或取平均到 (B, T, T) 或取某些 head
+        # 例如：torch.mean(attn_weights, dim=1) → (B, T, T)
 
-        self.original_weight = nn.Linear(args['hidden_size']*2, 1)
-        self.passed_weight = nn.Linear(args['hidden_size']*2, 1)
-
-        self.linear_for_dynmaic_gcn = nn.Linear(args['hidden_size'] + args['player_dim'], args['hidden_size'])
-
-    def forward(self, player, step, encode_node_embedding, original_embedding, adjacency_matrix, 
-                player_A_x, player_A_y, player_B_x, player_B_y, 
-                shot_type=None, train=False, first=False):
-        batch_size = player.size(0)
-        player_embedding = self.player_embedding(player)
-
-        prev_player_A_coordination = torch.cat((player_A_x.unsqueeze(2), player_A_y.unsqueeze(2)), dim=2).float()
-        prev_player_B_coordination = torch.cat((player_B_x.unsqueeze(2), player_B_y.unsqueeze(2)), dim=2).float()
-
-        prev_coordination_sequence = torch.stack((prev_player_A_coordination, prev_player_B_coordination), dim=2).view(player.size(0), -1, 2)
-        prev_coordination_transform = self.coordination_transform(prev_coordination_sequence)
-        prev_coordination_transform = F.relu(prev_coordination_transform)
-        rally_information = torch.cat((prev_coordination_transform, player_embedding), dim=-1)
-        initial_embedding = self.model_input_linear(rally_information)
-
-        if not first:            
-            player_A_coordination = torch.cat((player_A_x.unsqueeze(2), player_A_y.unsqueeze(2)), dim=2).float()
-            player_B_coordination = torch.cat((player_B_x.unsqueeze(2), player_B_y.unsqueeze(2)), dim=2).float()
-            coordination_sequence = torch.stack((player_A_coordination, player_B_coordination), dim=2).view(player.size(0), -1, 2)
-            coordination_transform = self.coordination_transform(coordination_sequence)
-            coordination_transform = F.relu(coordination_transform)
-            model_input = torch.cat((coordination_transform, player_embedding), dim=-1)
-            model_input = self.model_input_linear(model_input)
-
-            # original_weight = self.sigmoid(self.original_weight(original_embedding[:, -2:, :].view(batch_size, 1, -1)))
-            # passed_weight = self.sigmoid(self.passed_weight(encode_node_embedding[:, -2:, :].view(batch_size, 1, -1)))
-            # tmp = original_embedding * original_weight + passed_weight * encode_node_embedding
-            
-            # original_embedding = torch.cat((original_embedding, model_input), dim=1)
-
-            model_input = torch.cat((encode_node_embedding, model_input), dim=1)
-
-            player_A_embedding = model_input[:, 0::2, :].clone()
-            player_B_embedding = model_input[:, 1::2, :].clone()
-            partial_adjacency_matrix = self.partial_adjacency_matrix[:player_A_embedding.size(1), :player_A_embedding.size(1)].to(player.device)
-            partial_adjacency_matrix = torch.tile(partial_adjacency_matrix, (batch_size, 1, 1))
-
-            dynamic_gcn_input_A = torch.cat((player_A_embedding, player_embedding[:, 0:1, :].repeat(1, player_A_embedding.size(1), 1)), dim=-1)
-            dynamic_gcn_input_B = torch.cat((player_B_embedding, player_embedding[:, 1:2, :].repeat(1, player_B_embedding.size(1), 1)), dim=-1)
-
-            dynamic_gcn_input_A = self.linear_for_dynmaic_gcn(dynamic_gcn_input_A)
-            dynamic_gcn_input_B = self.linear_for_dynmaic_gcn(dynamic_gcn_input_B)
-
-            player_A_node_embedding = self.gcn(dynamic_gcn_input_A, partial_adjacency_matrix)
-            player_B_node_embedding = self.gcn(dynamic_gcn_input_B, partial_adjacency_matrix)
-            
-            full_graph_node_embedding = self.rGCN(model_input, adjacency_matrix)
-            tmp_embedding = torch.zeros((full_graph_node_embedding.size(0), full_graph_node_embedding.size(1), full_graph_node_embedding.size(2))).to(player.device)
-            
-            _, _, A_weight, B_weight =  self.co_attention(player_A_node_embedding.permute(0, 2, 1), player_B_node_embedding, batch_size)
-            A_weight = self.sigmoid(self.co_attention_linear_A(A_weight))
-            B_weight = self.sigmoid(self.co_attention_linear_B(B_weight))
-
-            player_A_node_embedding = player_A_node_embedding + B_weight.unsqueeze(1) * player_B_node_embedding
-            player_B_node_embedding = player_B_node_embedding + A_weight.unsqueeze(1) * player_A_node_embedding
-
-            rgcn_embedding_A = full_graph_node_embedding[:, 0::2, :].clone()[:, -1:, :].view(batch_size, -1)
-            rgcn_embedding_B = full_graph_node_embedding[:, 1::2, :].clone()[:, -1:, :].view(batch_size, -1)
-            gcn_embedding_A = player_A_node_embedding[:, -1:, :].clone().view(batch_size, -1)
-            gcn_embedding_B = player_B_node_embedding[:, -1:, :].clone().view(batch_size, -1)
-
-            rgcn_weight_A = self.rgcn_weight(rgcn_embedding_A)
-            rgcn_weight_B = self.rgcn_weight(rgcn_embedding_B)
-            gcn_weight_A = self.gcn_weight(gcn_embedding_A)
-            gcn_weight_B = self.gcn_weight(gcn_embedding_B)
-            
-            w_rgcn_A = self.sigmoid(rgcn_weight_A)
-            w_gcn_A = self.sigmoid(gcn_weight_A)
-            w_rgcn_B = self.sigmoid(rgcn_weight_B)
-            w_gcn_B = self.sigmoid(gcn_weight_B)
-
-            tmp_embedding[:, 0::2, :] = full_graph_node_embedding[:, 0::2, :] * w_rgcn_A.unsqueeze(1) + player_A_node_embedding * w_gcn_A.unsqueeze(1)
-            tmp_embedding[:, 1::2, :] = full_graph_node_embedding[:, 1::2, :] * w_rgcn_B.unsqueeze(1) + player_B_node_embedding * w_gcn_B.unsqueeze(1)
-
-            passed_node_embedding = torch.cat((encode_node_embedding[:, :-2, :], tmp_embedding[:, -4:, :]), dim=1)
-        else:
-            passed_node_embedding = encode_node_embedding.clone()
-
-        tmp_adjacency_matrix = update_adjacency_matrix(batch_size, step, adjacency_matrix, shot_type_predict=True)
-
-        # original_weight = self.sigmoid(self.original_weight(original_embedding[:, -2:, :].view(batch_size, 1, -1)))
-        # passed_weight = self.sigmoid(self.passed_weight(passed_node_embedding[:, -2:, :].view(batch_size, 1, -1)))
-        # tmp = original_weight * original_embedding + passed_weight * passed_node_embedding
-        model_input = torch.cat((passed_node_embedding, initial_embedding), dim=1)
-
-        # =============================================================================================================================================
-        tmp_model_input = model_input[:, :-2, :]
-        player_A_embedding = tmp_model_input[:, 0::2, :].clone()
-        player_B_embedding = tmp_model_input[:, 1::2, :].clone()
-
-        if step % 2 == 0:            
-            player_B_embedding = torch.cat((player_B_embedding, model_input[:, (step-1)*2+1:(step-1)*2+1+1, :]), dim=1)
-        if step % 2 == 1:
-            player_A_embedding = torch.cat((player_A_embedding, model_input[:, (step-1)*2:(step-1)*2+1, :]), dim=1)
-        
-        partial_adjacency_matrix_A = self.partial_adjacency_matrix[:player_A_embedding.size(1), :player_A_embedding.size(1)].to(player.device)
-        partial_adjacency_matrix_B = self.partial_adjacency_matrix[:player_B_embedding.size(1), :player_B_embedding.size(1)].to(player.device)
-        
-        partial_adjacency_matrix_A = torch.tile(partial_adjacency_matrix_A, (batch_size, 1, 1))
-        partial_adjacency_matrix_B = torch.tile(partial_adjacency_matrix_B, (batch_size, 1, 1))
-
-        dynamic_gcn_input_A = torch.cat((player_A_embedding, player_embedding[:, 0:1, :].repeat(1, player_A_embedding.size(1), 1)), dim=-1)
-        dynamic_gcn_input_B = torch.cat((player_B_embedding, player_embedding[:, 1:2, :].repeat(1, player_B_embedding.size(1), 1)), dim=-1)
-
-        dynamic_gcn_input_A = self.linear_for_dynmaic_gcn(dynamic_gcn_input_A)
-        dynamic_gcn_input_B = self.linear_for_dynmaic_gcn(dynamic_gcn_input_B)
-
-        player_A_node_embedding = self.gcn(dynamic_gcn_input_A, partial_adjacency_matrix_A)
-        player_B_node_embedding = self.gcn(dynamic_gcn_input_B, partial_adjacency_matrix_B)
-
-        if step % 2 == 0:            
-            tmp_model_input = model_input[:, torch.arange(model_input.size(1))!=(step-1)*2]
-            tmp_adjacency_matrix = tmp_adjacency_matrix[:, :, torch.arange(tmp_adjacency_matrix.size(2))!=(step-1)*2]
-            tmp_adjacency_matrix = tmp_adjacency_matrix[:, :, :, torch.arange(tmp_adjacency_matrix.size(3))!=(step-1)*2]
-        if step % 2 == 1:
-            tmp_model_input = model_input[:, torch.arange(model_input.size(1))!=(step-1)*2+1]
-            tmp_adjacency_matrix = tmp_adjacency_matrix[:, :, torch.arange(tmp_adjacency_matrix.size(2))!=(step-1)*2+1]
-            tmp_adjacency_matrix = tmp_adjacency_matrix[:, :, :, torch.arange(tmp_adjacency_matrix.size(3))!=(step-1)*2+1]
-
-        full_graph_node_embedding = self.rGCN(tmp_model_input, tmp_adjacency_matrix)
-        padding_full_graph_node_embedding = torch.zeros((full_graph_node_embedding .size(0), full_graph_node_embedding.size(1)+1, full_graph_node_embedding .size(2))).to(player.device)
-
-        if step % 2 == 0:
-            padding_full_graph_node_embedding[:, :-2, :] = full_graph_node_embedding[:, :-1, :]
-            padding_full_graph_node_embedding[:, -1, :] = full_graph_node_embedding[:, -1, :]  
-        if step % 2 == 1: 
-            padding_full_graph_node_embedding[:, :-1, :] = full_graph_node_embedding
-
-        full_graph_node_embedding = padding_full_graph_node_embedding.clone()
-        tmp_embedding = torch.zeros((full_graph_node_embedding.size(0), full_graph_node_embedding.size(1), full_graph_node_embedding.size(2))).to(player.device)
-
-        _, _, A_weight, B_weight =  self.co_attention(player_A_node_embedding.permute(0, 2, 1), player_B_node_embedding, batch_size)
-        A_weight = self.sigmoid(self.co_attention_linear_A(A_weight))
-        B_weight = self.sigmoid(self.co_attention_linear_B(B_weight))
-
-        if step % 2 == 0:            
-            player_A_node_embedding = torch.cat((player_A_node_embedding, torch.zeros((player_A_node_embedding.size(0), 1, player_A_node_embedding.size(2))).to(player.device)), dim=1)
-        if step % 2 == 1:
-            player_B_node_embedding = torch.cat((player_B_node_embedding, torch.zeros((player_B_node_embedding.size(0), 1, player_B_node_embedding.size(2))).to(player.device)), dim=1)
-
-        player_A_node_embedding = player_A_node_embedding + B_weight.unsqueeze(1) * player_B_node_embedding
-        player_B_node_embedding = player_B_node_embedding + A_weight.unsqueeze(1) * player_A_node_embedding
-
-        if step % 2 == 0:
-            rgcn_embedding_A = full_graph_node_embedding[:, 0::2, :].clone()[:, -2:-1, :].view(batch_size, -1)
-            rgcn_embedding_B = full_graph_node_embedding[:, 1::2, :].clone()[:, -1:, :].view(batch_size, -1)
-            gcn_embedding_A = player_A_node_embedding[:, -2:-1, :].clone().view(batch_size, -1)
-            gcn_embedding_B = player_B_node_embedding[:, -1:, :].clone().view(batch_size, -1)
-        if step % 2 == 1: 
-            rgcn_embedding_A = full_graph_node_embedding[:, 0::2, :].clone()[:, -1:, :].view(batch_size, -1)
-            rgcn_embedding_B = full_graph_node_embedding[:, 1::2, :].clone()[:, -2:-1, :].view(batch_size, -1)
-            gcn_embedding_A = player_A_node_embedding[:, -1:, :].clone().view(batch_size, -1)
-            gcn_embedding_B = player_B_node_embedding[:, -2:-1, :].clone().view(batch_size, -1)
-        
-        rgcn_weight_A = self.rgcn_weight(rgcn_embedding_A)
-        rgcn_weight_B = self.rgcn_weight(rgcn_embedding_B)
-        gcn_weight_A = self.gcn_weight(gcn_embedding_A)
-        gcn_weight_B = self.gcn_weight(gcn_embedding_B)
-        
-        w_rgcn_A = self.sigmoid(rgcn_weight_A)
-        w_gcn_A = self.sigmoid(gcn_weight_A)
-        w_rgcn_B = self.sigmoid(rgcn_weight_B)
-        w_gcn_B = self.sigmoid(gcn_weight_B)
-
-        tmp_embedding[:, 0::2, :] = full_graph_node_embedding[:, 0::2, :] * w_rgcn_A.unsqueeze(1) + player_A_node_embedding * w_gcn_A.unsqueeze(1)
-        tmp_embedding[:, 1::2, :] = full_graph_node_embedding[:, 1::2, :] * w_rgcn_B.unsqueeze(1) + player_B_node_embedding * w_gcn_B.unsqueeze(1)
-        
-        shot_type_predict = torch.cat((passed_node_embedding[:, :-2, :], tmp_embedding[:, -4:, :]), dim=1)
-        
-        if step % 2 == 0:
-            black_node = shot_type_predict[:, (step - 1) * 2 + 1, :]
-            white_node = shot_type_predict[:, (step - 2) * 2, :]
-        if step % 2 == 1:
-            black_node = shot_type_predict[:, (step - 2) * 2 + 1, :]
-            white_node = shot_type_predict[:, (step - 1) * 2, :]
-
-        type_predict_node = torch.cat((black_node, white_node), dim=-1) 
-        predict_shot_type_logit = self.predict_shot_type(type_predict_node)
-        # ==================================================================================================================================================================
-        adjacency_matrix = update_adjacency_matrix(batch_size, step, adjacency_matrix)
-        if train:
-            for batch in range(batch_size):
-                if step % 2 == 0:
-                    adjacency_matrix[batch][shot_type[batch][0]][(step - 2) * 2][(step - 1) * 2 + 1] = 1
-                    adjacency_matrix[batch][shot_type[batch][0]][(step - 1) * 2 + 1][(step - 2) * 2] = 1
-                if step % 2 == 1:
-                    adjacency_matrix[batch][shot_type[batch][0]][(step - 1) * 2][(step - 2) * 2 + 1] = 1
-                    adjacency_matrix[batch][shot_type[batch][0]][(step - 2) * 2 + 1][(step - 1) * 2] = 1
-        else:
-            weights = predict_shot_type_logit[0, 1:]
-            weights = F.softmax(weights, dim=0)
-            predict_shot_type = torch.multinomial(weights, 1).unsqueeze(0) + 1
-
-            for batch in range(batch_size):
-                if step % 2 == 0:
-                    adjacency_matrix[batch][predict_shot_type[batch][0]][(step - 2) * 2][(step - 1) * 2 + 1] = 1
-                    adjacency_matrix[batch][predict_shot_type[batch][0]][(step - 1) * 2 + 1][(step - 2) * 2] = 1
-                if step % 2 == 1:
-                    adjacency_matrix[batch][predict_shot_type[batch][0]][(step - 1) * 2][(step - 2) * 2 + 1] = 1
-                    adjacency_matrix[batch][predict_shot_type[batch][0]][(step - 2) * 2 + 1][(step - 1) * 2] = 1
-
-        player_A_embedding = model_input[:, 0::2, :].clone()
-        player_B_embedding = model_input[:, 1::2, :].clone()
-        partial_adjacency_matrix = self.partial_adjacency_matrix[:player_A_embedding.size(1), :player_A_embedding.size(1)].to(player.device)
-        partial_adjacency_matrix = torch.tile(partial_adjacency_matrix, (batch_size, 1, 1))
-
-        dynamic_gcn_input_A = torch.cat((player_A_embedding, player_embedding[:, 0:1, :].repeat(1, player_A_embedding.size(1), 1)), dim=-1)
-        dynamic_gcn_input_B = torch.cat((player_B_embedding, player_embedding[:, 1:2, :].repeat(1, player_B_embedding.size(1), 1)), dim=-1)
-
-        dynamic_gcn_input_A = self.linear_for_dynmaic_gcn(dynamic_gcn_input_A)
-        dynamic_gcn_input_B = self.linear_for_dynmaic_gcn(dynamic_gcn_input_B)
-
-        player_A_node_embedding = self.gcn(dynamic_gcn_input_A, partial_adjacency_matrix)
-        player_B_node_embedding = self.gcn(dynamic_gcn_input_B, partial_adjacency_matrix)
-        
-        full_graph_node_embedding = self.rGCN(model_input, adjacency_matrix)
-        tmp_embedding = torch.zeros((full_graph_node_embedding.size(0), full_graph_node_embedding.size(1), full_graph_node_embedding.size(2))).to(player.device)
-
-        _, _, A_weight, B_weight =  self.co_attention(player_A_node_embedding.permute(0, 2, 1), player_B_node_embedding, batch_size)
-        A_weight = self.sigmoid(self.co_attention_linear_A(A_weight))
-        B_weight = self.sigmoid(self.co_attention_linear_B(B_weight))
-
-        player_A_node_embedding = player_A_node_embedding + B_weight.unsqueeze(1) * player_B_node_embedding
-        player_B_node_embedding = player_B_node_embedding + A_weight.unsqueeze(1) * player_A_node_embedding
-
-        rgcn_embedding_A = full_graph_node_embedding[:, 0::2, :].clone()[:, -1:, :].view(batch_size, -1)
-        rgcn_embedding_B = full_graph_node_embedding[:, 1::2, :].clone()[:, -1:, :].view(batch_size, -1)
-        gcn_embedding_A = player_A_node_embedding[:, -1:, :].clone().view(batch_size, -1)
-        gcn_embedding_B = player_B_node_embedding[:, -1:, :].clone().view(batch_size, -1)
-
-        rgcn_weight_A = self.rgcn_weight(rgcn_embedding_A)
-        rgcn_weight_B = self.rgcn_weight(rgcn_embedding_B)
-        gcn_weight_A = self.gcn_weight(gcn_embedding_A)
-        gcn_weight_B = self.gcn_weight(gcn_embedding_B)
-        
-        w_rgcn_A = self.sigmoid(rgcn_weight_A)
-        w_gcn_A = self.sigmoid(gcn_weight_A)
-        w_rgcn_B = self.sigmoid(rgcn_weight_B)
-        w_gcn_B = self.sigmoid(gcn_weight_B)
-
-        tmp_embedding[:, 0::2, :] = full_graph_node_embedding[:, 0::2, :] * w_rgcn_A.unsqueeze(1) + player_A_node_embedding * w_gcn_A.unsqueeze(1)
-        tmp_embedding[:, 1::2, :] = full_graph_node_embedding[:, 1::2, :] * w_rgcn_B.unsqueeze(1) + player_B_node_embedding * w_gcn_B.unsqueeze(1)
-
-        last_two_node = tmp_embedding[:, -2:, :].view(batch_size, -1)
-        predict_xy = self.predict_xy(last_two_node)             
-        predict_xy = predict_xy.view(batch_size, 2, 5)
-        
-        return predict_xy, predict_shot_type_logit, adjacency_matrix, passed_node_embedding, original_embedding
+        return H3,pooled, attn_weights
 
 class Encoder(nn.Module):
     def __init__(self, args, device):
@@ -643,12 +460,17 @@ class Encoder(nn.Module):
         self.device = device
         self.player_num = player_num
 
-        self.player_embedding = nn.Embedding(player_num, player_dim)
+        self.player_embedding = nn.Embedding(player_num, player_dim,padding_idx=0)
         self.coordination_transform = nn.Linear(2, location_dim)
-        self.time_emb = nn.Embedding(max_len + 1,8)
-        self.shot_emb   = nn.Embedding(type_num, type_dim)
+        self.time_emb = nn.Embedding(max_len + 1,8,padding_idx=0)
+        self.shot_emb   = nn.Embedding(type_num, type_dim,padding_idx=0)
         self.shot_mu = nn.Linear(type_dim,16)
         self.shot_theta = nn.Linear(type_dim,16)
+        self.area_embedding = nn.Embedding(
+            num_embeddings=11,                
+            embedding_dim=hidden_size,          
+            padding_idx=0                     
+        )
 
         self.model_input_linear = nn.Linear(player_dim + location_dim+type_dim , hidden_size)
 
@@ -665,50 +487,50 @@ class Encoder(nn.Module):
         self.sigmoid = nn.Sigmoid()
         self.relu = nn.ReLU()
 
+        self.score_diff_fc    = nn.Linear(1, location_dim)
+        self.consec_score_fc  = nn.Linear(1, location_dim)
+
         self.linear_for_dynmaic_gcn = nn.Linear(2 * args['hidden_size'], args['hidden_size'])
         self.win_head = nn.Linear(2*args['hidden_size'], 1) #32,1
-        # self.win_head = nn.Sequential(
-        #     nn.Linear(2*args['hidden_size'], args['hidden_size']),    
-        #     nn.ReLU(),
-        #     nn.Linear(args['hidden_size'], 1),
+  
+        # self.transformer_block = RGCDynamicTransformerBlock(
+        #     D=hidden_size,        # 和你 R-GCN / Dynamic-GCN 的輸出維度相同
+        #     num_heads=1,         # 例如用 4 個頭
+        #     ffn_hidden_dim=hidden_size * 2  # FFN 中間層可以設定成 2*D、D 或 D/2 等
         # )
-
-
+        # self.final_linear = nn.Linear(hidden_size, 1)
+    
     def forward(self,
-                player,        # LongTensor[B, Lmax]
-                shot_type,     # LongTensor[B, Lmax]
-                player_A_x,    # FloatTensor[B, Lmax]
-                player_A_y,    # FloatTensor[B, Lmax]
-                player_B_x,    # FloatTensor[B, Lmax]
-                player_B_y,    # FloatTensor[B, Lmax]
+                player,     
+                shot_type,    
+                player_A_x,   
+                player_A_y,    
+                player_B_x,   
+                player_B_y,   
                 adjacency_matrix,
                 score_diff,
                 conpoint,
-                encode_length, # int scalar Lmax
+                player_A_loc,
+                player_B_loc,
+                mask,
+                encode_length, 
     ):
         
         batch_size = player.size(0)
-        
-        #adjacency_matrix = initialize_adjacency_matrix(batch_size, encode_length, shot_type)
-        player_A_coordination = torch.cat((player_A_x.unsqueeze(2), player_A_y.unsqueeze(2)), dim=2).float()
-        player_B_coordination = torch.cat((player_B_x.unsqueeze(2), player_B_y.unsqueeze(2)), dim=2).float()
-
-
-        # interleave the player and opponent location
-        coordination_sequence = torch.stack((player_A_coordination, player_B_coordination), dim=2).view(player.size(0), -1, 2)
-        coordination_transform = self.coordination_transform(coordination_sequence)
-        coordination_transform = F.relu(coordination_transform)
-
+       
+        AB = player_A_loc.new_zeros((batch_size, encode_length*2))  
+        AB[:, 0::2] = player_A_loc   
+        AB[:, 1::2] = player_B_loc    
+        AB = AB.long()
+        embedded_player_area=self.area_embedding(AB)
 
         shot_type = shot_type.repeat_interleave(2, dim=1)
         shot_emb = self.shot_emb(shot_type)  # [32,120,16]
         shot_mu = self.shot_mu(shot_emb)
         shot_theta = self.shot_theta(shot_emb)
-       # print('shotmu: ',shot_mu.size())
-
 
         out = player.new_zeros((batch_size, 2*encode_length))
-        time_out = player.new_zeros((batch_size, 2*encode_length))
+        time_out = player.new_zeros((batch_size, 2*encode_length), dtype=torch.float)
         thisRallyL = player.new_zeros((batch_size, 1))
         for i in range(batch_size):
             row = player[i]
@@ -717,11 +539,11 @@ class Encoder(nn.Module):
             k = (row != 0).sum().item()
             thisRallyL[i]=2*k
             prenum =row[:k].repeat(2)
-            pretime = row[:k].repeat(2)
+            pretime = row[:k].repeat(2).float()
             num=1
             for j in range(0,2*k,2):
-                pretime[j] = num/encode_length
-                pretime[j+1] = num/encode_length
+                pretime[j] = num/k
+                pretime[j+1] = num/k
                 num+=1
             j=0
             for j in range(0,2*k,2):
@@ -732,58 +554,64 @@ class Encoder(nn.Module):
             time_out[i, :2*k] = pretime
         player = out
         player_embedding = self.player_embedding(player)
-        # time_embedding = self.time_emb(time_out) # [32,120,8]  
         time_out = time_out.unsqueeze(-1)
-
+        
         # μn * τn
         shotEnhanced = torch.mul(shot_mu , time_out)
-        #print('μn * τn: ',shotEnhanced.size())
         # θn + μn * τn
         shotEnhanced = torch.add(shot_theta, shotEnhanced)
-        #print('θn + μn * τn: ',shotEnhanced.size())
         # δn = sigmoid(θn + μn * τn)
         shotEnhanced = self.sigmoid(shotEnhanced)
-       # print('δn = sigmoid(θn + μn * τn): ',shotEnhanced.size())
-
         enhanced_shot_features = torch.mul(shot_emb , shotEnhanced)
-        #print('enhace shot',enhanced_shot_features.size())
         
+        rally_information = torch.cat((embedded_player_area, player_embedding,enhanced_shot_features), dim=-1)
+        model_input = self.model_input_linear(rally_information) 
 
-        rally_information = torch.cat((coordination_transform, player_embedding,enhanced_shot_features), dim=-1)
-
-        model_input = self.model_input_linear(rally_information)
-
+        node_mask = mask.repeat_interleave(2, dim=1)    #[32,120]
+        node_mask = node_mask.unsqueeze(-1)
+        model_input = model_input * node_mask
+        
         # fixed node embedding in decoder
-        full_graph_node_embedding = self.rGCN( model_input, adjacency_matrix)
+        full_graph_node_embedding = self.rGCN(model_input, adjacency_matrix)
+        full_graph_node_embedding = full_graph_node_embedding*node_mask
+        full_graph_node_embedding = F.dropout(full_graph_node_embedding, p=0.25)
 
-        player_A_embedding = full_graph_node_embedding[:, 0::2, :].clone()
-        player_B_embedding = full_graph_node_embedding[:, 1::2, :].clone()
-
+        player_A_embedding = model_input[:, 0::2, :].clone()
+        player_B_embedding = model_input[:, 1::2, :].clone()
+        
         partial_adjacency_matrix = torch.ones((encode_length, encode_length), dtype=int) - torch.eye(encode_length, dtype=int)
 
-        dynamic_gcn_input_A = torch.cat((player_A_embedding, player_embedding[:, 0:1, :].repeat(1, encode_length, 1)), dim=-1)
-        dynamic_gcn_input_B = torch.cat((player_B_embedding, player_embedding[:, 1:2, :].repeat(1, encode_length, 1)), dim=-1)
-
+        dynamic_gcn_input_A = torch.cat((player_A_embedding, player_embedding[:, 0::2, :].clone()), dim=-1)
+        dynamic_gcn_input_B = torch.cat((player_B_embedding, player_embedding[:, 1::2, :].clone()), dim=-1)
+        
         dynamic_gcn_input_A = self.linear_for_dynmaic_gcn(dynamic_gcn_input_A)
         dynamic_gcn_input_B = self.linear_for_dynmaic_gcn(dynamic_gcn_input_B)
+        dynamic_gcn_input_A = dynamic_gcn_input_A * mask.unsqueeze(-1)
+        dynamic_gcn_input_B = dynamic_gcn_input_B * mask.unsqueeze(-1)
 
-        player_A_node_embedding = self.gcn(dynamic_gcn_input_A, partial_adjacency_matrix)
-        player_B_node_embedding = self.gcn(dynamic_gcn_input_B, partial_adjacency_matrix)
+        player_A_node_embedding = self.gcn(dynamic_gcn_input_A, partial_adjacency_matrix,mask.unsqueeze(-1))
+        player_B_node_embedding = self.gcn(dynamic_gcn_input_B, partial_adjacency_matrix,mask.unsqueeze(-1))
         node_embedding = torch.zeros((full_graph_node_embedding.size(0), full_graph_node_embedding.size(1), full_graph_node_embedding.size(2))).to(player.device)
-        
-        _, _, A_weight, B_weight = self.co_attention(player_A_node_embedding.permute(0, 2, 1), player_B_node_embedding, batch_size)
-        
-        A_weight = self.sigmoid(self.co_attention_linear_A(A_weight))
-        B_weight = self.sigmoid(self.co_attention_linear_B(B_weight))
+        player_A_node_embedding = player_A_node_embedding * mask.unsqueeze(-1)
+        player_B_node_embedding = player_B_node_embedding * mask.unsqueeze(-1)
 
+        _, _, A_weight, B_weight = self.co_attention(player_A_node_embedding.permute(0, 2, 1), player_B_node_embedding, thisRallyL//2)
+        A_weight = self.sigmoid(self.co_attention_linear_A(A_weight))
+        B_weight = self.sigmoid(self.co_attention_linear_B(B_weight))     
+        
         player_A_node_embedding = player_A_node_embedding + B_weight.unsqueeze(1) * player_B_node_embedding
         player_B_node_embedding = player_B_node_embedding + A_weight.unsqueeze(1) * player_A_node_embedding
 
-        rgcn_embedding_A = full_graph_node_embedding[:, 0::2, :].clone()[:, -1, :].view(batch_size, -1)
-        rgcn_embedding_B = full_graph_node_embedding[:, 1::2, :].clone()[:, -1, :].view(batch_size, -1)
-        gcn_embedding_A = player_A_node_embedding.clone()[:, -1, :].view(batch_size, -1)
-        gcn_embedding_B = player_B_node_embedding.clone()[:, -1, :].view(batch_size, -1)
-
+        idx = (thisRallyL).squeeze(-1).long()   # shape [32]
+        batch_idx = torch.arange(full_graph_node_embedding.size(0), device=full_graph_node_embedding.device)  # [32]
+        
+        rgcn_embedding_A = full_graph_node_embedding.clone()[batch_idx, idx-2, :]
+        rgcn_embedding_B = full_graph_node_embedding.clone()[batch_idx, idx-1, :]
+        
+        batch_idx = torch.arange(player_A_node_embedding.size(0), device=player_A_node_embedding.device)  # [32]
+        gcn_embedding_A = player_A_node_embedding.clone()[batch_idx, idx//2-1, :]
+        gcn_embedding_B = player_B_node_embedding.clone()[batch_idx, idx//2-1, :]
+        
         rgcn_weight_A = self.rgcn_weight(rgcn_embedding_A)
         rgcn_weight_B = self.rgcn_weight(rgcn_embedding_B)
         gcn_weight_A = self.gcn_weight(gcn_embedding_A)
@@ -793,21 +621,31 @@ class Encoder(nn.Module):
         w_gcn_A = self.sigmoid(gcn_weight_A)
         w_rgcn_B = self.sigmoid(rgcn_weight_B)
         w_gcn_B = self.sigmoid(gcn_weight_B)
-
+        
         node_embedding[:, 0::2, :] = full_graph_node_embedding[:, 0::2, :] * w_rgcn_A.unsqueeze(1) + player_A_node_embedding * w_gcn_A.unsqueeze(1)
         node_embedding[:, 1::2, :] = full_graph_node_embedding[:, 1::2, :] * w_rgcn_B.unsqueeze(1) + player_B_node_embedding * w_gcn_B.unsqueeze(1)
-        
+        node_embedding = F.dropout(node_embedding, p=0.25)
+
         idx = (thisRallyL).squeeze(-1).long()   # shape [32]
         batch_idx = torch.arange(node_embedding.size(0), device=node_embedding.device)  # [32]
         lastNode1 = node_embedding[batch_idx, idx-1, :] #[32,16]
         lastNode2 = node_embedding[batch_idx, idx-2, :] #[3216]
+        # sc = self.score_diff_fc(score_diff.float().unsqueeze(1))
+        # cp = self.consec_score_fc(conpoint.float().unsqueeze(1))
+        
         combineLast = torch.cat([lastNode1, lastNode2], dim=-1) #[32,32]
         logits = self.win_head(combineLast).squeeze(-1)  
-        win_logit = torch.sigmoid(logits)                                 
+        win_logit = torch.sigmoid(logits)             
+                               
 
         return win_logit
 
 
+
+# node_embedding[:, 0::2, :] = full_graph_node_embedding[:, 0::2, :]  + player_A_node_embedding 
+        # node_embedding[:, 1::2, :] = full_graph_node_embedding[:, 1::2, :]  + player_B_node_embedding 
+        # node_embedding[:, 0::2, :]=torch.cat([full_graph_node_embedding[:, 0::2, :], player_A_node_embedding], dim=-1)
+        # node_embedding[:, 1::2, :]=torch.cat([full_graph_node_embedding[:, 1::2, :], player_A_node_embedding], dim=-1)
 
 
         # idx = (thisRallyL).squeeze(-1).long()   # shape [32]
@@ -825,8 +663,13 @@ class Encoder(nn.Module):
 
         # debug_path = "mask_debug.txt"  
         # # 把 mask 拷到 CPU 并转成 Python 列表
-        # mask_list = mask.detach().cpu().tolist()  
+        # mask_list = mask.tolist()  
         # with open(debug_path, "w") as f:
         #     for i, row in enumerate(mask_list):
         #         f.write(f"batch {i}: {row}\n")
 
+
+
+        # pooled_vec, attn_w = self.transformer_block(node_embedding,key_padding_mask = mask.repeat_interleave(2, dim=1) )  # pooled_vec: (B, D)
+        # logit = self.final_linear(pooled_vec)        
+        # win_logit = torch.sigmoid(logit).squeeze(-1)   

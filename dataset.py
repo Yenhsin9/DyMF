@@ -50,6 +50,10 @@ class BadmintonDataset(Dataset):
             player_y = one_rally[['player_location_y']].values.reshape(-1)
             opponent_x = one_rally[['opponent_location_x']].values.reshape(-1)
             opponent_y = one_rally[['opponent_location_y']].values.reshape(-1)
+            player_loc = one_rally[['player_location_area']].values.reshape(-1)
+            player_loc[player_loc >= 10] = 10.0
+            opp_loc = one_rally[['opponent_location_area']].values.reshape(-1)
+            opp_loc[opp_loc >= 10] = 10.0
 
             player = np.pad(player, (0, self.encode_length - seqence_length), 'constant', constant_values=(0))
             shot_type  = np.pad(shot_type , (0, self.encode_length - seqence_length), 'constant', constant_values=(0))
@@ -57,6 +61,8 @@ class BadmintonDataset(Dataset):
             player_y = np.pad(player_y, (0, self.encode_length - seqence_length), 'constant', constant_values=(0))
             opponent_x = np.pad(opponent_x, (0, self.encode_length - seqence_length), 'constant', constant_values=(0))
             opponent_y = np.pad(opponent_y, (0, self.encode_length - seqence_length), 'constant', constant_values=(0))           
+            player_loc = np.pad(player_loc, (0, self.encode_length - seqence_length), 'constant', constant_values=(0))
+            opp_loc = np.pad(opp_loc, (0, self.encode_length - seqence_length), 'constant', constant_values=(0))
             
             setid = one_rally['set'].iloc[-1]
              # (Consecutive Points)
@@ -74,6 +80,13 @@ class BadmintonDataset(Dataset):
             pre_setid = setid
 
 
+            player_A_loc = np.empty((self.encode_length,), dtype=float)
+            player_A_loc[0::2] = player_loc[0::2]
+            player_A_loc[1::2] = opp_loc[1::2]
+
+            player_B_loc = np.empty((self.encode_length,), dtype=float)
+            player_B_loc[0::2] = opp_loc[0::2]
+            player_B_loc[1::2] = player_loc[1::2]
 
             player_A_x = np.empty((self.encode_length,), dtype=float)
             player_A_x[0::2] = player_x[0::2]
@@ -89,10 +102,13 @@ class BadmintonDataset(Dataset):
             player_B_y[0::2] = opponent_y[0::2]
             player_B_y[1::2] = player_y[1::2]
 
+            mask = np.concatenate([np.ones(seqence_length, dtype=np.float32),
+                                   np.zeros(self.encode_length - seqence_length, dtype=np.float32)])
+            
             shot_tensor = torch.from_numpy(shot_type).long().unsqueeze(0)
             adj = initialize_adjacency_matrix(1, self.encode_length, shot_tensor)
             adj = adj.squeeze(0)  # → [13, 2*L, 2*L]
-            self.player_sequence.append([player, shot_type, player_A_x, player_A_y, player_B_x, player_B_y, seqence_length,adj,roundscore_diff,consecutive_points])
+            self.player_sequence.append([player, shot_type, player_A_x, player_A_y, player_B_x, player_B_y, seqence_length,adj,roundscore_diff,consecutive_points,player_A_loc,player_B_loc,mask])
 
           
             # predict target
