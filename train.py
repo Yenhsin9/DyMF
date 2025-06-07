@@ -19,8 +19,8 @@ def main():
     args.add_argument("--prepared_data_output_path", type=str, default="./data/dataset.csv")
     args.add_argument("--already_have_data", type=int, default=1) #if have data
     args.add_argument("--preprocessed_data_path", type=str, default="./data/dataset.csv")
-    args.add_argument("--train_ratio", type=float, default=0.8)
-    args.add_argument("--valid_ratio", type=float, default=0.2)
+    args.add_argument("--train_ratio", type=float, default=0.7)
+    args.add_argument("--valid_ratio", type=float, default=0.15)
     args.add_argument("--max_length", type=int, default=100)
 
     # training
@@ -38,9 +38,9 @@ def main():
 
     args.add_argument("--epochs", type=int, default=100)
     #args.add_argument("--encode_length", type=int, required=True)
-    args.add_argument("--dropout", type=float, default=0.25)
+    args.add_argument("--dropout", type=float, default=0.4)
 
-    args.add_argument("--num_basis", type=int, default=3)
+    args.add_argument("--num_basis", type=int, default=2)
 
     # ablation
     args.add_argument("--use_complete_graph", type=int, default=0)
@@ -184,7 +184,7 @@ def main():
 
     encoder_optimizer = torch.optim.Adam(encoder.parameters(),
     lr=args['lr'],
-    #weight_decay=1e-4
+    weight_decay=1e-4
     )
 
     location_criterion = nn.MSELoss()

@@ -8,7 +8,8 @@ from torch.nn import BCEWithLogitsLoss
 from sklearn.metrics import roc_auc_score, brier_score_loss, accuracy_score
 from torch.nn import BCELoss
 from DyMF.draw_plot import draw_plot
-
+from sklearn.linear_model import LogisticRegression
+import numpy as np
 PAD = 0
 
 def Gaussian2D_loss(V_pred, V_trgt):
@@ -54,7 +55,12 @@ def train(train_dataloader, valid_dataloader, encoder,
     val_auc_list=[]  
     train_brier_list=[]  
     val_brier_list=[]  
-  
+    # scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+    #     encoder_optimizer, 
+    #     mode='max',  # 因為我們要最大化 AUC
+    #     factor=0.1,  # 學習率降低因子（降低到 0.1 倍）
+    #     patience=3,  # 等待 5 個 epoch 若無改善則降低學習率
+    # )
     for epoch in tqdm(range(args['epochs'])):
         train_loss = 0.0
         n_train    = 0
@@ -153,7 +159,8 @@ def train(train_dataloader, valid_dataloader, encoder,
             f"Train Brier: {T_brier:.4f}, "
             f"Val Brier: {brier:.4f}"
         )
-
+        #scheduler.step(auc)
+        
         # Early stopping
         if avg_val_loss < best_val_loss:
             best_val_loss = avg_val_loss
@@ -177,16 +184,17 @@ def evaluate(test_dataloader,
              encoder,
              args,
              device="cpu"):
- 
-    encoder.eval()
-    y_true, y_prob = [], []
-    total_loss = 0.0
-    total_n = 0
-    bce_loss = BCEWithLogitsLoss()
-
+    
     max_length = test_dataloader.dataset.encode_length
+    bce_loss = BCEWithLogitsLoss()
+    test_auc_list=[]  
+    test_brier_list=[] 
 
+    encoder.eval()
     with torch.no_grad():
+        test_loss = 0.0
+        n_test = 0
+        y_true, y_prob = [], []
         for rally_batch, target in test_dataloader:
             target = target.to(device).float()
 
@@ -206,33 +214,32 @@ def evaluate(test_dataloader,
                 rally_batch[12].to(device),
                 max_length,
             )
-
-            # loss
-            loss = bce_loss(win_logit, target)
-            batch_size = target.size(0)
-            total_loss += loss.item() * batch_size
-            total_n += batch_size
-
-            # 收集機率、label
             y_prob.extend(torch.sigmoid(win_logit).detach().cpu().numpy())
-            y_true.extend(target.cpu().numpy().tolist())
+            y_true.extend(target.cpu().numpy())
 
-    # 平均 loss
-    avg_loss = total_loss / total_n if total_n else float("nan")
+            l = bce_loss(win_logit, target)
+            test_loss += l.item() * rally_batch[0].size(0)
+            n_test += rally_batch[0].size(0)
 
-    # classification metrics
+    avg_test_loss = test_loss / n_test if n_test else 0.0
     y_pred = [1 if p >= 0.5 else 0 for p in y_prob]
-    #acc = accuracy_score(y_true, y_pred)
+    acc = accuracy_score(y_true, y_pred)
     try:
         auc = roc_auc_score(y_true, y_prob)
     except ValueError:
-        auc = float("nan")
+        auc = float('nan')
+    # 計算 Brier score
     brier = brier_score_loss(y_true, y_prob)
+    test_auc_list.append(auc)
+    test_brier_list.append(brier)
+    print(
+        f"Test Loss: {avg_test_loss:.4f}, "
+        f"Acc: {acc:.4f}, "
+        f"Test AUC: {auc:.4f}, "
+        f"Test Brier: {brier:.4f}"
+    )
 
-    # 列印
-    print(f"Test Loss: {avg_loss:.4f} | Test AUC: {auc:.4f} | Test Brier: {brier:.4f}")
-
-    return avg_loss, auc, brier
+    return avg_test_loss, auc, brier
 
 def save(encoder, decoder, args):
     output_folder_name = args['model_folder']

@@ -74,7 +74,7 @@ def prepare_dataset(args):
     for match_id in matches['match_id'].unique():
         match = matches[matches['match_id']==match_id]
         rally_index = match['rally_id'].unique()
-        np.random.shuffle(rally_index) 
+        #np.random.shuffle(rally_index) 
         train_num = int(len(rally_index) * args['train_ratio'])
         valid_num = int(len(rally_index) * args['valid_ratio'])
 

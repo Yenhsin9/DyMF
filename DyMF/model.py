@@ -126,6 +126,8 @@ def create_src_lengths_mask(
     Outputs:
       [batch_size, max_src_len]
     """
+    if src_lengths.dim() > 1:
+        src_lengths = src_lengths.squeeze()  # Ensure 1D tensor
     if max_src_len is None:
         max_src_len = int(src_lengths.max())
     src_indices = torch.arange(0, max_src_len).unsqueeze(0).type_as(src_lengths)
@@ -143,7 +145,7 @@ def masked_softmax(scores, src_lengths, src_length_masking=True):
         bsz, max_src_len = scores.size()
         # print('bsz:', bsz)
         # compute masks
-        src_mask = create_src_lengths_mask(bsz, src_lengths)
+        src_mask = create_src_lengths_mask(bsz, src_lengths,max_src_len)
         # Fill pad positions with -inf
         scores = scores.masked_fill(src_mask == 0, -np.inf)
  
@@ -197,12 +199,12 @@ class ParallelCoAttentionNetwork(nn.Module):
         # (batch_size, 1, region_num)
         a_v = F.softmax(torch.matmul(torch.t(self.w_hv), H_v), dim=2)
         # (batch_size, 1, seq_len)
-        a_q = F.softmax(torch.matmul(torch.t(self.w_hq), H_q), dim=2)
+        a_q = F.softmax(torch.matmul(torch.t(self.w_hq), H_q), dim=2) #torch.Size([32, 1, 60])
         # # (batch_size, 1, seq_len)
 
         # a_v = self.dropout(a_v)
         # a_q = self.dropout(a_q)
-        
+
         masked_a_q = masked_softmax(
             a_q.squeeze(1), Q_lengths, self.src_length_masking
         ).unsqueeze(1)
@@ -303,7 +305,7 @@ class GCN(nn.Module):
         return node_embedding
 
 class relational_GCN_layer(nn.Module):
-    def __init__(self, hidden_size, type_num, num_basis, device):
+    def __init__(self, hidden_size, type_num, num_basis,args, device):
         super(relational_GCN_layer, self).__init__()
         # relation index should minus 1, because padding 0
         self.num_basis = num_basis
@@ -316,7 +318,7 @@ class relational_GCN_layer(nn.Module):
         self.basis_matrix = torch.nn.Parameter(torch.Tensor(num_basis, hidden_size, hidden_size))
         # self.bias = torch.nn.Parameter(torch.Tensor(type_num + 3, hidden_size)).to(device)
         self.linear_combination = torch.nn.Parameter(torch.Tensor(type_num - 1 + 2, num_basis))
-        self.dropout = nn.Dropout(0.1)
+        self.dropout = nn.Dropout(args['dropout'])
         nn.init.xavier_uniform_(self.basis_matrix, gain=nn.init.calculate_gain('relu'))
         # nn.init.xavier_uniform_(self.bias, gain=nn.init.calculate_gain('relu'))
         nn.init.xavier_uniform_(self.linear_combination, gain=nn.init.calculate_gain('relu'))
@@ -337,7 +339,7 @@ class relational_GCN_layer(nn.Module):
         return output
 
 class relational_GCN(nn.Module):
-    def __init__(self, hidden_size, type_num, num_basis, num_layer, device):
+    def __init__(self, hidden_size, type_num, num_basis, num_layer,args, device):
         super(relational_GCN, self).__init__()
         # relation index should minus 1, because padding 0
 
@@ -349,7 +351,7 @@ class relational_GCN(nn.Module):
         self.hidden_activation_function = nn.ReLU()
         self.output_activation_function = nn.Sigmoid()
 
-        self.rgcn_layer_list = nn.ModuleList([relational_GCN_layer(hidden_size, type_num, num_basis, device) for _ in range(num_layer)])
+        self.rgcn_layer_list = nn.ModuleList([relational_GCN_layer(hidden_size, type_num, num_basis,args, device) for _ in range(num_layer)])
 
     def forward(self, node_embedding, adjacency_matrix):
         for i, rgcn_layer in enumerate(self.rgcn_layer_list):
@@ -468,27 +470,27 @@ class Encoder(nn.Module):
         self.shot_theta = nn.Linear(type_dim,16)
         self.area_embedding = nn.Embedding(
             num_embeddings=11,                
-            embedding_dim=hidden_size,          
+            embedding_dim=location_dim,          
             padding_idx=0                     
         )
 
         self.model_input_linear = nn.Linear(player_dim + location_dim+type_dim , hidden_size)
 
-        self.rGCN = relational_GCN(hidden_size, type_num, args['num_basis'], num_layer, device) # into 2 type (passive and active) and padding
+        self.rGCN = relational_GCN(hidden_size, type_num, args['num_basis'], num_layer,args, device) # into 2 type (passive and active) and padding
         self.gcn = GCN(args['hidden_size'], args['hidden_size'], 0.1, num_layer, args, device)
         
         self.rgcn_weight = nn.Linear(args['hidden_size'], 1)
         self.gcn_weight = nn.Linear(args['hidden_size'], 1)
 
-        self.co_attention = ParallelCoAttentionNetwork(args['hidden_size'], args['hidden_size'], src_length_masking=False)
+        self.co_attention = ParallelCoAttentionNetwork(args['hidden_size'], args['hidden_size'], src_length_masking=True)
         self.co_attention_linear_A = nn.Linear(args['hidden_size'], 1)
         self.co_attention_linear_B = nn.Linear(args['hidden_size'], 1)
 
         self.sigmoid = nn.Sigmoid()
         self.relu = nn.ReLU()
 
-        self.score_diff_fc    = nn.Linear(1, location_dim)
-        self.consec_score_fc  = nn.Linear(1, location_dim)
+        self.score_diff_fc    = nn.Linear(1, 8)
+        self.consec_score_fc  = nn.Linear(1, 8)
 
         self.linear_for_dynmaic_gcn = nn.Linear(2 * args['hidden_size'], args['hidden_size'])
         self.win_head = nn.Linear(2*args['hidden_size'], 1) #32,1
@@ -574,7 +576,7 @@ class Encoder(nn.Module):
         # fixed node embedding in decoder
         full_graph_node_embedding = self.rGCN(model_input, adjacency_matrix)
         full_graph_node_embedding = full_graph_node_embedding*node_mask
-        full_graph_node_embedding = F.dropout(full_graph_node_embedding, p=0.25)
+        #full_graph_node_embedding = F.dropout(full_graph_node_embedding, p=0.25)
 
         player_A_embedding = model_input[:, 0::2, :].clone()
         player_B_embedding = model_input[:, 1::2, :].clone()
@@ -594,8 +596,8 @@ class Encoder(nn.Module):
         node_embedding = torch.zeros((full_graph_node_embedding.size(0), full_graph_node_embedding.size(1), full_graph_node_embedding.size(2))).to(player.device)
         player_A_node_embedding = player_A_node_embedding * mask.unsqueeze(-1)
         player_B_node_embedding = player_B_node_embedding * mask.unsqueeze(-1)
-
-        _, _, A_weight, B_weight = self.co_attention(player_A_node_embedding.permute(0, 2, 1), player_B_node_embedding, thisRallyL//2)
+      
+        _, _, A_weight, B_weight = self.co_attention(player_A_node_embedding.permute(0, 2, 1), player_B_node_embedding, (thisRallyL//2).long().squeeze(-1))
         A_weight = self.sigmoid(self.co_attention_linear_A(A_weight))
         B_weight = self.sigmoid(self.co_attention_linear_B(B_weight))     
         
@@ -624,14 +626,13 @@ class Encoder(nn.Module):
         
         node_embedding[:, 0::2, :] = full_graph_node_embedding[:, 0::2, :] * w_rgcn_A.unsqueeze(1) + player_A_node_embedding * w_gcn_A.unsqueeze(1)
         node_embedding[:, 1::2, :] = full_graph_node_embedding[:, 1::2, :] * w_rgcn_B.unsqueeze(1) + player_B_node_embedding * w_gcn_B.unsqueeze(1)
-        node_embedding = F.dropout(node_embedding, p=0.25)
+        #node_embedding = F.dropout(node_embedding, p=0.25)
 
         idx = (thisRallyL).squeeze(-1).long()   # shape [32]
         batch_idx = torch.arange(node_embedding.size(0), device=node_embedding.device)  # [32]
         lastNode1 = node_embedding[batch_idx, idx-1, :] #[32,16]
         lastNode2 = node_embedding[batch_idx, idx-2, :] #[3216]
-        # sc = self.score_diff_fc(score_diff.float().unsqueeze(1))
-        # cp = self.consec_score_fc(conpoint.float().unsqueeze(1))
+        
         
         combineLast = torch.cat([lastNode1, lastNode2], dim=-1) #[32,32]
         logits = self.win_head(combineLast).squeeze(-1)  
