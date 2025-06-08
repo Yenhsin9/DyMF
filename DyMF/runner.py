@@ -55,12 +55,7 @@ def train(train_dataloader, valid_dataloader, encoder,
     val_auc_list=[]  
     train_brier_list=[]  
     val_brier_list=[]  
-    # scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
-    #     encoder_optimizer, 
-    #     mode='max',  # 因為我們要最大化 AUC
-    #     factor=0.1,  # 學習率降低因子（降低到 0.1 倍）
-    #     patience=3,  # 等待 5 個 epoch 若無改善則降低學習率
-    # )
+  
     for epoch in tqdm(range(args['epochs'])):
         train_loss = 0.0
         n_train    = 0
@@ -84,7 +79,7 @@ def train(train_dataloader, valid_dataloader, encoder,
                 rally_batch[12].to(device),
                 max_length,
             )
-
+            
             x_prob.extend(torch.sigmoid(win_logit).detach().cpu().numpy())
             x_true.extend(target.detach().cpu().numpy())
             loss = bce_loss(win_logit, target)
@@ -159,7 +154,6 @@ def train(train_dataloader, valid_dataloader, encoder,
             f"Train Brier: {T_brier:.4f}, "
             f"Val Brier: {brier:.4f}"
         )
-        #scheduler.step(auc)
         
         # Early stopping
         if avg_val_loss < best_val_loss:
