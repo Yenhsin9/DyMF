@@ -447,28 +447,6 @@ class RGCDynamicTransformerBlock(nn.Module):
 
         return H3,pooled, attn_weights
     
-class AttentionLayer(nn.Module):
-    def __init__(self, hidden_size):
-        super(AttentionLayer, self).__init__()
-        self.query = nn.Parameter(torch.randn(hidden_size))
-        self.key = nn.Linear(hidden_size, hidden_size)
-        self.value = nn.Linear(hidden_size, hidden_size)
-        self.scale = hidden_size ** -0.5
-
-    def forward(self, x, mask=None):
-        k = self.key(x)
-        v = self.value(x)
-        q = self.query.unsqueeze(0).unsqueeze(1)
-        scores = torch.matmul(q, k.transpose(-2, -1)) * self.scale
-        scores = scores.squeeze(0)
-        if mask is not None:
-            scores = scores.masked_fill(mask.transpose(-2, -1) == 0, -1e9)
-        attn_weights = F.softmax(scores, dim=-1)
-        attn_weights = attn_weights.transpose(-2, -1)
-        output = torch.matmul(attn_weights.transpose(-2, -1), v)
-        attn_output = output.squeeze(1)
-        return attn_output, attn_weights
-    
 class Encoder(nn.Module):
     def __init__(self, args, device):
         super(Encoder, self).__init__()
@@ -510,11 +488,6 @@ class Encoder(nn.Module):
         self.weight_dgcn_A = nn.Linear(hidden_size, 1)
         self.weight_rgcn_B = nn.Linear(hidden_size, 1)
         self.weight_dgcn_B = nn.Linear(hidden_size, 1)
-        # 注意力層
-        self.attn_rgcn_A = AttentionLayer(hidden_size)
-        self.attn_rgcn_B = AttentionLayer(hidden_size)
-        self.attn_dgcn_A = AttentionLayer(hidden_size)
-        self.attn_dgcn_B = AttentionLayer(hidden_size)
 
         self.co_attention = ParallelCoAttentionNetwork(args['hidden_size'], args['hidden_size'], src_length_masking=True)
         self.co_attention_linear_A = nn.Linear(args['hidden_size'], 1)
@@ -604,7 +577,6 @@ class Encoder(nn.Module):
         # fixed node embedding in decoder
         full_graph_node_embedding = self.rGCN(model_input, adjacency_matrix)
         full_graph_node_embedding = full_graph_node_embedding*node_mask
-        #full_graph_node_embedding = F.dropout(full_graph_node_embedding, p=0.25)
 
         player_A_embedding = model_input[:, 0::2, :].clone()
         player_B_embedding = model_input[:, 1::2, :].clone()
@@ -632,27 +604,15 @@ class Encoder(nn.Module):
         player_A_node_embedding = player_A_node_embedding + B_weight.unsqueeze(1) * player_B_node_embedding
         player_B_node_embedding = player_B_node_embedding + A_weight.unsqueeze(1) * player_A_node_embedding
 
-        rgcnAnode = full_graph_node_embedding[:, 0::2, :].clone()
-        rgcnBnode = full_graph_node_embedding[:, 1::2, :].clone()
-
-        rgcn_A, rgcn_A_weights = self.attn_rgcn_A(rgcnAnode, mask.unsqueeze(-1))  
-        rgcn_B, rgcn_B_weights = self.attn_rgcn_A(rgcnBnode, mask.unsqueeze(-1)) 
-        dgcn_A, dgcn_A_weights = self.attn_dgcn_A(player_A_node_embedding, mask.unsqueeze(-1))
-        dgcn_B, dgcn_B_weights = self.attn_dgcn_B(player_B_node_embedding, mask.unsqueeze(-1))
-
-        rgcn_A_key_shot_idx = rgcn_A_weights.squeeze(-1).argmax(dim=-1)
-        rgcn_B_key_shot_idx = rgcn_B_weights.squeeze(-1).argmax(dim=-1)
-        dgcn_A_key_shot_idx = dgcn_A_weights.squeeze(-1).argmax(dim=-1)
-        dgcn_B_key_shot_idx = dgcn_B_weights.squeeze(-1).argmax(dim=-1)
-        # idx = (thisRallyL).squeeze(-1).long()   # shape [32]
+        idx = (thisRallyL).squeeze(-1).long()   # shape [32]
         batch_idx = torch.arange(full_graph_node_embedding.size(0), device=full_graph_node_embedding.device)  # [32]
         
-        rgcn_embedding_A = full_graph_node_embedding.clone()[batch_idx, rgcn_A_key_shot_idx, :]
-        rgcn_embedding_B = full_graph_node_embedding.clone()[batch_idx, rgcn_B_key_shot_idx, :]
+        rgcn_embedding_A = full_graph_node_embedding.clone()[batch_idx, idx-2, :]
+        rgcn_embedding_B = full_graph_node_embedding.clone()[batch_idx, idx-1, :]
         
         batch_idx = torch.arange(player_A_node_embedding.size(0), device=player_A_node_embedding.device)  # [32]
-        gcn_embedding_A = player_A_node_embedding.clone()[batch_idx, dgcn_A_key_shot_idx, :]
-        gcn_embedding_B = player_B_node_embedding.clone()[batch_idx, dgcn_B_key_shot_idx, :]
+        gcn_embedding_A = player_A_node_embedding.clone()[batch_idx, idx//2-1, :]
+        gcn_embedding_B = player_B_node_embedding.clone()[batch_idx, idx//2-1, :]
         
         rgcn_weight_A = self.rgcn_weight(rgcn_embedding_A)
         rgcn_weight_B = self.rgcn_weight(rgcn_embedding_B)
@@ -666,13 +626,11 @@ class Encoder(nn.Module):
         
         node_embedding[:, 0::2, :] = full_graph_node_embedding[:, 0::2, :] * w_rgcn_A.unsqueeze(1) + player_A_node_embedding * w_gcn_A.unsqueeze(1)
         node_embedding[:, 1::2, :] = full_graph_node_embedding[:, 1::2, :] * w_rgcn_B.unsqueeze(1) + player_B_node_embedding * w_gcn_B.unsqueeze(1)
-        # node_embedding = F.dropout(node_embedding, p=0.25)
 
         idx = (thisRallyL).squeeze(-1).long()   # shape [32]
         batch_idx = torch.arange(node_embedding.size(0), device=node_embedding.device)  # [32]
         lastNode1 = node_embedding[batch_idx, idx-1, :] #[32,16]
-        lastNode2 = node_embedding[batch_idx, idx-2, :] #[3216]
-        
+        lastNode2 = node_embedding[batch_idx, idx-2, :] #[32 16]
         
         combineLast = torch.cat([lastNode1, lastNode2], dim=-1) #[32,32]
         logits = self.win_head(combineLast).squeeze(-1)  
