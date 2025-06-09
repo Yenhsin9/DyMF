@@ -19,8 +19,8 @@ def main():
     args.add_argument("--prepared_data_output_path", type=str, default="./data/dataset.csv")
     args.add_argument("--already_have_data", type=int, default=1) #if have data
     args.add_argument("--preprocessed_data_path", type=str, default="./data/dataset.csv")
-    args.add_argument("--train_ratio", type=float, default=0.7)
-    args.add_argument("--valid_ratio", type=float, default=0.15)
+    args.add_argument("--train_ratio", type=float, default=0.6)
+    args.add_argument("--valid_ratio", type=float, default=0.2)
     args.add_argument("--max_length", type=int, default=100)
 
     # training
@@ -30,15 +30,15 @@ def main():
     args.add_argument("--test_batch_size", type=int, default=8)
     args.add_argument("--hidden_size", type=int, default=16)
     args.add_argument("--model_type", type=str, required=True)
-    args.add_argument("--lr", type=float, default=0.008)
-    args.add_argument("--player_dim", type=int, default=16)
+    args.add_argument("--lr", type=float, default=0.003)
+    args.add_argument("--player_dim", type=int, default=8)
     args.add_argument("--type_dim", type=int, default=16)
     args.add_argument("--location_dim", type=int, default=16)
     args.add_argument("--num_layer", type=int, default=2)
 
     args.add_argument("--epochs", type=int, default=100)
     #args.add_argument("--encode_length", type=int, required=True)
-    args.add_argument("--dropout", type=float, default=0.3)
+    args.add_argument("--dropout", type=float, default=0.4)
 
     args.add_argument("--num_basis", type=int, default=2)
 
@@ -184,7 +184,7 @@ def main():
 
     encoder_optimizer = torch.optim.Adam(encoder.parameters(),
     lr=args['lr'],
-    #weight_decay=1e-4
+    weight_decay=0.00006
     )
 
     location_criterion = nn.MSELoss()
