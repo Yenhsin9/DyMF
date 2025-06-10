@@ -5,8 +5,8 @@ import random
 import torch.nn as nn
 from datetime import datetime
 import os
-
 from prepare_dataset import prepare_dataset
+from prepare_dataset import prepare_kfold_datasets
 from utils import save_args_file
 
 def main():
@@ -21,6 +21,7 @@ def main():
     args.add_argument("--preprocessed_data_path", type=str, default="./data/dataset.csv")
     args.add_argument("--train_ratio", type=float, default=0.6)
     args.add_argument("--valid_ratio", type=float, default=0.2)
+    args.add_argument("--test_ratio", type=float, default=0.2)
     args.add_argument("--max_length", type=int, default=100)
 
     # training
@@ -30,15 +31,15 @@ def main():
     args.add_argument("--test_batch_size", type=int, default=8)
     args.add_argument("--hidden_size", type=int, default=16)
     args.add_argument("--model_type", type=str, required=True)
-    args.add_argument("--lr", type=float, default=0.003)
-    args.add_argument("--player_dim", type=int, default=8)
+    args.add_argument("--lr", type=float, default=0.005)
+    args.add_argument("--player_dim", type=int, default=16)
     args.add_argument("--type_dim", type=int, default=16)
     args.add_argument("--location_dim", type=int, default=16)
     args.add_argument("--num_layer", type=int, default=2)
 
     args.add_argument("--epochs", type=int, default=100)
     #args.add_argument("--encode_length", type=int, required=True)
-    args.add_argument("--dropout", type=float, default=0.4)
+    args.add_argument("--dropout", type=float, default=0.1)
 
     args.add_argument("--num_basis", type=int, default=2)
 
@@ -58,6 +59,9 @@ def main():
     # sample
     args.add_argument("--sample_num", type=int, default=1)
 
+    # k-fold 參數
+    args.add_argument("--k_folds", type=int, default=2)
+
     args = args.parse_args()
     args = vars(args)
 
@@ -74,10 +78,10 @@ def main():
 
     if args['model_folder'] == None:
         args['model_folder'] = './model/' +  args['model_type'] + '_' + str(datetime.now().strftime("%Y-%m-%d-%H:%M"))
-    train_dataloader, valid_dataloader, test_dataloader, args = prepare_dataset(args)
-    TrainMAXlength = train_dataloader.dataset.encode_length
-    ValMAXlength = valid_dataloader.dataset.encode_length
-    args['max_length']=max(ValMAXlength,TrainMAXlength)
+    #train_dataloader, valid_dataloader, test_dataloader, args = prepare_dataset(args)
+    # 獲取 k-fold 數據集
+    fold_datasets,test_dataloader = prepare_kfold_datasets(args, k_folds=args['k_folds'])
+
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     if args['model_type'] == 'DNRI':
@@ -115,7 +119,8 @@ def main():
             from DyMF.runner import train
         else:
             from DyMF.model import Encoder
-            from DyMF.runner import train
+            from DyMF.runner import train_kfold
+            #from DyMF.runner import train
         
         encoder = Encoder(args, device)
         # encoder.rGCN.type_embedding.weight = decoder.rGCN.type_embedding.weight
@@ -184,7 +189,7 @@ def main():
 
     encoder_optimizer = torch.optim.Adam(encoder.parameters(),
     lr=args['lr'],
-    weight_decay=0.00006
+    #weight_decay=0.0001
     )
 
     location_criterion = nn.MSELoss()
@@ -195,14 +200,19 @@ def main():
     total_params = sum(p.numel() for p in encoder.parameters() if p.requires_grad) 
     print(total_params)
 
-    best_val_loss = train(train_dataloader, valid_dataloader, encoder, location_criterion, shot_type_criterion, encoder_optimizer, args, device=device)
-    save_args_file(args)
+    #best_val_loss = train(train_dataloader, valid_dataloader, encoder, location_criterion, shot_type_criterion, encoder_optimizer, args, device=device)
+    # save_args_file(args)
 
-    print(args['model_folder'])
-    print("best val loss: {}".format(best_val_loss))
+    # print(args['model_folder'])
+    # print("best val loss: {}".format(best_val_loss))
     # print("total loss: {}".format(train_loss))
     # print("location loss: {}".format(train_loss_location))
     # print("type loss: {}".format(train_loss_type))
+    avg_val_loss, avg_val_auc, avg_val_brier,test_loss, test_auc, test_brier = train_kfold(
+        fold_datasets, test_dataloader,encoder, location_criterion, shot_type_criterion, 
+        encoder_optimizer, args, device=device
+    )
+    
 
 if __name__ == "__main__":
     main()
