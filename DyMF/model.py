@@ -409,8 +409,16 @@ class Encoder(nn.Module):
         self.score_diff_fc    = nn.Linear(1, 8)
         self.consec_score_fc  = nn.Linear(1, 8)
 
+        self.mha = nn.MultiheadAttention(embed_dim=args['hidden_size']+1, num_heads=1, dropout=args['dropout'], batch_first=True)
+        self.ln = nn.LayerNorm(args['hidden_size']+1)
+        self.ffn = nn.Sequential(
+            nn.Linear(args['hidden_size']+1, args['hidden_size']),
+            nn.ReLU(),
+            nn.Linear(args['hidden_size'], args['hidden_size']))
+
+
         self.linear_for_dynmaic_gcn = nn.Linear(player_dim+ args['hidden_size'], args['hidden_size'])
-        self.win_head = nn.Linear(2*args['hidden_size'], 1) 
+        self.win_head = nn.Linear(2*args['hidden_size']+2, 1) 
 
     
     def forward(self,
@@ -488,8 +496,8 @@ class Encoder(nn.Module):
         full_graph_node_embedding = self.rGCN(model_input, adjacency_matrix)
         full_graph_node_embedding = full_graph_node_embedding*node_mask
 
-        player_A_embedding = model_input[:, 0::2, :].clone()
-        player_B_embedding = model_input[:, 1::2, :].clone()
+        player_A_embedding = full_graph_node_embedding[:, 0::2, :].clone()
+        player_B_embedding = full_graph_node_embedding[:, 1::2, :].clone()
         
         partial_adjacency_matrix = torch.ones((encode_length, encode_length), dtype=int) - torch.eye(encode_length, dtype=int)
 
@@ -536,15 +544,19 @@ class Encoder(nn.Module):
         
         node_embedding[:, 0::2, :] = full_graph_node_embedding[:, 0::2, :] * w_rgcn_A.unsqueeze(1) + player_A_node_embedding * w_gcn_A.unsqueeze(1)
         node_embedding[:, 1::2, :] = full_graph_node_embedding[:, 1::2, :] * w_rgcn_B.unsqueeze(1) + player_B_node_embedding * w_gcn_B.unsqueeze(1)
-
+        
+        # output = node_embedding.max(dim=1).values  # [32,16]
+        # combineLast = torch.cat([output], dim=-1)
+        # logits = self.win_head(combineLast).squeeze(-1) 
         idx = (thisRallyL).squeeze(-1).long()   # shape [32]
         batch_idx = torch.arange(node_embedding.size(0), device=node_embedding.device)  # [32]
         lastNode1 = node_embedding[batch_idx, idx-1, :] #[32,16]
         lastNode2 = node_embedding[batch_idx, idx-2, :] #[32 16]
-        
-        combineLast = torch.cat([lastNode1, lastNode2], dim=-1) #[32,32]
+        sc = score_diff.unsqueeze(1)
+        cp = conpoint.unsqueeze(1)
+        combineLast = torch.cat([lastNode1, lastNode2,sc,cp], dim=-1) #[32,32]
         logits = self.win_head(combineLast).squeeze(-1)  
-        #win_logit = torch.sigmoid(logits)             
+        win_logit = torch.sigmoid(logits)             
         
         return logits
 

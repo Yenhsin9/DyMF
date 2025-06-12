@@ -217,6 +217,7 @@ def train(train_dataloader, valid_dataloader, encoder,
     patience = args.get('patience', 10)
     no_improve = 0
     max_length = train_dataloader.dataset.encode_length
+    args['max_length'] = max_length
     train_auc_list=[]
     val_auc_list=[]  
     train_brier_list=[]  
@@ -269,6 +270,7 @@ def train(train_dataloader, valid_dataloader, encoder,
         print('avg_train_loss',avg_train_loss)
 
         valid_max_length = valid_dataloader.dataset.encode_length
+        args['max_length'] = valid_max_length
         # Validation phase
         encoder.eval()
         with torch.no_grad():
@@ -337,7 +339,7 @@ def train(train_dataloader, valid_dataloader, encoder,
             if no_improve >= patience:
                 print("🔚 Early stopping triggered.")
                 break
-    draw_plot(train_auc_list,val_auc_list,train_brier_list,val_brier_list)
+    #draw_plot(train_auc_list,val_auc_list,train_brier_list,val_brier_list)
     return best_val_loss
 
 def evaluate(test_dataloader,
@@ -346,6 +348,7 @@ def evaluate(test_dataloader,
              device="cpu"):
     
     max_length = test_dataloader.dataset.encode_length
+    args['max_length'] = max_length
     bce_loss = BCEWithLogitsLoss()
     test_auc_list=[]  
     test_brier_list=[] 

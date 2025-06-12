@@ -6,8 +6,8 @@ import torch.nn as nn
 from datetime import datetime
 import os
 from prepare_dataset import prepare_dataset
-from prepare_dataset import prepare_kfold_datasets
-from utils import save_args_file
+#from prepare_dataset import prepare_kfold_datasets
+import csv
 
 def main():
     args = argparse.ArgumentParser()
@@ -31,15 +31,16 @@ def main():
     args.add_argument("--test_batch_size", type=int, default=8)
     args.add_argument("--hidden_size", type=int, default=16)
     args.add_argument("--model_type", type=str, required=True)
-    args.add_argument("--lr", type=float, default=0.005)
+    args.add_argument("--lr", type=float, default=0.003)
     args.add_argument("--player_dim", type=int, default=16)
     args.add_argument("--type_dim", type=int, default=16)
     args.add_argument("--location_dim", type=int, default=16)
     args.add_argument("--num_layer", type=int, default=2)
+    args.add_argument("--weight_decay", type=float, default=1e-06)
 
     args.add_argument("--epochs", type=int, default=100)
     #args.add_argument("--encode_length", type=int, required=True)
-    args.add_argument("--dropout", type=float, default=0.1)
+    args.add_argument("--dropout", type=float, default=0.3)
 
     args.add_argument("--num_basis", type=int, default=2)
 
@@ -78,9 +79,11 @@ def main():
 
     if args['model_folder'] == None:
         args['model_folder'] = './model/' +  args['model_type'] + '_' + str(datetime.now().strftime("%Y-%m-%d-%H:%M"))
-    #train_dataloader, valid_dataloader, test_dataloader, args = prepare_dataset(args)
+    train_dataloader, valid_dataloader, test_dataloader, args = prepare_dataset(args)
     # 獲取 k-fold 數據集
-    fold_datasets,test_dataloader = prepare_kfold_datasets(args, k_folds=args['k_folds'])
+    #fold_datasets,test_dataloader = prepare_kfold_datasets(args, k_folds=args['k_folds'])
+
+    #args['max_length'] = max(train_dataloader.dataset.max_length,valid_dataloader.dataset.max_length,test_dataloader.dataset.max_length)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -119,7 +122,7 @@ def main():
             from DyMF.runner import train
         else:
             from DyMF.model import Encoder
-            from DyMF.runner import train_kfold
+            from DyMF.runner import train
             #from DyMF.runner import train
         
         encoder = Encoder(args, device)
@@ -188,9 +191,8 @@ def main():
         encoder.coordination_transform.weight = decoder.coordination_transform.weight
 
     encoder_optimizer = torch.optim.Adam(encoder.parameters(),
-    lr=args['lr'],
-    #weight_decay=0.0001
-    )
+                                        lr=args['lr'],
+                                        weight_decay=args['weight_decay'])
 
     location_criterion = nn.MSELoss()
     shot_type_criterion = nn.CrossEntropyLoss()
@@ -200,18 +202,24 @@ def main():
     total_params = sum(p.numel() for p in encoder.parameters() if p.requires_grad) 
     print(total_params)
 
-    #best_val_loss = train(train_dataloader, valid_dataloader, encoder, location_criterion, shot_type_criterion, encoder_optimizer, args, device=device)
+    best_val_loss = train(train_dataloader, valid_dataloader, encoder, location_criterion, shot_type_criterion, encoder_optimizer, args, device=device)
     # save_args_file(args)
 
-    # print(args['model_folder'])
-    # print("best val loss: {}".format(best_val_loss))
-    # print("total loss: {}".format(train_loss))
-    # print("location loss: {}".format(train_loss_location))
-    # print("type loss: {}".format(train_loss_type))
-    avg_val_loss, avg_val_auc, avg_val_brier,test_loss, test_auc, test_brier = train_kfold(
-        fold_datasets, test_dataloader,encoder, location_criterion, shot_type_criterion, 
-        encoder_optimizer, args, device=device
-    )
+    # Log results to CSV
+    results_file = 'grid_search_results.csv'
+    if not os.path.exists(results_file) or os.stat(results_file).st_size == 0:
+        with open(results_file, 'w', newline='') as csvfile:
+            fieldnames = ['dropout', 'weight_decay', 'lr', 'best_val_loss']
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            writer.writeheader()
+    with open(results_file, 'a', newline='') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=['dropout', 'weight_decay', 'lr', 'best_val_loss'])
+        writer.writerow({
+            'dropout': args['dropout'],
+            'weight_decay': args['weight_decay'],
+            'lr': args['lr'],
+            'best_val_loss': best_val_loss
+        })
     
 
 if __name__ == "__main__":
