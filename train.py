@@ -31,15 +31,15 @@ def main():
     args.add_argument("--test_batch_size", type=int, default=8)
     args.add_argument("--hidden_size", type=int, default=16)
     args.add_argument("--model_type", type=str, required=True)
-    args.add_argument("--lr", type=float, default=0.005)
+    args.add_argument("--lr", type=float, default=0.003)
     args.add_argument("--player_dim", type=int, default=16)
     args.add_argument("--type_dim", type=int, default=16)
     args.add_argument("--location_dim", type=int, default=16)
     args.add_argument("--num_layer", type=int, default=2)
 
-    args.add_argument("--epochs", type=int, default=100)
+    args.add_argument("--epochs", type=int, default=50)
     #args.add_argument("--encode_length", type=int, required=True)
-    args.add_argument("--dropout", type=float, default=0.1)
+    args.add_argument("--dropout", type=float, default=0.3)
 
     args.add_argument("--num_basis", type=int, default=2)
 
@@ -60,7 +60,7 @@ def main():
     args.add_argument("--sample_num", type=int, default=1)
 
     # k-fold 參數
-    args.add_argument("--k_folds", type=int, default=2)
+    args.add_argument("--k_folds", type=int, default=5)
 
     args = args.parse_args()
     args = vars(args)
@@ -189,7 +189,7 @@ def main():
 
     encoder_optimizer = torch.optim.Adam(encoder.parameters(),
     lr=args['lr'],
-    #weight_decay=0.0001
+    weight_decay=1e-6
     )
 
     location_criterion = nn.MSELoss()

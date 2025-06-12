@@ -117,22 +117,22 @@ def prepare_dataset(args):
     return train_dataloader, valid_dataloader, test_dataloader, args
     
 
-
-def prepare_kfold_datasets(args, k_folds=1):
+def prepare_kfold_datasets(args, k_folds=5):
     matches = DataCleaner(args)
     
     used_column = [
-    'rally_id','player','type',
-    'player_location_area','opponent_location_area',
-    'hit_area',
-    'player_location_x','player_location_y',
-    'opponent_location_x','opponent_location_y',
-    'ball_round','set','match_id',
-    'getpoint_player','roundscore_A','roundscore_B'    
+        'rally_id', 'player', 'type',
+        'player_location_area', 'opponent_location_area',
+        'hit_area',
+        'player_location_x', 'player_location_y',
+        'opponent_location_x', 'opponent_location_y',
+        'ball_round', 'set', 'match_id',
+        'getpoint_player', 'roundscore_A', 'roundscore_B'
     ]
 
     matches = matches[used_column]
 
+    # 编码 player 和 type
     player_codes, player_uniques = pd.factorize(matches['player'])
     matches['player'] = player_codes + 1
     args['player_num'] = len(player_uniques) + 1
@@ -141,68 +141,62 @@ def prepare_kfold_datasets(args, k_folds=1):
     matches['type'] = type_codes + 1
     args['type_num'] = len(type_uniques) + 1
     
-    rally_ids = matches['rally_id'].unique()
-    rally_player_map = matches[['rally_id', 'player']].drop_duplicates(subset=['rally_id'])
-    print(f"Number of rows in rally_player_map before deduplication: {len(rally_player_map)}")  # Debug
+    test_index = []
+    train_val_index=[]
 
-    # 檢查 rally_player_map 是否與 rally_ids 長度一致
-    if len(rally_player_map) != len(rally_ids):
-        raise ValueError(f"Mismatch: rally_player_map has {len(rally_player_map)} rows, but rally_ids has {len(rally_ids)}")
-    
-    rally_player_map = rally_player_map.set_index('rally_id')
-    
-    # 檢查 stratify 陣列長度
-    stratify_values = rally_player_map.loc[rally_ids, 'player']
-    print(f"Length of stratify values: {len(stratify_values)}")  # Debug: should be 2372
+    for match_id in matches['match_id'].unique():
+        match = matches[matches['match_id']==match_id]
+        
+        rally_index = match['rally_id'].unique()
+        np.random.shuffle(rally_index) 
+        train_num = int(len(rally_index) * args['train_ratio'])
+        valid_num = int(len(rally_index) * args['valid_ratio'])
+        train_val_num = train_num + valid_num
 
-    # 分層分割 rally_id
-    train_val_rally_ids, test_rally_ids = train_test_split(
-        rally_ids,
-        test_size=args['test_ratio'],
-        stratify=stratify_values,
-        random_state=args['seed']
-    )
-    
-    # 檢查資料洩漏
-    assert len(np.intersect1d(test_rally_ids, train_val_rally_ids)) == 0, "Overlap detected between test_rally_ids and train_val_rally_ids!"
+        train_val_index.extend(rally_index[:train_val_num])
+        test_index.extend(rally_index[train_val_num:])
 
-    # 提取測試集資料
-    test_rally_data = matches[matches['rally_id'].isin(test_rally_ids)].reset_index(drop=True)
+    train_val_index = np.array(train_val_index)
+    test_index = np.array(test_index)
+
+    assert len(np.intersect1d(train_val_index, test_index)) == 0, "Overlap detected between train_val_rally_ids and test_rally_ids!"
+    test_rally_data = matches[matches['rally_id'].isin(test_index)].reset_index(drop=True)
     test_dataset = BadmintonDataset(test_rally_data, used_column, args)
     test_dataloader = DataLoader(test_dataset, batch_size=args['test_batch_size'], shuffle=False, num_workers=8)
-
-    matches = matches[matches['rally_id'].isin(train_val_rally_ids)].copy()
-    rally_ids = matches['rally_id'].unique()
-  
-    rally_player_map2 = matches[['rally_id', 'player']].drop_duplicates(subset='rally_id')
-    rally_player_map2 = rally_player_map2.set_index('rally_id')
     
-    skf = StratifiedKFold(n_splits=k_folds, shuffle=True, random_state=args['seed'])
+    # 初始化 KFold
+    kf = KFold(n_splits=k_folds, shuffle=True, random_state=args['seed'])
     fold_datasets = []
     
-    for fold, (train_idx, val_idx) in enumerate(skf.split(rally_player_map2.index, rally_player_map2.player)):
-        train_idx = rally_player_map2.index[train_idx]
-        val_idx = rally_player_map2.index[val_idx]
+    # 基于 rally_ids 进行普通 K-Fold 分割
+    for fold, (train_idx, val_idx) in enumerate(kf.split(train_val_index)):
+        train_rally_ids = train_val_index[train_idx]
+        val_rally_ids = train_val_index[val_idx]
     
-        train_rally_data = matches[matches['rally_id'].isin(train_idx)].reset_index(drop=True)
-        valid_rally_data = matches[matches['rally_id'].isin(val_idx)].reset_index(drop=True)
-        # 檢查資料洩漏
-        assert len(np.intersect1d(train_idx, val_idx)) == 0, "Overlap detected between train_idx and val_idx!"
+        # 提取训练和验证数据
+        train_rally_data = matches[matches['rally_id'].isin(train_rally_ids)].reset_index(drop=True)
+        valid_rally_data = matches[matches['rally_id'].isin(val_rally_ids)].reset_index(drop=True)
         
-        # 檢查 player_id 分佈
-        print("Test player distribution:\n", test_rally_data['player'].value_counts(normalize=True).sort_index())
-        print("Train player distribution:\n", train_rally_data['player'].value_counts(normalize=True).sort_index())
-        print("val player distribution:\n", valid_rally_data['player'].value_counts(normalize=True).sort_index())
+        # 检查数据泄漏
+        assert len(np.intersect1d(train_rally_ids, val_rally_ids)) == 0, "Overlap detected between train_rally_ids and val_rally_ids!"
+        
+        # 检查 player_id 分布
+        print(f"Fold {fold + 1} Train player distribution:\n", train_rally_data['player'].value_counts(normalize=True).sort_index())
+        print(f"Fold {fold + 1} Validation player distribution:\n", valid_rally_data['player'].value_counts(normalize=True).sort_index())
 
+        # 创建数据集
         train_dataset = BadmintonDataset(train_rally_data, used_column, args)
         valid_dataset = BadmintonDataset(valid_rally_data, used_column, args)
 
+        # 设置随机种子以确保可重复性
         g = torch.Generator()
         g.manual_seed(0)
 
+        # 创建数据加载器
         train_dataloader = DataLoader(train_dataset, batch_size=args['train_batch_size'], shuffle=True, num_workers=8, generator=g)
         valid_dataloader = DataLoader(valid_dataset, batch_size=args['valid_batch_size'], shuffle=False, num_workers=8, generator=g)
 
         fold_datasets.append((train_dataloader, valid_dataloader, args))
 
-    return fold_datasets, test_dataloader
+    return fold_datasets,test_dataloader
+
