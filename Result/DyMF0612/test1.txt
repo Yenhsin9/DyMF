@@ -1,0 +1,575 @@
+❯ python train.py --model_type DyMF
+Fold 1 Train player distribution:
+ player
+1     0.118129
+2     0.175028
+3     0.050770
+4     0.078486
+5     0.066360
+6     0.086282
+7     0.016923
+8     0.106003
+9     0.053834
+10    0.008995
+11    0.032047
+12    0.003598
+13    0.003598
+14    0.022253
+15    0.007662
+16    0.006596
+17    0.037711
+18    0.020521
+19    0.009861
+20    0.008595
+21    0.029316
+22    0.006330
+23    0.009661
+24    0.011127
+25    0.007462
+26    0.007129
+27    0.015724
+Name: proportion, dtype: float64
+Fold 1 Validation player distribution:
+ player
+1     0.132411
+2     0.182815
+3     0.043092
+4     0.066597
+5     0.048838
+6     0.074432
+7     0.013319
+8     0.100548
+9     0.050405
+10    0.020893
+11    0.029773
+12    0.002350
+13    0.002350
+14    0.019065
+15    0.001828
+16    0.015670
+17    0.052233
+18    0.027161
+19    0.004701
+20    0.009924
+21    0.042048
+22    0.007574
+23    0.010447
+24    0.019587
+25    0.004962
+26    0.005223
+27    0.011752
+Name: proportion, dtype: float64
+Fold 2 Train player distribution:
+ player
+1     0.119442
+2     0.176416
+3     0.050159
+4     0.081061
+5     0.062268
+6     0.084767
+7     0.015286
+8     0.105678
+9     0.053401
+10    0.012374
+11    0.030572
+12    0.003110
+13    0.003176
+14    0.021308
+15    0.006948
+16    0.007411
+17    0.039637
+18    0.021109
+19    0.009132
+20    0.008602
+21    0.033814
+22    0.005625
+23    0.008470
+24    0.011977
+25    0.007014
+26    0.006683
+27    0.014558
+Name: proportion, dtype: float64
+Fold 2 Validation player distribution:
+ player
+1     0.127483
+2     0.177402
+3     0.045357
+4     0.055824
+5     0.064949
+6     0.080247
+7     0.019860
+8     0.101718
+9     0.052067
+10    0.007515
+11    0.035695
+12    0.004294
+13    0.004026
+14    0.022813
+15    0.004563
+16    0.012614
+17    0.044820
+18    0.024960
+19    0.007515
+20    0.009930
+21    0.024155
+22    0.010467
+23    0.015298
+24    0.016371
+25    0.006710
+26    0.006978
+27    0.016371
+Name: proportion, dtype: float64
+Fold 3 Train player distribution:
+ player
+1     0.120395
+2     0.172455
+3     0.049160
+4     0.072488
+5     0.062010
+6     0.083229
+7     0.016145
+8     0.107611
+9     0.047578
+10    0.013114
+11    0.032158
+12    0.003888
+13    0.003822
+14    0.023328
+15    0.005997
+16    0.009621
+17    0.042306
+18    0.022867
+19    0.008237
+20    0.009555
+21    0.035189
+22    0.006853
+23    0.010873
+24    0.012257
+25    0.006853
+26    0.006656
+27    0.015354
+Name: proportion, dtype: float64
+Fold 3 Validation player distribution:
+ player
+1     0.123669
+2     0.193830
+3     0.049413
+4     0.090909
+5     0.066066
+6     0.086541
+7     0.016380
+8     0.093639
+9     0.076167
+10    0.004368
+11    0.029211
+12    0.001092
+13    0.001365
+14    0.014469
+15    0.008463
+16    0.003549
+17    0.033852
+18    0.017745
+19    0.011193
+20    0.006006
+21    0.018291
+22    0.005460
+23    0.005460
+24    0.015288
+25    0.007371
+26    0.007098
+27    0.013104
+Name: proportion, dtype: float64
+Fold 4 Train player distribution:
+ player
+1     0.119448
+2     0.176748
+3     0.049200
+4     0.075095
+5     0.063807
+6     0.082929
+7     0.016002
+8     0.104575
+9     0.055375
+10    0.010889
+11    0.031804
+12    0.003121
+13    0.003121
+14    0.023504
+15    0.004714
+16    0.009163
+17    0.041232
+18    0.020915
+19    0.009428
+20    0.008100
+21    0.032202
+22    0.006507
+23    0.009163
+24    0.014010
+25    0.007171
+26    0.007104
+27    0.014674
+Name: proportion, dtype: float64
+Fold 4 Validation player distribution:
+ player
+1     0.127350
+2     0.176066
+3     0.049245
+4     0.079958
+5     0.058777
+6     0.087636
+7     0.016945
+8     0.106169
+9     0.044215
+10    0.013503
+11    0.030712
+12    0.004236
+13    0.004236
+14    0.014032
+15    0.013503
+16    0.005560
+17    0.038390
+18    0.025682
+19    0.006354
+20    0.011914
+21    0.030712
+22    0.006884
+23    0.012444
+24    0.008208
+25    0.006089
+26    0.005295
+27    0.015886
+Name: proportion, dtype: float64
+Fold 5 Train player distribution:
+ player
+1     0.127776
+2     0.182461
+3     0.046749
+4     0.073224
+5     0.059553
+6     0.082161
+7     0.016606
+8     0.100567
+9     0.055552
+10    0.011671
+11    0.031344
+12    0.003001
+13    0.003001
+14    0.017606
+15    0.007069
+16    0.009403
+17    0.042414
+18    0.023941
+19    0.007402
+20    0.009470
+21    0.028943
+22    0.007603
+23    0.010937
+24    0.014872
+25    0.006269
+26    0.006135
+27    0.014271
+Name: proportion, dtype: float64
+Fold 5 Validation player distribution:
+ player
+1     0.094718
+2     0.153786
+3     0.058808
+4     0.087171
+5     0.075462
+6     0.090554
+7     0.014572
+8     0.121780
+9     0.043716
+10    0.010409
+11    0.032527
+12    0.004684
+13    0.004684
+14    0.037211
+15    0.004163
+16    0.004684
+17    0.033828
+18    0.013791
+19    0.014312
+20    0.006505
+21    0.043456
+22    0.002602
+23    0.005464
+24    0.004944
+25    0.009628
+26    0.009107
+27    0.017434
+Name: proportion, dtype: float64
+9091
+
+Training Fold 1/5
+  0%|                                                                                                     | 0/50 [00:00<?, ?it/s]Fold 1 Epoch 1 - Avg Train Loss: 0.7036, Train AUC: 0.5016, Train Brier: 0.2549
+Fold 1 Epoch 1 - Val Loss: 0.6830, Acc: 0.5764, Val AUC: 0.5552, Val Brier: 0.2450
+  ✔ Fold 1 New best model saved.
+  2%|█▊                                                                                           | 1/50 [00:29<24:23, 29.87s/it]Fold 1 Epoch 2 - Avg Train Loss: 0.6887, Train AUC: 0.5196, Train Brier: 0.2478
+Fold 1 Epoch 2 - Val Loss: 0.6859, Acc: 0.5764, Val AUC: 0.5715, Val Brier: 0.2464
+  ⚠ Fold 1 No improvement for 1/5 epochs.
+  4%|███▋                                                                                         | 2/50 [00:57<22:50, 28.55s/it]Fold 1 Epoch 3 - Avg Train Loss: 0.6855, Train AUC: 0.5451, Train Brier: 0.2462
+Fold 1 Epoch 3 - Val Loss: 0.6803, Acc: 0.5764, Val AUC: 0.5666, Val Brier: 0.2436
+  ✔ Fold 1 New best model saved.
+  6%|█████▌                                                                                       | 3/50 [01:25<22:01, 28.13s/it]Fold 1 Epoch 4 - Avg Train Loss: 0.6913, Train AUC: 0.5050, Train Brier: 0.2490
+Fold 1 Epoch 4 - Val Loss: 0.6760, Acc: 0.5764, Val AUC: 0.5755, Val Brier: 0.2415
+  ✔ Fold 1 New best model saved.
+  8%|███████▍                                                                                     | 4/50 [01:52<21:21, 27.87s/it]Fold 1 Epoch 5 - Avg Train Loss: 0.6842, Train AUC: 0.5506, Train Brier: 0.2455
+Fold 1 Epoch 5 - Val Loss: 0.6724, Acc: 0.6032, Val AUC: 0.5808, Val Brier: 0.2397
+  ✔ Fold 1 New best model saved.
+ 10%|█████████▎                                                                                   | 5/50 [02:20<20:48, 27.75s/it]Fold 1 Epoch 6 - Avg Train Loss: 0.6721, Train AUC: 0.6117, Train Brier: 0.2397
+Fold 1 Epoch 6 - Val Loss: 0.6640, Acc: 0.6139, Val AUC: 0.6288, Val Brier: 0.2356
+  ✔ Fold 1 New best model saved.
+ 12%|███████████▏                                                                                 | 6/50 [02:47<20:19, 27.72s/it]Fold 1 Epoch 7 - Avg Train Loss: 0.6637, Train AUC: 0.6310, Train Brier: 0.2356
+Fold 1 Epoch 7 - Val Loss: 0.6499, Acc: 0.6381, Val AUC: 0.6514, Val Brier: 0.2288
+  ✔ Fold 1 New best model saved.
+ 14%|█████████████                                                                                | 7/50 [03:15<19:49, 27.65s/it]Fold 1 Epoch 8 - Avg Train Loss: 0.6528, Train AUC: 0.6562, Train Brier: 0.2303
+Fold 1 Epoch 8 - Val Loss: 0.6389, Acc: 0.6273, Val AUC: 0.6764, Val Brier: 0.2237
+  ✔ Fold 1 New best model saved.
+ 16%|██████████████▉                                                                              | 8/50 [03:42<19:20, 27.63s/it]Fold 1 Epoch 9 - Avg Train Loss: 0.6327, Train AUC: 0.6962, Train Brier: 0.2210
+Fold 1 Epoch 9 - Val Loss: 0.6273, Acc: 0.6327, Val AUC: 0.6921, Val Brier: 0.2188
+  ✔ Fold 1 New best model saved.
+ 18%|████████████████▋                                                                            | 9/50 [04:10<18:48, 27.53s/it]Fold 1 Epoch 10 - Avg Train Loss: 0.6196, Train AUC: 0.7085, Train Brier: 0.2153
+Fold 1 Epoch 10 - Val Loss: 0.6152, Acc: 0.6488, Val AUC: 0.7052, Val Brier: 0.2135
+  ✔ Fold 1 New best model saved.
+ 20%|██████████████████▍                                                                         | 10/50 [04:37<18:22, 27.56s/it]Fold 1 Epoch 11 - Avg Train Loss: 0.6111, Train AUC: 0.7211, Train Brier: 0.2113
+Fold 1 Epoch 11 - Val Loss: 0.6243, Acc: 0.6273, Val AUC: 0.7068, Val Brier: 0.2179
+  ⚠ Fold 1 No improvement for 1/5 epochs.
+ 22%|████████████████████▏                                                                       | 11/50 [05:05<17:54, 27.54s/it]Fold 1 Epoch 12 - Avg Train Loss: 0.5955, Train AUC: 0.7433, Train Brier: 0.2045
+Fold 1 Epoch 12 - Val Loss: 0.6309, Acc: 0.6327, Val AUC: 0.7087, Val Brier: 0.2209
+  ⚠ Fold 1 No improvement for 2/5 epochs.
+ 24%|██████████████████████                                                                      | 12/50 [05:33<17:30, 27.66s/it]Fold 1 Epoch 13 - Avg Train Loss: 0.5988, Train AUC: 0.7368, Train Brier: 0.2058
+Fold 1 Epoch 13 - Val Loss: 0.6167, Acc: 0.6461, Val AUC: 0.7058, Val Brier: 0.2141
+  ⚠ Fold 1 No improvement for 3/5 epochs.
+ 26%|███████████████████████▉                                                                    | 13/50 [06:00<17:02, 27.63s/it]Fold 1 Epoch 14 - Avg Train Loss: 0.5978, Train AUC: 0.7403, Train Brier: 0.2054
+Fold 1 Epoch 14 - Val Loss: 0.6070, Acc: 0.6702, Val AUC: 0.7182, Val Brier: 0.2092
+  ✔ Fold 1 New best model saved.
+ 28%|█████████████████████████▊                                                                  | 14/50 [06:28<16:34, 27.63s/it]Fold 1 Epoch 15 - Avg Train Loss: 0.5844, Train AUC: 0.7565, Train Brier: 0.1991
+Fold 1 Epoch 15 - Val Loss: 0.6011, Acc: 0.6568, Val AUC: 0.7242, Val Brier: 0.2075
+  ✔ Fold 1 New best model saved.
+ 30%|███████████████████████████▌                                                                | 15/50 [06:56<16:06, 27.62s/it]Fold 1 Epoch 16 - Avg Train Loss: 0.5776, Train AUC: 0.7621, Train Brier: 0.1969
+Fold 1 Epoch 16 - Val Loss: 0.6038, Acc: 0.6810, Val AUC: 0.7176, Val Brier: 0.2084
+  ⚠ Fold 1 No improvement for 1/5 epochs.
+ 32%|█████████████████████████████▍                                                              | 16/50 [07:23<15:38, 27.61s/it]Fold 1 Epoch 17 - Avg Train Loss: 0.5786, Train AUC: 0.7618, Train Brier: 0.1967
+Fold 1 Epoch 17 - Val Loss: 0.6104, Acc: 0.6461, Val AUC: 0.7169, Val Brier: 0.2118
+  ⚠ Fold 1 No improvement for 2/5 epochs.
+ 34%|███████████████████████████████▎                                                            | 17/50 [07:51<15:11, 27.61s/it]Fold 1 Epoch 18 - Avg Train Loss: 0.5570, Train AUC: 0.7846, Train Brier: 0.1880
+Fold 1 Epoch 18 - Val Loss: 0.5997, Acc: 0.6783, Val AUC: 0.7251, Val Brier: 0.2070
+  ✔ Fold 1 New best model saved.
+ 36%|█████████████████████████████████                                                           | 18/50 [08:18<14:43, 27.62s/it]Fold 1 Epoch 19 - Avg Train Loss: 0.5619, Train AUC: 0.7762, Train Brier: 0.1902
+Fold 1 Epoch 19 - Val Loss: 0.6050, Acc: 0.6622, Val AUC: 0.7190, Val Brier: 0.2088
+  ⚠ Fold 1 No improvement for 1/5 epochs.
+ 38%|██████████████████████████████████▉                                                         | 19/50 [08:46<14:15, 27.60s/it]Fold 1 Epoch 20 - Avg Train Loss: 0.5393, Train AUC: 0.8037, Train Brier: 0.1805
+Fold 1 Epoch 20 - Val Loss: 0.6075, Acc: 0.6461, Val AUC: 0.7255, Val Brier: 0.2104
+  ⚠ Fold 1 No improvement for 2/5 epochs.
+ 40%|████████████████████████████████████▊                                                       | 20/50 [09:14<13:48, 27.63s/it]Fold 1 Epoch 21 - Avg Train Loss: 0.5557, Train AUC: 0.7865, Train Brier: 0.1868
+Fold 1 Epoch 21 - Val Loss: 0.6161, Acc: 0.6461, Val AUC: 0.7104, Val Brier: 0.2136
+  ⚠ Fold 1 No improvement for 3/5 epochs.
+ 42%|██████████████████████████████████████▋                                                     | 21/50 [09:42<13:24, 27.75s/it]Fold 1 Epoch 22 - Avg Train Loss: 0.5467, Train AUC: 0.7903, Train Brier: 0.1844
+Fold 1 Epoch 22 - Val Loss: 0.6170, Acc: 0.6542, Val AUC: 0.7098, Val Brier: 0.2136
+  ⚠ Fold 1 No improvement for 4/5 epochs.
+ 44%|████████████████████████████████████████▍                                                   | 22/50 [10:09<12:56, 27.73s/it]Fold 1 Epoch 23 - Avg Train Loss: 0.5490, Train AUC: 0.7912, Train Brier: 0.1841
+Fold 1 Epoch 23 - Val Loss: 0.6064, Acc: 0.6649, Val AUC: 0.7233, Val Brier: 0.2087
+  ⚠ Fold 1 No improvement for 5/5 epochs.
+🔚 Fold 1 Early stopping triggered.
+ 44%|████████████████████████████████████████▍                                                   | 22/50 [10:37<13:31, 28.98s/it]
+
+Training Fold 2/5
+  0%|                                                                                                     | 0/50 [00:00<?, ?it/s]Fold 2 Epoch 1 - Avg Train Loss: 0.6914, Train AUC: 0.4866, Train Brier: 0.2491
+Fold 2 Epoch 1 - Val Loss: 0.6879, Acc: 0.5362, Val AUC: 0.6392, Val Brier: 0.2474
+  ✔ Fold 2 New best model saved.
+  2%|█▊                                                                                           | 1/50 [00:28<23:23, 28.63s/it]Fold 2 Epoch 2 - Avg Train Loss: 0.6802, Train AUC: 0.5645, Train Brier: 0.2436
+Fold 2 Epoch 2 - Val Loss: 0.6755, Acc: 0.5576, Val AUC: 0.6705, Val Brier: 0.2413
+  ✔ Fold 2 New best model saved.
+  4%|███▋                                                                                         | 2/50 [00:56<22:30, 28.13s/it]Fold 2 Epoch 3 - Avg Train Loss: 0.6632, Train AUC: 0.6349, Train Brier: 0.2354
+Fold 2 Epoch 3 - Val Loss: 0.6423, Acc: 0.6542, Val AUC: 0.7068, Val Brier: 0.2253
+  ✔ Fold 2 New best model saved.
+  6%|█████▌                                                                                       | 3/50 [01:24<21:56, 28.02s/it]Fold 2 Epoch 4 - Avg Train Loss: 0.6378, Train AUC: 0.6852, Train Brier: 0.2229
+Fold 2 Epoch 4 - Val Loss: 0.6139, Acc: 0.6944, Val AUC: 0.7331, Val Brier: 0.2120
+  ✔ Fold 2 New best model saved.
+  8%|███████▍                                                                                     | 4/50 [01:52<21:23, 27.90s/it]Fold 2 Epoch 5 - Avg Train Loss: 0.6126, Train AUC: 0.7197, Train Brier: 0.2118
+Fold 2 Epoch 5 - Val Loss: 0.6051, Acc: 0.6783, Val AUC: 0.7381, Val Brier: 0.2081
+  ✔ Fold 2 New best model saved.
+ 10%|█████████▎                                                                                   | 5/50 [02:19<20:56, 27.92s/it]Fold 2 Epoch 6 - Avg Train Loss: 0.5978, Train AUC: 0.7382, Train Brier: 0.2052
+Fold 2 Epoch 6 - Val Loss: 0.5975, Acc: 0.7024, Val AUC: 0.7465, Val Brier: 0.2048
+  ✔ Fold 2 New best model saved.
+ 12%|███████████▏                                                                                 | 6/50 [02:47<20:26, 27.87s/it]Fold 2 Epoch 7 - Avg Train Loss: 0.5871, Train AUC: 0.7512, Train Brier: 0.2003
+Fold 2 Epoch 7 - Val Loss: 0.5935, Acc: 0.6890, Val AUC: 0.7482, Val Brier: 0.2030
+  ✔ Fold 2 New best model saved.
+ 14%|█████████████                                                                                | 7/50 [03:15<19:59, 27.89s/it]Fold 2 Epoch 8 - Avg Train Loss: 0.5770, Train AUC: 0.7612, Train Brier: 0.1961
+Fold 2 Epoch 8 - Val Loss: 0.5898, Acc: 0.6971, Val AUC: 0.7495, Val Brier: 0.2018
+  ✔ Fold 2 New best model saved.
+ 16%|██████████████▉                                                                              | 8/50 [03:43<19:31, 27.88s/it]Fold 2 Epoch 9 - Avg Train Loss: 0.5710, Train AUC: 0.7682, Train Brier: 0.1934
+Fold 2 Epoch 9 - Val Loss: 0.5967, Acc: 0.6729, Val AUC: 0.7401, Val Brier: 0.2048
+  ⚠ Fold 2 No improvement for 1/5 epochs.
+ 18%|████████████████▋                                                                            | 9/50 [04:11<19:02, 27.87s/it]Fold 2 Epoch 10 - Avg Train Loss: 0.5669, Train AUC: 0.7708, Train Brier: 0.1923
+Fold 2 Epoch 10 - Val Loss: 0.5955, Acc: 0.7051, Val AUC: 0.7434, Val Brier: 0.2040
+  ⚠ Fold 2 No improvement for 2/5 epochs.
+ 20%|██████████████████▍                                                                         | 10/50 [04:39<18:34, 27.85s/it]Fold 2 Epoch 11 - Avg Train Loss: 0.5573, Train AUC: 0.7823, Train Brier: 0.1879
+Fold 2 Epoch 11 - Val Loss: 0.5911, Acc: 0.6863, Val AUC: 0.7490, Val Brier: 0.2023
+  ⚠ Fold 2 No improvement for 3/5 epochs.
+ 22%|████████████████████▏                                                                       | 11/50 [05:07<18:06, 27.85s/it]Fold 2 Epoch 12 - Avg Train Loss: 0.5502, Train AUC: 0.7877, Train Brier: 0.1853
+Fold 2 Epoch 12 - Val Loss: 0.5945, Acc: 0.6917, Val AUC: 0.7487, Val Brier: 0.2031
+  ⚠ Fold 2 No improvement for 4/5 epochs.
+ 24%|██████████████████████                                                                      | 12/50 [05:34<17:37, 27.83s/it]Fold 2 Epoch 13 - Avg Train Loss: 0.5516, Train AUC: 0.7876, Train Brier: 0.1853
+Fold 2 Epoch 13 - Val Loss: 0.5890, Acc: 0.6971, Val AUC: 0.7518, Val Brier: 0.2008
+  ✔ Fold 2 New best model saved.
+ 26%|███████████████████████▉                                                                    | 13/50 [06:02<17:09, 27.81s/it]Fold 2 Epoch 14 - Avg Train Loss: 0.5440, Train AUC: 0.7941, Train Brier: 0.1827
+Fold 2 Epoch 14 - Val Loss: 0.6068, Acc: 0.6890, Val AUC: 0.7416, Val Brier: 0.2078
+  ⚠ Fold 2 No improvement for 1/5 epochs.
+ 28%|█████████████████████████▊                                                                  | 14/50 [06:30<16:40, 27.80s/it]Fold 2 Epoch 15 - Avg Train Loss: 0.5356, Train AUC: 0.8030, Train Brier: 0.1787
+Fold 2 Epoch 15 - Val Loss: 0.6143, Acc: 0.6997, Val AUC: 0.7421, Val Brier: 0.2101
+  ⚠ Fold 2 No improvement for 2/5 epochs.
+ 30%|███████████████████████████▌                                                                | 15/50 [06:58<16:12, 27.78s/it]Fold 2 Epoch 16 - Avg Train Loss: 0.5359, Train AUC: 0.8021, Train Brier: 0.1784
+Fold 2 Epoch 16 - Val Loss: 0.6017, Acc: 0.6944, Val AUC: 0.7456, Val Brier: 0.2057
+  ⚠ Fold 2 No improvement for 3/5 epochs.
+ 32%|█████████████████████████████▍                                                              | 16/50 [07:25<15:44, 27.78s/it]Fold 2 Epoch 17 - Avg Train Loss: 0.5371, Train AUC: 0.8006, Train Brier: 0.1800
+Fold 2 Epoch 17 - Val Loss: 0.6051, Acc: 0.7024, Val AUC: 0.7520, Val Brier: 0.2064
+  ⚠ Fold 2 No improvement for 4/5 epochs.
+ 34%|███████████████████████████████▎                                                            | 17/50 [07:53<15:15, 27.74s/it]Fold 2 Epoch 18 - Avg Train Loss: 0.5385, Train AUC: 0.8020, Train Brier: 0.1788
+Fold 2 Epoch 18 - Val Loss: 0.6069, Acc: 0.6863, Val AUC: 0.7460, Val Brier: 0.2082
+  ⚠ Fold 2 No improvement for 5/5 epochs.
+🔚 Fold 2 Early stopping triggered.
+ 34%|███████████████████████████████▎                                                            | 17/50 [08:21<16:12, 29.48s/it]
+
+Training Fold 3/5
+  0%|                                                                                                     | 0/50 [00:00<?, ?it/s]Fold 3 Epoch 1 - Avg Train Loss: 0.6908, Train AUC: 0.5000, Train Brier: 0.2488
+Fold 3 Epoch 1 - Val Loss: 0.6810, Acc: 0.5430, Val AUC: 0.6513, Val Brier: 0.2441
+  ✔ Fold 3 New best model saved.
+  2%|█▊                                                                                           | 1/50 [00:28<23:38, 28.95s/it]Fold 3 Epoch 2 - Avg Train Loss: 0.6670, Train AUC: 0.6388, Train Brier: 0.2371
+Fold 3 Epoch 2 - Val Loss: 0.6484, Acc: 0.6263, Val AUC: 0.6982, Val Brier: 0.2282
+  ✔ Fold 3 New best model saved.
+  4%|███▋                                                                                         | 2/50 [00:56<22:40, 28.35s/it]Fold 3 Epoch 3 - Avg Train Loss: 0.6399, Train AUC: 0.6827, Train Brier: 0.2241
+Fold 3 Epoch 3 - Val Loss: 0.6151, Acc: 0.6747, Val AUC: 0.7320, Val Brier: 0.2125
+  ✔ Fold 3 New best model saved.
+  6%|█████▌                                                                                       | 3/50 [01:24<22:05, 28.21s/it]Fold 3 Epoch 4 - Avg Train Loss: 0.6031, Train AUC: 0.7336, Train Brier: 0.2074
+Fold 3 Epoch 4 - Val Loss: 0.5903, Acc: 0.6882, Val AUC: 0.7532, Val Brier: 0.2021
+  ✔ Fold 3 New best model saved.
+  8%|███████▍                                                                                     | 4/50 [01:52<21:32, 28.09s/it]Fold 3 Epoch 5 - Avg Train Loss: 0.5939, Train AUC: 0.7436, Train Brier: 0.2031
+Fold 3 Epoch 5 - Val Loss: 0.5957, Acc: 0.6801, Val AUC: 0.7535, Val Brier: 0.2047
+  ⚠ Fold 3 No improvement for 1/5 epochs.
+ 10%|█████████▎                                                                                   | 5/50 [02:20<20:58, 27.97s/it]Fold 3 Epoch 6 - Avg Train Loss: 0.5827, Train AUC: 0.7554, Train Brier: 0.1980
+Fold 3 Epoch 6 - Val Loss: 0.5821, Acc: 0.6774, Val AUC: 0.7621, Val Brier: 0.1989
+  ✔ Fold 3 New best model saved.
+ 12%|███████████▏                                                                                 | 6/50 [02:48<20:28, 27.93s/it]Fold 3 Epoch 7 - Avg Train Loss: 0.5672, Train AUC: 0.7745, Train Brier: 0.1915
+Fold 3 Epoch 7 - Val Loss: 0.5854, Acc: 0.6882, Val AUC: 0.7530, Val Brier: 0.2005
+  ⚠ Fold 3 No improvement for 1/5 epochs.
+ 14%|█████████████                                                                                | 7/50 [03:16<20:00, 27.91s/it]Fold 3 Epoch 8 - Avg Train Loss: 0.5574, Train AUC: 0.7807, Train Brier: 0.1881
+Fold 3 Epoch 8 - Val Loss: 0.5841, Acc: 0.7016, Val AUC: 0.7594, Val Brier: 0.1999
+  ⚠ Fold 3 No improvement for 2/5 epochs.
+ 16%|██████████████▉                                                                              | 8/50 [03:44<19:30, 27.87s/it]Fold 3 Epoch 9 - Avg Train Loss: 0.5579, Train AUC: 0.7820, Train Brier: 0.1877
+Fold 3 Epoch 9 - Val Loss: 0.5933, Acc: 0.6882, Val AUC: 0.7509, Val Brier: 0.2043
+  ⚠ Fold 3 No improvement for 3/5 epochs.
+ 18%|████████████████▋                                                                            | 9/50 [04:12<19:03, 27.89s/it]Fold 3 Epoch 10 - Avg Train Loss: 0.5571, Train AUC: 0.7814, Train Brier: 0.1881
+Fold 3 Epoch 10 - Val Loss: 0.5813, Acc: 0.6935, Val AUC: 0.7600, Val Brier: 0.1995
+  ✔ Fold 3 New best model saved.
+ 20%|██████████████████▍                                                                         | 10/50 [04:39<18:33, 27.85s/it]Fold 3 Epoch 11 - Avg Train Loss: 0.5379, Train AUC: 0.8004, Train Brier: 0.1802
+Fold 3 Epoch 11 - Val Loss: 0.5841, Acc: 0.6882, Val AUC: 0.7587, Val Brier: 0.1998
+  ⚠ Fold 3 No improvement for 1/5 epochs.
+ 22%|████████████████████▏                                                                       | 11/50 [05:08<18:10, 27.96s/it]Fold 3 Epoch 12 - Avg Train Loss: 0.5445, Train AUC: 0.7942, Train Brier: 0.1826
+Fold 3 Epoch 12 - Val Loss: 0.5909, Acc: 0.6828, Val AUC: 0.7573, Val Brier: 0.2032
+  ⚠ Fold 3 No improvement for 2/5 epochs.
+ 24%|██████████████████████                                                                      | 12/50 [05:36<17:43, 27.98s/it]Fold 3 Epoch 13 - Avg Train Loss: 0.5382, Train AUC: 0.7999, Train Brier: 0.1794
+Fold 3 Epoch 13 - Val Loss: 0.5835, Acc: 0.6828, Val AUC: 0.7571, Val Brier: 0.2006
+  ⚠ Fold 3 No improvement for 3/5 epochs.
+ 26%|███████████████████████▉                                                                    | 13/50 [06:03<17:14, 27.95s/it]Fold 3 Epoch 14 - Avg Train Loss: 0.5431, Train AUC: 0.7959, Train Brier: 0.1816
+Fold 3 Epoch 14 - Val Loss: 0.5881, Acc: 0.6640, Val AUC: 0.7542, Val Brier: 0.2025
+  ⚠ Fold 3 No improvement for 4/5 epochs.
+ 28%|█████████████████████████▊                                                                  | 14/50 [06:33<17:08, 28.57s/it]Fold 3 Epoch 15 - Avg Train Loss: 0.5284, Train AUC: 0.8095, Train Brier: 0.1754
+Fold 3 Epoch 15 - Val Loss: 0.5840, Acc: 0.6989, Val AUC: 0.7544, Val Brier: 0.2009
+  ⚠ Fold 3 No improvement for 5/5 epochs.
+🔚 Fold 3 Early stopping triggered.
+ 28%|█████████████████████████▊                                                                  | 14/50 [07:09<18:25, 30.70s/it]
+
+Training Fold 4/5
+  0%|                                                                                                     | 0/50 [00:00<?, ?it/s]Fold 4 Epoch 1 - Avg Train Loss: 0.6860, Train AUC: 0.5246, Train Brier: 0.2465
+Fold 4 Epoch 1 - Val Loss: 0.6685, Acc: 0.5591, Val AUC: 0.6473, Val Brier: 0.2379
+  ✔ Fold 4 New best model saved.
+  2%|█▊                                                                                           | 1/50 [00:37<30:46, 37.69s/it]Fold 4 Epoch 2 - Avg Train Loss: 0.6501, Train AUC: 0.6768, Train Brier: 0.2291
+Fold 4 Epoch 2 - Val Loss: 0.6401, Acc: 0.6452, Val AUC: 0.6815, Val Brier: 0.2246
+  ✔ Fold 4 New best model saved.
+  4%|███▋                                                                                         | 2/50 [01:14<29:33, 36.95s/it]Fold 4 Epoch 3 - Avg Train Loss: 0.6100, Train AUC: 0.7254, Train Brier: 0.2108
+Fold 4 Epoch 3 - Val Loss: 0.6240, Acc: 0.6774, Val AUC: 0.7023, Val Brier: 0.2167
+  ✔ Fold 4 New best model saved.
+  6%|█████▌                                                                                       | 3/50 [01:49<28:18, 36.14s/it]Fold 4 Epoch 4 - Avg Train Loss: 0.5968, Train AUC: 0.7421, Train Brier: 0.2041
+Fold 4 Epoch 4 - Val Loss: 0.6301, Acc: 0.6694, Val AUC: 0.6966, Val Brier: 0.2194
+  ⚠ Fold 4 No improvement for 1/5 epochs.
+  8%|███████▍                                                                                     | 4/50 [02:23<27:08, 35.40s/it]Fold 4 Epoch 5 - Avg Train Loss: 0.5839, Train AUC: 0.7560, Train Brier: 0.1991
+Fold 4 Epoch 5 - Val Loss: 0.6213, Acc: 0.6909, Val AUC: 0.7141, Val Brier: 0.2147
+  ✔ Fold 4 New best model saved.
+ 10%|█████████▎                                                                                   | 5/50 [02:57<26:16, 35.03s/it]Fold 4 Epoch 6 - Avg Train Loss: 0.5805, Train AUC: 0.7607, Train Brier: 0.1965
+Fold 4 Epoch 6 - Val Loss: 0.6024, Acc: 0.6909, Val AUC: 0.7284, Val Brier: 0.2070
+  ✔ Fold 4 New best model saved.
+ 12%|███████████▏                                                                                 | 6/50 [03:32<25:39, 34.98s/it]Fold 4 Epoch 7 - Avg Train Loss: 0.5672, Train AUC: 0.7724, Train Brier: 0.1918
+Fold 4 Epoch 7 - Val Loss: 0.6094, Acc: 0.6935, Val AUC: 0.7257, Val Brier: 0.2096
+  ⚠ Fold 4 No improvement for 1/5 epochs.
+ 14%|█████████████                                                                                | 7/50 [04:07<25:03, 34.98s/it]Fold 4 Epoch 8 - Avg Train Loss: 0.5664, Train AUC: 0.7764, Train Brier: 0.1903
+Fold 4 Epoch 8 - Val Loss: 0.6036, Acc: 0.6828, Val AUC: 0.7355, Val Brier: 0.2074
+  ⚠ Fold 4 No improvement for 2/5 epochs.
+ 16%|██████████████▉                                                                              | 8/50 [04:43<24:35, 35.14s/it]Fold 4 Epoch 9 - Avg Train Loss: 0.5524, Train AUC: 0.7903, Train Brier: 0.1849
+Fold 4 Epoch 9 - Val Loss: 0.6084, Acc: 0.6720, Val AUC: 0.7308, Val Brier: 0.2093
+  ⚠ Fold 4 No improvement for 3/5 epochs.
+ 18%|████████████████▋                                                                            | 9/50 [05:19<24:12, 35.42s/it]Fold 4 Epoch 10 - Avg Train Loss: 0.5500, Train AUC: 0.7921, Train Brier: 0.1838
+Fold 4 Epoch 10 - Val Loss: 0.6094, Acc: 0.6935, Val AUC: 0.7286, Val Brier: 0.2096
+  ⚠ Fold 4 No improvement for 4/5 epochs.
+ 20%|██████████████████▍                                                                         | 10/50 [05:56<24:04, 36.10s/it]Fold 4 Epoch 11 - Avg Train Loss: 0.5543, Train AUC: 0.7864, Train Brier: 0.1857
+Fold 4 Epoch 11 - Val Loss: 0.6061, Acc: 0.6801, Val AUC: 0.7354, Val Brier: 0.2091
+  ⚠ Fold 4 No improvement for 5/5 epochs.
+🔚 Fold 4 Early stopping triggered.
+ 20%|██████████████████▍                                                                         | 10/50 [06:34<26:19, 39.49s/it]
+
+Training Fold 5/5
+  0%|                                                                                                     | 0/50 [00:00<?, ?it/s]Fold 5 Epoch 1 - Avg Train Loss: 0.6823, Train AUC: 0.5621, Train Brier: 0.2447
+Fold 5 Epoch 1 - Val Loss: 0.6732, Acc: 0.6048, Val AUC: 0.6156, Val Brier: 0.2401
+  ✔ Fold 5 New best model saved.
+  2%|█▊                                                                                           | 1/50 [00:36<30:04, 36.84s/it]Fold 5 Epoch 2 - Avg Train Loss: 0.6382, Train AUC: 0.6984, Train Brier: 0.2235
+Fold 5 Epoch 2 - Val Loss: 0.6345, Acc: 0.6317, Val AUC: 0.6822, Val Brier: 0.2218
+  ✔ Fold 5 New best model saved.
+  4%|███▋                                                                                         | 2/50 [01:12<28:43, 35.90s/it]Fold 5 Epoch 3 - Avg Train Loss: 0.6075, Train AUC: 0.7293, Train Brier: 0.2087
+Fold 5 Epoch 3 - Val Loss: 0.6298, Acc: 0.6398, Val AUC: 0.6920, Val Brier: 0.2195
+  ✔ Fold 5 New best model saved.
+  6%|█████▌                                                                                       | 3/50 [01:47<27:50, 35.54s/it]Fold 5 Epoch 4 - Avg Train Loss: 0.5891, Train AUC: 0.7511, Train Brier: 0.2008
+Fold 5 Epoch 4 - Val Loss: 0.6183, Acc: 0.6801, Val AUC: 0.7081, Val Brier: 0.2138
+  ✔ Fold 5 New best model saved.
+  8%|███████▍                                                                                     | 4/50 [02:23<27:36, 36.01s/it]Fold 5 Epoch 5 - Avg Train Loss: 0.5790, Train AUC: 0.7619, Train Brier: 0.1969
+Fold 5 Epoch 5 - Val Loss: 0.6218, Acc: 0.6774, Val AUC: 0.7106, Val Brier: 0.2151
+  ⚠ Fold 5 No improvement for 1/5 epochs.
+ 10%|█████████▎                                                                                   | 5/50 [02:58<26:44, 35.66s/it]Fold 5 Epoch 6 - Avg Train Loss: 0.5734, Train AUC: 0.7646, Train Brier: 0.1946
+Fold 5 Epoch 6 - Val Loss: 0.6224, Acc: 0.6640, Val AUC: 0.7173, Val Brier: 0.2156
+  ⚠ Fold 5 No improvement for 2/5 epochs.
+ 12%|███████████▏                                                                                 | 6/50 [03:32<25:36, 34.93s/it]Fold 5 Epoch 7 - Avg Train Loss: 0.5546, Train AUC: 0.7868, Train Brier: 0.1856
+Fold 5 Epoch 7 - Val Loss: 0.6319, Acc: 0.6505, Val AUC: 0.7143, Val Brier: 0.2199
+  ⚠ Fold 5 No improvement for 3/5 epochs.
+ 14%|█████████████                                                                                | 7/50 [04:13<26:34, 37.07s/it]Fold 5 Epoch 8 - Avg Train Loss: 0.5611, Train AUC: 0.7805, Train Brier: 0.1886
+Fold 5 Epoch 8 - Val Loss: 0.6160, Acc: 0.6747, Val AUC: 0.7245, Val Brier: 0.2123
+  ✔ Fold 5 New best model saved.
+ 16%|██████████████▉                                                                              | 8/50 [04:50<25:55, 37.03s/it]Fold 5 Epoch 9 - Avg Train Loss: 0.5544, Train AUC: 0.7860, Train Brier: 0.1859
+Fold 5 Epoch 9 - Val Loss: 0.6106, Acc: 0.6586, Val AUC: 0.7233, Val Brier: 0.2096
+  ✔ Fold 5 New best model saved.
+ 18%|████████████████▋                                                                            | 9/50 [05:29<25:32, 37.38s/it]Fold 5 Epoch 10 - Avg Train Loss: 0.5522, Train AUC: 0.7894, Train Brier: 0.1850
+Fold 5 Epoch 10 - Val Loss: 0.6169, Acc: 0.6667, Val AUC: 0.7230, Val Brier: 0.2120
+  ⚠ Fold 5 No improvement for 1/5 epochs.
+ 20%|██████████████████▍                                                                         | 10/50 [06:03<24:22, 36.55s/it]Fold 5 Epoch 11 - Avg Train Loss: 0.5469, Train AUC: 0.7956, Train Brier: 0.1821
+Fold 5 Epoch 11 - Val Loss: 0.6265, Acc: 0.6694, Val AUC: 0.7170, Val Brier: 0.2160
+  ⚠ Fold 5 No improvement for 2/5 epochs.
+ 22%|████████████████████▏                                                                       | 11/50 [06:41<23:56, 36.83s/it]Fold 5 Epoch 12 - Avg Train Loss: 0.5418, Train AUC: 0.7999, Train Brier: 0.1804
+Fold 5 Epoch 12 - Val Loss: 0.6497, Acc: 0.6425, Val AUC: 0.7022, Val Brier: 0.2267
+  ⚠ Fold 5 No improvement for 3/5 epochs.
+ 24%|██████████████████████                                                                      | 12/50 [07:19<23:36, 37.27s/it]Fold 5 Epoch 13 - Avg Train Loss: 0.5290, Train AUC: 0.8096, Train Brier: 0.1753
+Fold 5 Epoch 13 - Val Loss: 0.6176, Acc: 0.6909, Val AUC: 0.7191, Val Brier: 0.2110
+  ⚠ Fold 5 No improvement for 4/5 epochs.
+ 26%|███████████████████████▉                                                                    | 13/50 [07:53<22:26, 36.40s/it]Fold 5 Epoch 14 - Avg Train Loss: 0.5244, Train AUC: 0.8140, Train Brier: 0.1741
+Fold 5 Epoch 14 - Val Loss: 0.6437, Acc: 0.6613, Val AUC: 0.7126, Val Brier: 0.2226
+  ⚠ Fold 5 No improvement for 5/5 epochs.
+🔚 Fold 5 Early stopping triggered.
+ 26%|███████████████████████▉                                                                    | 13/50 [08:30<24:12, 39.27s/it]
+
+K-Fold Cross-Validation Results:
+Average Val Loss: 0.5966
+Average Val AUC: 0.7399 (±0.0148)
+Average Val Brier: 0.2047
+
+Evaluating best model (Fold 3) on test dataset...
+Test Loss: 0.5848, Acc: 0.6882, Test AUC: 0.7571, Test Brier: 0.2002
+
+change back to playerx,y location

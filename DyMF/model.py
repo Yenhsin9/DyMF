@@ -410,9 +410,20 @@ class Encoder(nn.Module):
         self.consec_score_fc  = nn.Linear(1, 8)
 
         self.linear_for_dynmaic_gcn = nn.Linear(player_dim+ args['hidden_size'], args['hidden_size'])
-        self.win_head = nn.Linear(2*args['hidden_size'], 1) 
+        self.win_head = nn.Linear(args['hidden_size']+3, 1) 
 
-    
+        self.mha = nn.MultiheadAttention(
+            embed_dim=hidden_size+1,      # 输入特征维度
+            num_heads=1,      # 注意力头数
+            dropout=args['dropout'],          # Dropout 比例
+            batch_first=True          # 输入格式为 (batch_size, seq_len, embed_dim)
+        )
+
+        self.ln = nn.LayerNorm(hidden_size+1, eps=1e-5, elementwise_affine=True)
+        self.ffn = nn.Sequential(
+            nn.Linear(hidden_size+1, 32),
+            nn.Linear(32, hidden_size+1)
+        )
     def forward(self,
                 player,     
                 shot_type,    
@@ -431,11 +442,13 @@ class Encoder(nn.Module):
         
         batch_size = player.size(0)
        
-        AB = player_A_loc.new_zeros((batch_size, encode_length*2))  
-        AB[:, 0::2] = player_A_loc   
-        AB[:, 1::2] = player_B_loc    
-        AB = AB.long()
-        embedded_player_area=self.area_embedding(AB)
+        player_A_coordination = torch.cat((player_A_x.unsqueeze(2), player_A_y.unsqueeze(2)), dim=2).float()
+        player_B_coordination = torch.cat((player_B_x.unsqueeze(2), player_B_y.unsqueeze(2)), dim=2).float()
+
+        # interleave the player and opponent location
+        coordination_sequence = torch.stack((player_A_coordination, player_B_coordination), dim=2).view(player.size(0), -1, 2)
+        coordination_transform = self.coordination_transform(coordination_sequence)
+        coordination_transform = F.relu(coordination_transform) 
 
         shot_type = shot_type.repeat_interleave(2, dim=1)
         shot_emb = self.shot_emb(shot_type)  # [32,120,16]
@@ -476,9 +489,9 @@ class Encoder(nn.Module):
         # δn = sigmoid(θn + μn * τn)
         shotEnhanced = self.sigmoid(shotEnhanced)
         enhanced_shot_features = torch.mul(shot_emb , shotEnhanced)
-        
-        rally_information = torch.cat((embedded_player_area, player_embedding,enhanced_shot_features), dim=-1)
-        model_input = self.model_input_linear(rally_information) 
+
+        rally_information = torch.cat((coordination_transform, player_embedding,enhanced_shot_features), dim=-1)
+        model_input = self.model_input_linear(rally_information)
 
         node_mask = mask.repeat_interleave(2, dim=1)    #[32,120]
         node_mask = node_mask.unsqueeze(-1)
@@ -503,7 +516,7 @@ class Encoder(nn.Module):
 
         player_A_node_embedding = self.gcn(dynamic_gcn_input_A, partial_adjacency_matrix,mask.unsqueeze(-1))
         player_B_node_embedding = self.gcn(dynamic_gcn_input_B, partial_adjacency_matrix,mask.unsqueeze(-1))
-        node_embedding = torch.zeros((full_graph_node_embedding.size(0), full_graph_node_embedding.size(1), full_graph_node_embedding.size(2))).to(player.device)
+        node_embedding = torch.zeros((model_input.size(0), model_input.size(1), model_input.size(2))).to(player.device)
         player_A_node_embedding = player_A_node_embedding * mask.unsqueeze(-1)
         player_B_node_embedding = player_B_node_embedding * mask.unsqueeze(-1)
       
@@ -537,13 +550,27 @@ class Encoder(nn.Module):
         node_embedding[:, 0::2, :] = full_graph_node_embedding[:, 0::2, :] * w_rgcn_A.unsqueeze(1) + player_A_node_embedding * w_gcn_A.unsqueeze(1)
         node_embedding[:, 1::2, :] = full_graph_node_embedding[:, 1::2, :] * w_rgcn_B.unsqueeze(1) + player_B_node_embedding * w_gcn_B.unsqueeze(1)
 
-        idx = (thisRallyL).squeeze(-1).long()   # shape [32]
-        batch_idx = torch.arange(node_embedding.size(0), device=node_embedding.device)  # [32]
-        lastNode1 = node_embedding[batch_idx, idx-1, :] #[32,16]
-        lastNode2 = node_embedding[batch_idx, idx-2, :] #[32 16]
+        node_embedding = torch.cat([node_embedding, time_out], dim=-1)  #[32,120,17]
+        attn_output, attn_weights = self.mha(node_embedding, node_embedding, node_embedding, key_padding_mask=node_mask.squeeze(-1), need_weights=True)
+        attn_output = attn_output * node_mask
+
+        attn_output = self.ln(attn_output + node_embedding) #z+p
+        r = self.ffn(attn_output)
+        r=self.ln(r + attn_output) #r+z
+        r = r.masked_fill(node_mask == 0, float('-inf'))  
+        max_pooled = torch.max(r, dim=1)[0] #[32,17]
+        score_diff = score_diff.unsqueeze(-1)  # [32, 1]
+        conpoint = conpoint.unsqueeze(-1)  # [32, 1]
+        combineLast = torch.cat([max_pooled, score_diff, conpoint], dim=-1)  # [32,19]
+        logits = self.win_head(combineLast).squeeze(-1)  # [32, 1]
+
+        # idx = (thisRallyL).squeeze(-1).long()   # shape [32]
+        # batch_idx = torch.arange(full_graph_node_embedding.size(0), device=full_graph_node_embedding.device)  # [32]
+        # lastNode1 = full_graph_node_embedding[batch_idx, idx-1, :] #[32,16]
+        # lastNode2 = full_graph_node_embedding[batch_idx, idx-2, :] #[32 16]
         
-        combineLast = torch.cat([lastNode1, lastNode2], dim=-1) #[32,32]
-        logits = self.win_head(combineLast).squeeze(-1)  
+        # combineLast = torch.cat([lastNode1, lastNode2], dim=-1) #[32,32]
+        # logits = self.win_head(combineLast).squeeze(-1)  
         #win_logit = torch.sigmoid(logits)             
         
         return logits

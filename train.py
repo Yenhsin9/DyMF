@@ -8,7 +8,7 @@ import os
 from prepare_dataset import prepare_dataset
 from prepare_dataset import prepare_kfold_datasets
 from utils import save_args_file
-
+import csv
 def main():
     args = argparse.ArgumentParser()
 
@@ -31,15 +31,16 @@ def main():
     args.add_argument("--test_batch_size", type=int, default=8)
     args.add_argument("--hidden_size", type=int, default=16)
     args.add_argument("--model_type", type=str, required=True)
-    args.add_argument("--lr", type=float, default=0.003)
+    args.add_argument("--lr", type=float, default=0.01)
     args.add_argument("--player_dim", type=int, default=16)
     args.add_argument("--type_dim", type=int, default=16)
     args.add_argument("--location_dim", type=int, default=16)
     args.add_argument("--num_layer", type=int, default=2)
+    args.add_argument("--weight_decay", type=float, default=0.001 )
 
     args.add_argument("--epochs", type=int, default=50)
     #args.add_argument("--encode_length", type=int, required=True)
-    args.add_argument("--dropout", type=float, default=0.3)
+    args.add_argument("--dropout", type=float, default=0.2)
 
     args.add_argument("--num_basis", type=int, default=2)
 
@@ -189,8 +190,8 @@ def main():
 
     encoder_optimizer = torch.optim.Adam(encoder.parameters(),
     lr=args['lr'],
-    weight_decay=1e-6
-    )
+    weight_decay=args['weight_decay']),
+    
 
     location_criterion = nn.MSELoss()
     shot_type_criterion = nn.CrossEntropyLoss()
@@ -212,7 +213,20 @@ def main():
         fold_datasets, test_dataloader,encoder, location_criterion, shot_type_criterion, 
         encoder_optimizer, args, device=device
     )
-    
+    results_file = 'grid_search_results.csv'
+    if not os.path.exists(results_file) or os.stat(results_file).st_size == 0:
+        with open(results_file, 'w', newline='') as csvfile:
+            fieldnames = ['dropout', 'weight_decay', 'lr', 'avg_val_loss']
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            writer.writeheader()
+    with open(results_file, 'a', newline='') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=['dropout', 'weight_decay', 'lr', 'avg_val_loss'])
+        writer.writerow({
+            'dropout': args['dropout'],
+            'weight_decay': args['weight_decay'],
+            'lr': args['lr'],
+            'avg_val_loss': avg_val_loss
+        })
 
 if __name__ == "__main__":
     main()

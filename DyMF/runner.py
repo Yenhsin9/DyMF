@@ -46,7 +46,7 @@ def Gaussian2D_loss(V_pred, V_trgt):
 def train_kfold(fold_datasets,test_dataloader, encoder, location_criterion, shot_type_criterion, encoder_optimizer, args, device="cpu"):
     bce_loss = BCEWithLogitsLoss()
     best_val_loss = float('inf')
-    patience = args.get('patience', 5)
+    patience = args.get('patience', 10)
     
     # 儲存每個折的指標
     fold_val_losses = []
