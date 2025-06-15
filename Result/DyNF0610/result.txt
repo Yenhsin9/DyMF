@@ -914,3 +914,5 @@ Average Val Brier: 0.1405
 
 Evaluating best model (Fold 5) on test dataset...
 Test Loss: 0.6551, Acc: 0.6603, Test AUC: 0.7154, Test Brier: 0.2237
+
+#資料洩漏
