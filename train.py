@@ -27,7 +27,7 @@ def main():
     # training
     args.add_argument("--seed", type=int, default=22)
     args.add_argument("--train_batch_size", type=int, default=32)
-    args.add_argument("--valid_batch_size", type=int, default=8)
+    args.add_argument("--valid_batch_size", type=int, default=8) 
     args.add_argument("--test_batch_size", type=int, default=8)
     args.add_argument("--hidden_size", type=int, default=16)
     args.add_argument("--model_type", type=str, required=True)
