@@ -1,8 +1,8 @@
 import torch
 import numpy as np
 import pandas as pd
-import random
 import os
+import random
 from data_cleaner import DataCleaner
 from dataset import BadmintonDataset
 from torch.utils.data import DataLoader
@@ -47,75 +47,75 @@ def dynamic_collate(batch):
     return rally_batch, labels
 
 
-# def prepare_dataset(args):
-#     matches = DataCleaner(args)
+def prepare_dataset(args):
+    matches = DataCleaner(args)
     
-#     used_column = [
-#     'rally_id','player','type',
-#     'player_location_area','opponent_location_area',
-#     'hit_area',
-#     'player_location_x','player_location_y',
-#     'opponent_location_x','opponent_location_y',
-#     'ball_round','set','match_id',
-#     'getpoint_player','roundscore_A','roundscore_B'    
-#     ]
+    used_column = [
+    'rally_id','player','type',
+    'player_location_area','opponent_location_area',
+    'hit_area',
+    'player_location_x','player_location_y',
+    'opponent_location_x','opponent_location_y',
+    'ball_round','set','match_id',
+    'getpoint_player','roundscore_A','roundscore_B'    
+    ]
 
-#     matches = matches[used_column]
+    matches = matches[used_column]
 
-#     player_codes, player_uniques = pd.factorize(matches['player'])
-#     matches['player'] = player_codes + 1
-#     args['player_num'] = len(player_uniques) + 1
+    player_codes, player_uniques = pd.factorize(matches['player'])
+    matches['player'] = player_codes + 1
+    args['player_num'] = len(player_uniques) + 1
 
-#     type_codes, type_uniques = pd.factorize(matches['type'])
-#     matches['type'] = type_codes + 1
-#     args['type_num'] = len(type_uniques) + 1
+    type_codes, type_uniques = pd.factorize(matches['type'])
+    matches['type'] = type_codes + 1
+    args['type_num'] = len(type_uniques) + 1
     
-#     rally_ids = matches['rally_id'].unique()
+    rally_ids = matches['rally_id'].unique()
 
-#     # 隨機分割測試集
-#     np.random.seed(args['seed'])
-#     np.random.shuffle(rally_ids)
-#     test_num = int(len(rally_ids) * args['test_ratio'])
-#     test_rally_ids = rally_ids[:test_num]
-#     train_val_rally_ids = rally_ids[test_num:]
+    # 隨機分割測試集
+    np.random.seed(args['seed'])
+    np.random.shuffle(rally_ids)
+    test_num = int(len(rally_ids) * args['test_ratio'])
+    test_rally_ids = rally_ids[:test_num]
+    train_val_rally_ids = rally_ids[test_num:]
 
-#     test_rally_data = matches[matches['rally_id'].isin(test_rally_ids)].reset_index(drop=True)
-#     test_dataset = BadmintonDataset(test_rally_data, used_column, args)
-#     test_dataloader = DataLoader(test_dataset, batch_size=args['test_batch_size'], shuffle=False, num_workers=8)
+    test_rally_data = matches[matches['rally_id'].isin(test_rally_ids)].reset_index(drop=True)
+    test_dataset = BadmintonDataset(test_rally_data, used_column, args)
+    test_dataloader = DataLoader(test_dataset, batch_size=args['test_batch_size'], shuffle=False, num_workers=8)
 
-#     kf = KFold(n_splits=k_folds, shuffle=True, random_state=args['seed'])
-#     fold_datasets = []
+    kf = KFold(n_splits=k_folds, shuffle=True, random_state=args['seed'])
+    fold_datasets = []
 
-#     for match_id in matches['match_id'].unique():
-#         match = matches[matches['match_id']==match_id]
-#         rally_index = match['rally_id'].unique()
-#        # np.random.shuffle(rally_index) 
-#         train_num = int(len(rally_index) * args['train_ratio'])
-#         valid_num = int(len(rally_index) * args['valid_ratio'])
+    for match_id in matches['match_id'].unique():
+        match = matches[matches['match_id']==match_id]
+        rally_index = match['rally_id'].unique()
+       # np.random.shuffle(rally_index) 
+        train_num = int(len(rally_index) * args['train_ratio'])
+        valid_num = int(len(rally_index) * args['valid_ratio'])
 
-#         train_index.extend(rally_index[:train_num])
-#         valid_index.extend(rally_index[train_num:train_num+valid_num])
-#         test_index.extend(rally_index[train_num+valid_num:])
+        train_index.extend(rally_index[:train_num])
+        valid_index.extend(rally_index[train_num:train_num+valid_num])
+        test_index.extend(rally_index[train_num+valid_num:])
     
-#     train_index = np.array(train_index)
-#     valid_index = np.array(valid_index)
-#     test_index = np.array(test_index)
+    train_index = np.array(train_index)
+    valid_index = np.array(valid_index)
+    test_index = np.array(test_index)
  
-#     train_rally_data = matches[matches['rally_id'].isin(train_index)].reset_index(drop=True)
-#     valid_rally_data = matches[matches['rally_id'].isin(valid_index)].reset_index(drop=True)
-#     test_rally_data = matches[matches['rally_id'].isin(test_index)].reset_index(drop=True)
+    train_rally_data = matches[matches['rally_id'].isin(train_index)].reset_index(drop=True)
+    valid_rally_data = matches[matches['rally_id'].isin(valid_index)].reset_index(drop=True)
+    test_rally_data = matches[matches['rally_id'].isin(test_index)].reset_index(drop=True)
 
-#     train_dataset = BadmintonDataset(train_rally_data, used_column, args)
-#     valid_dataset = BadmintonDataset(valid_rally_data, used_column, args)
-#     test_dataset = BadmintonDataset(test_rally_data, used_column, args)
+    train_dataset = BadmintonDataset(train_rally_data, used_column, args)
+    valid_dataset = BadmintonDataset(valid_rally_data, used_column, args)
+    test_dataset = BadmintonDataset(test_rally_data, used_column, args)
 
-#     g = torch.Generator()
-#     g.manual_seed(0)
+    g = torch.Generator()
+    g.manual_seed(0)
 
-#     train_dataloader = DataLoader(train_dataset, batch_size=args['train_batch_size'], shuffle=True, num_workers=8)
-#     valid_dataloader = DataLoader(valid_dataset, batch_size=args['valid_batch_size'], shuffle=False, num_workers=8)
-#     test_dataloader = DataLoader(test_dataset, batch_size=args['test_batch_size'], shuffle=False, num_workers=8)
-#     return train_dataloader, valid_dataloader, test_dataloader, args
+    train_dataloader = DataLoader(train_dataset, batch_size=args['train_batch_size'], shuffle=True, num_workers=8)
+    valid_dataloader = DataLoader(valid_dataset, batch_size=args['valid_batch_size'], shuffle=False, num_workers=8)
+    test_dataloader = DataLoader(test_dataset, batch_size=args['test_batch_size'], shuffle=False, num_workers=8)
+    return train_dataloader, valid_dataloader, test_dataloader, args
     
 
 def prepare_kfold_datasets(args, k_folds=5):
@@ -136,7 +136,6 @@ def prepare_kfold_datasets(args, k_folds=5):
     matches = matches[used_column]
 
     player_codes, player_uniques = pd.factorize(matches['player'])
-    matches['player'] = player_codes + 1
     args['player_num'] = len(player_uniques) + 1
 
     type_codes, type_uniques = pd.factorize(matches['type'])
@@ -180,4 +179,3 @@ def prepare_kfold_datasets(args, k_folds=5):
         fold_datasets.append((train_dataloader, valid_dataloader, args))
 
     return fold_datasets,test_dataloader
-
