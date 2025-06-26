@@ -37,7 +37,7 @@ class BadmintonDataset(Dataset):
             one_rally = rally_data.iloc[rally_id].reset_index(drop=True)
             
             seqence_length = len(one_rally)     #shot sequence length
-            tmpGetPoint = one_rally['getpoint_player'].iloc[-1]
+            tmpGetPoint = one_rally['is_target_win'].iloc[-1]
             
             # rally information
             player = one_rally[['player']].values.reshape(-1)
@@ -71,7 +71,7 @@ class BadmintonDataset(Dataset):
                 consecutive_points = 0
             else:
                 roundscore_diff = pre_diff
-                if pre_getPoint == 'A':
+                if pre_getPoint == 1:
                     consecutive_points += 1
                 else:
                     consecutive_points = 0 
@@ -112,9 +112,8 @@ class BadmintonDataset(Dataset):
 
           
             # predict target
-            last_point = one_rally['getpoint_player'].iloc[-1]
-            label = 1 if last_point == 'A' else 0
-            self.target_sequence.append(label)
+            last_point = one_rally['is_target_win'].iloc[-1]
+            self.target_sequence.append(last_point)
  
     def __len__(self):
         return len(self.player_sequence)
