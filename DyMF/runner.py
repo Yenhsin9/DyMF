@@ -65,8 +65,8 @@ def train_kfold(fold_datasets,test_dataloader, encoder, location_criterion, shot
         val_auc_list = []
         train_brier_list = []
         val_brier_list = []
-        train_loss = []
-        val_loss = []
+        train_loss_list = []
+        val_loss_list = []
         best_fold_val_loss = float('inf')
         no_improve = 0
         
@@ -115,7 +115,7 @@ def train_kfold(fold_datasets,test_dataloader, encoder, location_criterion, shot
             T_brier = brier_score_loss(x_true, x_prob)
             train_auc_list.append(T_auc)
             train_brier_list.append(T_brier)
-            train_loss.append(avg_train_loss)
+            train_loss_list.append(avg_train_loss)
             print(f'Fold {fold + 1} Epoch {epoch + 1} - Avg Train Loss: {avg_train_loss:.4f}, Train AUC: {T_auc:.4f}, Train Brier: {T_brier:.4f}')
 
             # 驗證階段
@@ -159,7 +159,7 @@ def train_kfold(fold_datasets,test_dataloader, encoder, location_criterion, shot
             brier = brier_score_loss(y_true, y_prob)
             val_auc_list.append(auc)
             val_brier_list.append(brier)
-            val_loss.append(avg_val_loss)
+            val_loss_list.append(avg_val_loss)
             print(
                 f"Fold {fold + 1} Epoch {epoch + 1} - "
                 f"Val Loss: {avg_val_loss:.4f}, "
@@ -188,7 +188,7 @@ def train_kfold(fold_datasets,test_dataloader, encoder, location_criterion, shot
                 if no_improve >= patience:
                     print(f"🔚 Fold {fold + 1} Early stopping triggered.")
                     break
-        draw_plot(train_auc_list,val_auc_list,train_brier_list,val_brier_list,train_loss,val_loss)
+        draw_plot(train_auc_list,val_auc_list,train_brier_list,val_brier_list,train_loss_list,val_loss_list)
         # 記錄該折的最佳驗證指標
         fold_val_losses.append(best_fold_val_loss)
         fold_val_aucs.append(max(val_auc_list))
