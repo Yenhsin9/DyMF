@@ -2,6 +2,7 @@ import torch
 import numpy as np
 import pandas as pd
 import random
+import os
 from data_cleaner import DataCleaner
 from dataset import BadmintonDataset
 from torch.utils.data import DataLoader
@@ -127,7 +128,8 @@ def prepare_kfold_datasets(args, k_folds=5):
         'player_location_x', 'player_location_y',
         'opponent_location_x', 'opponent_location_y',
         'ball_round', 'set', 'match_id',
-        'getpoint_player', 'roundscore_A', 'roundscore_B'
+        'getpoint_player', 'roundscore_A', 'roundscore_B',
+        'aroundhead','backhand'
     ]
 
     matches = matches[used_column]
@@ -161,6 +163,7 @@ def prepare_kfold_datasets(args, k_folds=5):
 
     assert len(np.intersect1d(train_val_index, test_index)) == 0, "Overlap detected between train_val_rally_ids and test_rally_ids!"
     test_rally_data = matches[matches['rally_id'].isin(test_index)].reset_index(drop=True)
+    test_rally_data.to_csv('./data/test.csv', index=False)
     test_dataset = BadmintonDataset(test_rally_data, used_column, args)
     test_dataloader = DataLoader(test_dataset, batch_size=args['test_batch_size'], shuffle=False, num_workers=8)
     
@@ -168,6 +171,7 @@ def prepare_kfold_datasets(args, k_folds=5):
     kf = KFold(n_splits=k_folds, shuffle=True, random_state=args['seed'])
     fold_datasets = []
     
+    path = './data/'
     # 基于 rally_ids 进行普通 K-Fold 分割
     for fold, (train_idx, val_idx) in enumerate(kf.split(train_val_index)):
         train_rally_ids = train_val_index[train_idx]
@@ -180,6 +184,9 @@ def prepare_kfold_datasets(args, k_folds=5):
         # 检查数据泄漏
         assert len(np.intersect1d(train_rally_ids, val_rally_ids)) == 0, "Overlap detected between train_rally_ids and val_rally_ids!"
         
+        train_rally_data.to_csv(os.path.join(path, f'train_fold_{fold+1}.csv'), index=False)
+        valid_rally_data.to_csv(os.path.join(path, f'val_fold_{fold+1}.csv'), index=False)
+
         # 检查 player_id 分布
         print(f"Fold {fold + 1} Train player distribution:\n", train_rally_data['player'].value_counts(normalize=True).sort_index())
         print(f"Fold {fold + 1} Validation player distribution:\n", valid_rally_data['player'].value_counts(normalize=True).sort_index())
