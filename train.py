@@ -26,9 +26,9 @@ def main():
 
     # training
     args.add_argument("--seed", type=int, default=22)
-    args.add_argument("--train_batch_size", type=int, default=32)
-    args.add_argument("--valid_batch_size", type=int, default=8) 
-    args.add_argument("--test_batch_size", type=int, default=8)
+    args.add_argument("--train_batch_size", type=int, default=128)
+    args.add_argument("--valid_batch_size", type=int, default=64) 
+    args.add_argument("--test_batch_size", type=int, default=64)
     args.add_argument("--hidden_size", type=int, default=16)
     args.add_argument("--model_type", type=str, required=True)
     args.add_argument("--lr", type=float, default=0.003)
@@ -66,24 +66,43 @@ def main():
     args = args.parse_args()
     args = vars(args)
 
+    # Set random seeds for reproducibility
     np.random.seed(args['seed'])
     random.seed(args['seed'])
     torch.manual_seed(args['seed'])
-    torch.cuda.manual_seed(args['seed'])
-    torch.cuda.manual_seed_all(args['seed'])
-    os.environ["CUDA_LAUNCH_BLOCKING"] = "1"
-    os.environ["CUBLAS_WORKSPACE_CONFIG"] = ":4096:8"
-    torch.use_deterministic_algorithms(True)
-    torch.backends.cudnn.benchmark = False
-    torch.backends.cudnn.deterministic = True
+
+    # Device-specific seed and settings
+    if torch.backends.mps.is_available():
+        # MPS-specific seed (available in PyTorch 2.3+)
+        torch.mps.manual_seed(args['seed'])
+        device = torch.device("mps")
+        # MPS does not use CUDNN, so no need for CUDNN settings
+        # Use deterministic algorithms with warning for unsupported ops
+        torch.use_deterministic_algorithms(True, warn_only=True)
+    else:
+        # CUDA-specific settings for non-M1 environments
+        if torch.cuda.is_available():
+            torch.cuda.manual_seed(args['seed'])
+            torch.cuda.manual_seed_all(args['seed'])
+            os.environ["CUDA_LAUNCH_BLOCKING"] = "1"
+            os.environ["CUBLAS_WORKSPACE_CONFIG"] = ":4096:8"
+            torch.backends.cudnn.benchmark = False
+            torch.backends.cudnn.deterministic = True
+            device = torch.device("cuda")
+        else:
+            # Fallback to CPU if neither MPS nor CUDA is available
+            device = torch.device("cpu")
+            torch.use_deterministic_algorithms(True, warn_only=True)
+
+    print(f"Using device: {device}")
 
     if args['model_folder'] == None:
         args['model_folder'] = './model/' +  args['model_type'] + '_' + str(datetime.now().strftime("%Y-%m-%d-%H:%M"))
+
     #train_dataloader, valid_dataloader, test_dataloader, args = prepare_dataset(args)
     # 獲取 k-fold 數據集
     fold_datasets,test_dataloader = prepare_kfold_datasets(args, k_folds=args['k_folds'])
 
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     if args['model_type'] == 'DNRI':
         from DNRI.model import Encoder
