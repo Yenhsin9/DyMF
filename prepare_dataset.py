@@ -128,13 +128,11 @@ def prepare_kfold_datasets(args, k_folds=5):
         'player_location_x', 'player_location_y',
         'opponent_location_x', 'opponent_location_y',
         'ball_round', 'set', 'match_id',
-        'getpoint_player', 'roundscore_A', 'roundscore_B',
-        'aroundhead','backhand'
+        'getpoint_player', 'roundscore_A', 'roundscore_B'
     ]
 
     matches = matches[used_column]
 
-    # 编码 player 和 type
     player_codes, player_uniques = pd.factorize(matches['player'])
     matches['player'] = player_codes + 1
     args['player_num'] = len(player_uniques) + 1
@@ -142,54 +140,20 @@ def prepare_kfold_datasets(args, k_folds=5):
     type_codes, type_uniques = pd.factorize(matches['type'])
     matches['type'] = type_codes + 1
     args['type_num'] = len(type_uniques) + 1
-    
-    test_index = []
-    train_val_index=[]
 
-    for match_id in matches['match_id'].unique():
-        match = matches[matches['match_id']==match_id]
-        
-        rally_index = match['rally_id'].unique()
-        np.random.shuffle(rally_index) 
-        train_num = int(len(rally_index) * args['train_ratio'])
-        valid_num = int(len(rally_index) * args['valid_ratio'])
-        train_val_num = train_num + valid_num
+    data_dir = './data/'
 
-        train_val_index.extend(rally_index[:train_val_num])
-        test_index.extend(rally_index[train_val_num:])
-
-    train_val_index = np.array(train_val_index)
-    test_index = np.array(test_index)
-
-    assert len(np.intersect1d(train_val_index, test_index)) == 0, "Overlap detected between train_val_rally_ids and test_rally_ids!"
-    test_rally_data = matches[matches['rally_id'].isin(test_index)].reset_index(drop=True)
-    test_rally_data.to_csv('./data/test.csv', index=False)
+    test_rally_data = pd.read_csv('./data/test.csv')
     test_dataset = BadmintonDataset(test_rally_data, used_column, args)
     test_dataloader = DataLoader(test_dataset, batch_size=args['test_batch_size'], shuffle=False, num_workers=8)
     
-    # 初始化 KFold
-    kf = KFold(n_splits=k_folds, shuffle=True, random_state=args['seed'])
     fold_datasets = []
-    
-    path = './data/'
-    # 基于 rally_ids 进行普通 K-Fold 分割
-    for fold, (train_idx, val_idx) in enumerate(kf.split(train_val_index)):
-        train_rally_ids = train_val_index[train_idx]
-        val_rally_ids = train_val_index[val_idx]
-    
-        # 提取训练和验证数据
-        train_rally_data = matches[matches['rally_id'].isin(train_rally_ids)].reset_index(drop=True)
-        valid_rally_data = matches[matches['rally_id'].isin(val_rally_ids)].reset_index(drop=True)
-        
-        # 检查数据泄漏
-        assert len(np.intersect1d(train_rally_ids, val_rally_ids)) == 0, "Overlap detected between train_rally_ids and val_rally_ids!"
-        
-        train_rally_data.to_csv(os.path.join(path, f'train_fold_{fold+1}.csv'), index=False)
-        valid_rally_data.to_csv(os.path.join(path, f'val_fold_{fold+1}.csv'), index=False)
-
+    for i in range(1, 6):
+        train_rally_data = pd.read_csv(os.path.join(data_dir, f'train_fold_{i}.csv'))
+        valid_rally_data = pd.read_csv(os.path.join(data_dir, f'val_fold_{i}.csv'))
         # 检查 player_id 分布
-        print(f"Fold {fold + 1} Train player distribution:\n", train_rally_data['player'].value_counts(normalize=True).sort_index())
-        print(f"Fold {fold + 1} Validation player distribution:\n", valid_rally_data['player'].value_counts(normalize=True).sort_index())
+        print(f"Fold {i} Train player distribution:\n", train_rally_data['player'].value_counts(normalize=True).sort_index())
+        print(f"Fold {i} Validation player distribution:\n", valid_rally_data['player'].value_counts(normalize=True).sort_index())
 
         # 创建数据集
         train_dataset = BadmintonDataset(train_rally_data, used_column, args)
@@ -206,4 +170,5 @@ def prepare_kfold_datasets(args, k_folds=5):
         fold_datasets.append((train_dataloader, valid_dataloader, args))
 
     return fold_datasets,test_dataloader
+
 

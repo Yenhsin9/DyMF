@@ -1,0 +1,7 @@
+K-Fold Cross-Validation Results:
+Average Val Loss: 0.5998
+Average Val AUC: 0.7362 (±0.0201)
+Average Val Brier: 0.2070
+
+Evaluating best model (Fold 1) on test dataset...
+Test Loss: 0.6140, Acc: 0.6608, Test AUC: 0.7209, Test Brier: 0.2118

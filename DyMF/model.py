@@ -410,7 +410,7 @@ class Encoder(nn.Module):
         self.consec_score_fc  = nn.Linear(1, 8)
 
         self.linear_for_dynmaic_gcn = nn.Linear(player_dim+ args['hidden_size'], args['hidden_size'])
-        self.win_head = nn.Linear(args['hidden_size']*2+2, 1) 
+        self.win_head = nn.Linear(args['hidden_size']*2, 1) 
 
         self.mha = nn.MultiheadAttention(
             embed_dim=hidden_size+1,      # 输入特征维度
@@ -554,12 +554,12 @@ class Encoder(nn.Module):
         batch_idx = torch.arange(full_graph_node_embedding.size(0), device=full_graph_node_embedding.device)  # [32]
         lastNode1 = full_graph_node_embedding[batch_idx, idx-1, :] #[32,16]
         lastNode2 = full_graph_node_embedding[batch_idx, idx-2, :] #[32 16]
-        score_diff = score_diff.unsqueeze(1).float()  # [32, 1]
-        conpoint = conpoint.unsqueeze(1).float()  # [32, 1]
+        #score_diff = score_diff.unsqueeze(1).float()  # [32, 1]
+        #conpoint = conpoint.unsqueeze(1).float()  # [32, 1]
         # score_diff = self.score_diff_fc(score_diff)
         # conpoint = self.consec_score_fc(conpoint)
         
-        combineLast = torch.cat([lastNode1, lastNode2,score_diff,conpoint], dim=-1) #[32,32]
+        combineLast = torch.cat([lastNode1, lastNode2], dim=-1) #[32,32]
         logits = self.win_head(combineLast).squeeze(-1)  
         #win_logit = torch.sigmoid(logits)             
         
