@@ -94,6 +94,9 @@ def train_kfold(fold_datasets,test_dataloader, encoder, location_criterion, shot
                     rally_batch[10].to(device),
                     rally_batch[11].to(device),
                     rally_batch[12].to(device),
+                    rally_batch[13].to(device),
+                    rally_batch[14].to(device),
+                    rally_batch[15].to(device),
                     max_length,
                 )
                 
@@ -140,6 +143,9 @@ def train_kfold(fold_datasets,test_dataloader, encoder, location_criterion, shot
                         rally_batch[10].to(device),
                         rally_batch[11].to(device),
                         rally_batch[12].to(device),
+                        rally_batch[13].to(device),
+                        rally_batch[14].to(device),
+                        rally_batch[15].to(device),
                         valid_max_length,
                     )
                     y_prob.extend(torch.sigmoid(win_logit).detach().cpu().numpy())
@@ -376,6 +382,9 @@ def evaluate(test_dataloader,
                 rally_batch[10].to(device),
                 rally_batch[11].to(device),
                 rally_batch[12].to(device),
+                rally_batch[13].to(device),
+                rally_batch[14].to(device),
+                rally_batch[15].to(device),
                 max_length,
             )
             y_prob.extend(torch.sigmoid(win_logit).detach().cpu().numpy())

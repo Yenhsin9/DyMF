@@ -1,0 +1,1 @@
+Test Loss: 0.6186, Acc: 0.6856, Test AUC: 0.7266, Test Brier: 0.2109

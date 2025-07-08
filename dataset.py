@@ -46,24 +46,29 @@ class BadmintonDataset(Dataset):
             scoreB = one_rally[['roundscore_B']].values.reshape(-1)[0]
             tmp = scoreA-scoreB
 
-            player_x = one_rally[['player_location_x']].values.reshape(-1)
-            player_y = one_rally[['player_location_y']].values.reshape(-1)
-            opponent_x = one_rally[['opponent_location_x']].values.reshape(-1)
-            opponent_y = one_rally[['opponent_location_y']].values.reshape(-1)
-            player_loc = one_rally[['player_location_area']].values.reshape(-1)
+            player_x = one_rally[['player_location_x']].values.reshape(-1).astype(np.float32)
+            player_y = one_rally[['player_location_y']].values.reshape(-1).astype(np.float32)
+            opponent_x = one_rally[['opponent_location_x']].values.reshape(-1).astype(np.float32)
+            opponent_y = one_rally[['opponent_location_y']].values.reshape(-1).astype(np.float32)
+            player_loc = one_rally[['player_location_area']].values.reshape(-1).astype(np.float32)
             player_loc[player_loc >= 10] = 10.0
-            opp_loc = one_rally[['opponent_location_area']].values.reshape(-1)
+            opp_loc = one_rally[['opponent_location_area']].values.reshape(-1).astype(np.float32)
             opp_loc[opp_loc >= 10] = 10.0
+            hit_area = one_rally[['hit_area']].values.reshape(-1)
+            backhand = one_rally[['backhand']].values.reshape(-1)
+            aroundhead = one_rally[['aroundhead']].values.reshape(-1)
 
             player = np.pad(player, (0, self.encode_length - seqence_length), 'constant', constant_values=(0))
-            shot_type  = np.pad(shot_type , (0, self.encode_length - seqence_length), 'constant', constant_values=(0))
-            player_x = np.pad(player_x, (0, self.encode_length - seqence_length), 'constant', constant_values=(0))
-            player_y = np.pad(player_y, (0, self.encode_length - seqence_length), 'constant', constant_values=(0))
-            opponent_x = np.pad(opponent_x, (0, self.encode_length - seqence_length), 'constant', constant_values=(0))
-            opponent_y = np.pad(opponent_y, (0, self.encode_length - seqence_length), 'constant', constant_values=(0))           
-            player_loc = np.pad(player_loc, (0, self.encode_length - seqence_length), 'constant', constant_values=(0))
-            opp_loc = np.pad(opp_loc, (0, self.encode_length - seqence_length), 'constant', constant_values=(0))
-            
+            shot_type = np.pad(shot_type, (0, self.encode_length - seqence_length), 'constant', constant_values=(0))
+            player_x = np.pad(player_x, (0, self.encode_length - seqence_length), 'constant', constant_values=(0)).astype(np.float32)
+            player_y = np.pad(player_y, (0, self.encode_length - seqence_length), 'constant', constant_values=(0)).astype(np.float32)
+            opponent_x = np.pad(opponent_x, (0, self.encode_length - seqence_length), 'constant', constant_values=(0)).astype(np.float32)
+            opponent_y = np.pad(opponent_y, (0, self.encode_length - seqence_length), 'constant', constant_values=(0)).astype(np.float32)
+            player_loc = np.pad(player_loc, (0, self.encode_length - seqence_length), 'constant', constant_values=(0)).astype(np.float32)
+            opp_loc = np.pad(opp_loc, (0, self.encode_length - seqence_length), 'constant', constant_values=(0)).astype(np.float32)
+            hit_area = np.pad(hit_area, (0, self.encode_length - seqence_length), 'constant', constant_values=(0))
+            backhand = np.pad(backhand, (0, self.encode_length - seqence_length), 'constant', constant_values=(0))
+            aroundhead = np.pad(aroundhead, (0, self.encode_length - seqence_length), 'constant', constant_values=(0))
             setid = one_rally['set'].iloc[-1]
              # (Consecutive Points)
             if setid != pre_setid: 
@@ -80,25 +85,25 @@ class BadmintonDataset(Dataset):
             pre_setid = setid
 
 
-            player_A_loc = np.empty((self.encode_length,), dtype=float)
+            player_A_loc = np.empty((self.encode_length,), dtype=np.float32)
             player_A_loc[0::2] = player_loc[0::2]
             player_A_loc[1::2] = opp_loc[1::2]
 
-            player_B_loc = np.empty((self.encode_length,), dtype=float)
+            player_B_loc = np.empty((self.encode_length,), dtype=np.float32)
             player_B_loc[0::2] = opp_loc[0::2]
             player_B_loc[1::2] = player_loc[1::2]
 
-            player_A_x = np.empty((self.encode_length,), dtype=float)
+            player_A_x = np.empty((self.encode_length,), dtype=np.float32)
             player_A_x[0::2] = player_x[0::2]
             player_A_x[1::2] = opponent_x[1::2]
-            player_A_y = np.empty((self.encode_length,), dtype=float)
+            player_A_y = np.empty((self.encode_length,), dtype=np.float32)
             player_A_y[0::2] = player_y[0::2]
             player_A_y[1::2] = opponent_y[1::2]
 
-            player_B_x = np.empty((self.encode_length,), dtype=float)
+            player_B_x = np.empty((self.encode_length,), dtype=np.float32)
             player_B_x[0::2] = opponent_x[0::2]
             player_B_x[1::2] = player_x[1::2]
-            player_B_y = np.empty((self.encode_length,), dtype=float)
+            player_B_y = np.empty((self.encode_length,), dtype=np.float32)
             player_B_y[0::2] = opponent_y[0::2]
             player_B_y[1::2] = player_y[1::2]
 
@@ -108,7 +113,7 @@ class BadmintonDataset(Dataset):
             shot_tensor = torch.from_numpy(shot_type).long().unsqueeze(0)
             adj = initialize_adjacency_matrix(1, self.encode_length, shot_tensor)
             adj = adj.squeeze(0)  # → [13, 2*L, 2*L]
-            self.player_sequence.append([player, shot_type, player_A_x, player_A_y, player_B_x, player_B_y, seqence_length,adj,roundscore_diff,consecutive_points,player_A_loc,player_B_loc,mask])
+            self.player_sequence.append([player, shot_type, player_A_x, player_A_y, player_B_x, player_B_y, seqence_length,adj,roundscore_diff,consecutive_points,player_A_loc,player_B_loc,mask,hit_area,backhand,aroundhead])
 
           
             # predict target

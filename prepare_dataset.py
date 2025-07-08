@@ -124,7 +124,7 @@ def prepare_kfold_datasets(args, k_folds=5):
     used_column = [
         'rally_id', 'player', 'type',
         'player_location_area', 'opponent_location_area',
-        'hit_area',
+        'hit_area','backhand', 'aroundhead',
         'player_location_x', 'player_location_y',
         'opponent_location_x', 'opponent_location_y',
         'ball_round', 'set', 'match_id',
