@@ -46,7 +46,7 @@ def Gaussian2D_loss(V_pred, V_trgt):
 def train_kfold(fold_datasets,test_dataloader, encoder, location_criterion, shot_type_criterion, encoder_optimizer, args, device="cpu"):
     bce_loss = BCEWithLogitsLoss()
     best_val_loss = float('inf')
-    patience = args.get('patience', 10)
+    patience = args.get('patience', 5)
     
     # 儲存每個折的指標
     fold_val_losses = []
@@ -224,7 +224,7 @@ def train(train_dataloader, valid_dataloader, encoder,
 
     bce_loss = BCEWithLogitsLoss()
     best_val_loss = float('inf')
-    patience = args.get('patience', 10)
+    patience = args.get('patience', 5)
     no_improve = 0
     max_length = train_dataloader.dataset.encode_length
     train_auc_list=[]
@@ -371,21 +371,21 @@ def evaluate(test_dataloader,
             # forward
             win_logit = encoder(
                 rally_batch[0].to(device),
-                rally_batch[1].to(device),
-                rally_batch[2].to(device),
-                rally_batch[3].to(device),
-                rally_batch[4].to(device),
-                rally_batch[5].to(device),
-                rally_batch[7].to(device),
-                rally_batch[8].to(device),
-                rally_batch[9].to(device),
-                rally_batch[10].to(device),
-                rally_batch[11].to(device),
-                rally_batch[12].to(device),
-                rally_batch[13].to(device),
-                rally_batch[14].to(device),
-                rally_batch[15].to(device),
-                max_length,
+                    rally_batch[1].to(device),
+                    rally_batch[2].to(device),
+                    rally_batch[3].to(device),
+                    rally_batch[4].to(device),
+                    rally_batch[5].to(device),
+                    rally_batch[7].to(device),
+                    rally_batch[8].to(device),
+                    rally_batch[9].to(device),
+                    rally_batch[10].to(device),
+                    rally_batch[11].to(device),
+                    rally_batch[12].to(device),
+                    rally_batch[13].to(device),
+                    rally_batch[14].to(device),
+                    rally_batch[15].to(device),
+                    max_length,
             )
             y_prob.extend(torch.sigmoid(win_logit).detach().cpu().numpy())
             y_true.extend(target.cpu().numpy())

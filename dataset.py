@@ -26,25 +26,19 @@ class BadmintonDataset(Dataset):
             if seqence_length > self.encode_length:
                 self.encode_length=seqence_length    # maxlength in dataset
 
-
-        pre_setid = None
-        consecutive_points = 0
-        pre_diff=None
-        pre_getPoint=None
-
         for rally_id in rally_id_grouped.values():
             rally_id = rally_id.to_numpy()
             one_rally = rally_data.iloc[rally_id].reset_index(drop=True)
             
             seqence_length = len(one_rally)     #shot sequence length
-            tmpGetPoint = one_rally['getpoint_player'].iloc[-1]
             
             # rally information
-            player = one_rally[['player']].values.reshape(-1)
+            #player = one_rally[['player']].values.reshape(-1)
+            player = np.where(one_rally['player'].values == 'A', 1, 2)
+            player = player.reshape(-1)
             shot_type = one_rally[['type']].values.reshape(-1)
-            scoreA = one_rally[['roundscore_A']].values.reshape(-1)[0]
-            scoreB = one_rally[['roundscore_B']].values.reshape(-1)[0]
-            tmp = scoreA-scoreB
+            roundscore_diff = one_rally[['score_diff']].values.reshape(-1)
+            consecutive_points = one_rally[['consecutive_points']].values.reshape(-1)
 
             player_x = one_rally[['player_location_x']].values.reshape(-1).astype(np.float32)
             player_y = one_rally[['player_location_y']].values.reshape(-1).astype(np.float32)
@@ -60,6 +54,8 @@ class BadmintonDataset(Dataset):
 
             player = np.pad(player, (0, self.encode_length - seqence_length), 'constant', constant_values=(0))
             shot_type = np.pad(shot_type, (0, self.encode_length - seqence_length), 'constant', constant_values=(0))
+            roundscore_diff = np.pad(roundscore_diff, (0, self.encode_length - seqence_length), 'constant', constant_values=(0))
+            consecutive_points = np.pad(consecutive_points, (0, self.encode_length - seqence_length), 'constant', constant_values=(0))
             player_x = np.pad(player_x, (0, self.encode_length - seqence_length), 'constant', constant_values=(0)).astype(np.float32)
             player_y = np.pad(player_y, (0, self.encode_length - seqence_length), 'constant', constant_values=(0)).astype(np.float32)
             opponent_x = np.pad(opponent_x, (0, self.encode_length - seqence_length), 'constant', constant_values=(0)).astype(np.float32)
@@ -69,21 +65,6 @@ class BadmintonDataset(Dataset):
             hit_area = np.pad(hit_area, (0, self.encode_length - seqence_length), 'constant', constant_values=(0))
             backhand = np.pad(backhand, (0, self.encode_length - seqence_length), 'constant', constant_values=(0))
             aroundhead = np.pad(aroundhead, (0, self.encode_length - seqence_length), 'constant', constant_values=(0))
-            setid = one_rally['set'].iloc[-1]
-             # (Consecutive Points)
-            if setid != pre_setid: 
-                roundscore_diff = 0
-                consecutive_points = 0
-            else:
-                roundscore_diff = pre_diff
-                if pre_getPoint == 'A':
-                    consecutive_points += 1
-                else:
-                    consecutive_points = 0 
-            pre_getPoint = tmpGetPoint
-            pre_diff = tmp
-            pre_setid = setid
-
 
             player_A_loc = np.empty((self.encode_length,), dtype=np.float32)
             player_A_loc[0::2] = player_loc[0::2]

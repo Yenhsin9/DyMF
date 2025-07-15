@@ -360,8 +360,7 @@ class relational_GCN(nn.Module):
 class Encoder(nn.Module):
     def __init__(self, args, device):
         super(Encoder, self).__init__()
-        player_num = args['player_num']
-        player_dim = args['player_dim']
+        #player_dim = args['player_dim']
         type_num = args['type_num']
         type_dim = args['type_dim']
         location_dim = args['location_dim']
@@ -370,9 +369,9 @@ class Encoder(nn.Module):
         max_len =  args['max_length']
 
         self.device = device
-        self.player_num = player_num
+        #self.player_num = player_num
 
-        self.player_embedding = nn.Embedding(player_num, player_dim,padding_idx=0)
+        #self.player_embedding = nn.Embedding(player_num, player_dim,padding_idx=0)
         self.coordination_transform = nn.Linear(2, location_dim)
         self.time_emb = nn.Embedding(max_len + 1,8,padding_idx=0)
         self.shot_emb   = nn.Embedding(type_num, type_dim,padding_idx=0)
@@ -384,7 +383,7 @@ class Encoder(nn.Module):
             padding_idx=0                     
         )
 
-        self.model_input_linear = nn.Linear(player_dim + location_dim+type_dim +location_dim+2, hidden_size)
+        self.model_input_linear = nn.Linear(1 + location_dim + type_dim + location_dim + 2, hidden_size)
 
         self.rGCN = relational_GCN(hidden_size, type_num, args['num_basis'], num_layer,args, device) # into 2 type (passive and active) and padding
         self.gcn = GCN(args['hidden_size'], args['hidden_size'], args['dropout'], num_layer, args, device)
@@ -409,9 +408,12 @@ class Encoder(nn.Module):
         self.score_diff_fc    = nn.Linear(1, 8)
         self.consec_score_fc  = nn.Linear(1, 8)
 
-        self.linear_for_dynmaic_gcn = nn.Linear(player_dim+ args['hidden_size'], args['hidden_size'])
-        self.win_head = nn.Linear(args['hidden_size']*2+2, 1) 
-
+        self.linear_for_dynmaic_gcn = nn.Linear(1+ args['hidden_size'], args['hidden_size'])
+        self.win_head = nn.Linear(args['hidden_size']*2+16, 1) 
+        self.attention = nn.Linear(hidden_size, 1)
+        nn.init.xavier_uniform_(self.attention.weight)
+        nn.init.constant_(self.attention.bias, 0)
+        self.softmax = nn.Softmax(dim=1)
         self.mha = nn.MultiheadAttention(
             embed_dim=hidden_size+1,      # 输入特征维度
             num_heads=1,      # 注意力头数
@@ -445,13 +447,19 @@ class Encoder(nn.Module):
         
         batch_size = player.size(0)
        
-        player_A_coordination = torch.cat((player_A_x.unsqueeze(2), player_A_y.unsqueeze(2)), dim=2).float()
-        player_B_coordination = torch.cat((player_B_x.unsqueeze(2), player_B_y.unsqueeze(2)), dim=2).float()
+        # player_A_coordination = torch.cat((player_A_x.unsqueeze(2), player_A_y.unsqueeze(2)), dim=2).float()
+        # player_B_coordination = torch.cat((player_B_x.unsqueeze(2), player_B_y.unsqueeze(2)), dim=2).float()
 
-        # interleave the player and opponent location
-        coordination_sequence = torch.stack((player_A_coordination, player_B_coordination), dim=2).view(player.size(0), -1, 2)
-        coordination_transform = self.coordination_transform(coordination_sequence)
-        coordination_transform = F.relu(coordination_transform) 
+        # # interleave the player and opponent location
+        # coordination_sequence = torch.stack((player_A_coordination, player_B_coordination), dim=2).view(player.size(0), -1, 2)
+        # coordination_transform = self.coordination_transform(coordination_sequence)
+        # coordination_transform = F.relu(coordination_transform) 
+
+        AB = player_A_loc.new_zeros((batch_size, encode_length*2))  
+        AB[:, 0::2] = player_A_loc   
+        AB[:, 1::2] = player_B_loc    
+        AB = AB.long()
+        embedded_player_area=self.area_embedding(AB)
 
         shot_type = shot_type.repeat_interleave(2, dim=1)
         shot_emb = self.shot_emb(shot_type)  # [32,120,16]
@@ -466,8 +474,8 @@ class Encoder(nn.Module):
         thisRallyL = player.new_zeros((batch_size, 1))
         for i in range(batch_size):
             row = player[i]
-            A_id = row[0]
-            B_id = row[1]
+            first_id = row[0]
+            second_id = row[1]
             k = (row != 0).sum().item()
             thisRallyL[i]=2*k
             prenum =row[:k].repeat(2)
@@ -479,13 +487,13 @@ class Encoder(nn.Module):
                 num+=1
             j=0
             for j in range(0,2*k,2):
-                prenum[j] = A_id
-                prenum[j+1] = B_id
+                prenum[j] = first_id
+                prenum[j+1] = second_id
             j=0
             out[i, :2*k] = prenum
             time_out[i, :2*k] = pretime
         player = out
-        player_embedding = self.player_embedding(player)
+        player = player.unsqueeze(-1)  # [32,120,1]
         time_out = time_out.unsqueeze(-1)
         
         # μn * τn
@@ -501,7 +509,7 @@ class Encoder(nn.Module):
         backhand = backhand.repeat_interleave(2, dim=1)
         backhand = backhand.unsqueeze(-1)  # [32,120,1]
        
-        rally_information = torch.cat((coordination_transform, player_embedding,enhanced_shot_features,hit_area_emb,aroundhead,backhand), dim=-1)
+        rally_information = torch.cat((embedded_player_area, player,enhanced_shot_features,hit_area_emb,aroundhead,backhand), dim=-1)
         model_input = self.model_input_linear(rally_information)
 
         node_mask = mask.repeat_interleave(2, dim=1)    #[32,120]
@@ -517,8 +525,8 @@ class Encoder(nn.Module):
         
         partial_adjacency_matrix = torch.ones((encode_length, encode_length), dtype=int) - torch.eye(encode_length, dtype=int)
 
-        dynamic_gcn_input_A = torch.cat((player_A_embedding, player_embedding[:, 0::2, :].clone()), dim=-1)
-        dynamic_gcn_input_B = torch.cat((player_B_embedding, player_embedding[:, 1::2, :].clone()), dim=-1)
+        dynamic_gcn_input_A = torch.cat((player_A_embedding, player[:, 0::2, :].clone()), dim=-1)
+        dynamic_gcn_input_B = torch.cat((player_B_embedding, player[:, 1::2, :].clone()), dim=-1)
         
         dynamic_gcn_input_A = self.linear_for_dynmaic_gcn(dynamic_gcn_input_A)
         dynamic_gcn_input_B = self.linear_for_dynmaic_gcn(dynamic_gcn_input_B)
@@ -562,22 +570,35 @@ class Encoder(nn.Module):
         node_embedding[:, 1::2, :] = full_graph_node_embedding[:, 1::2, :] * w_rgcn_B.unsqueeze(1) + player_B_node_embedding * w_gcn_B.unsqueeze(1)
 
         idx = (thisRallyL).squeeze(-1).long()   # shape [32]
-        batch_idx = torch.arange(full_graph_node_embedding.size(0), device=full_graph_node_embedding.device)  # [32]
-        lastNode1 = full_graph_node_embedding[batch_idx, idx-1, :] #[32,16]
-        lastNode2 = full_graph_node_embedding[batch_idx, idx-2, :] #[32 16]
-        score_diff = score_diff.unsqueeze(1).float()  # [32, 1]
-        conpoint = conpoint.unsqueeze(1).float()  # [32, 1]
-        # score_diff = self.score_diff_fc(score_diff)
-        # conpoint = self.consec_score_fc(conpoint)
-        
-        combineLast = torch.cat([lastNode1, lastNode2,score_diff,conpoint], dim=-1) #[32,32]
+        batch_idx = torch.arange(node_embedding.size(0), device=node_embedding.device)  # [32]
+        lastNode1 = node_embedding[batch_idx, idx-1, :] #[32,16]
+        lastNode2 = node_embedding[batch_idx, idx-2, :] #[32 16]
+        score_diff = score_diff[:, 0].float().unsqueeze(1)  # shape: [64] → [64, 1]
+        conpoint = conpoint[:, 0].float().unsqueeze(1)  # shape: [64] → [64, 1]
+        score_diff = self.score_diff_fc(score_diff)
+        conpoint = self.consec_score_fc(conpoint)
+
+        combineLast = torch.cat([lastNode1,lastNode2,score_diff,conpoint], dim=-1) #[32,32]
         logits = self.win_head(combineLast).squeeze(-1)  
         #win_logit = torch.sigmoid(logits)             
         
         return logits
 
 
+# Compute attention scores
+        # attention_scores = self.attention(node_embedding).squeeze(-1)  # [batch_size, seq_len]
 
+        # # Apply mask and compute attention weights
+        # attention_scores = attention_scores.masked_fill(node_mask.squeeze(-1) == 0, -float('inf'))  # Zero out padded positions
+        # attention_weights = self.softmax(attention_scores)  # [batch_size, seq_len]
+
+        # # Select top 2 shots based on attention weights
+        # _, top_indices = torch.topk(attention_weights, 2, dim=1)  # [batch_size, 2]
+        # batch_idx = torch.arange(node_embedding.size(0), device=node_embedding.device)  # [batch_size, 1]
+
+        # # Extract the top 2 node embeddings (using original node_embedding)
+        # Node1 = node_embedding[batch_idx, top_indices[:, 0], :].squeeze(1)  # [batch_size, hidden_size]
+        # Node2 = node_embedding[batch_idx, top_indices[:, 1], :].squeeze(1) # [batch_size, hidden_size]
 # node_embedding[:, 0::2, :] = full_graph_node_embedding[:, 0::2, :]  + player_A_node_embedding 
         # node_embedding[:, 1::2, :] = full_graph_node_embedding[:, 1::2, :]  + player_B_node_embedding 
         # node_embedding[:, 0::2, :]=torch.cat([full_graph_node_embedding[:, 0::2, :], player_A_node_embedding], dim=-1)

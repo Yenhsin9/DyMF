@@ -35,8 +35,6 @@ def dynamic_collate(batch):
     # 單一迴dlly 解構、填值
     for i, rally in enumerate(rallies):
         player, shot_type, A_x, A_y, B_x, B_y, seq_len = rally
-        seq_len = int(seq_len)
-        print(seq_len)
         rally_batch['player'][i]    = torch.from_numpy(player)
         rally_batch['shot_type'][i] = torch.from_numpy(shot_type)
         rally_batch['A_x'][i]       = torch.from_numpy(A_x)
@@ -118,7 +116,7 @@ def prepare_dataset(args):
     return train_dataloader, valid_dataloader, test_dataloader, args
     
 
-def prepare_kfold_datasets(args, k_folds=5):
+def prepare_kfold_datasets(args, k_folds=1):
     matches = DataCleaner(args)
     
     used_column = [
@@ -128,14 +126,11 @@ def prepare_kfold_datasets(args, k_folds=5):
         'player_location_x', 'player_location_y',
         'opponent_location_x', 'opponent_location_y',
         'ball_round', 'set', 'match_id',
-        'getpoint_player', 'roundscore_A', 'roundscore_B'
+        'getpoint_player', 'roundscore_A', 'roundscore_B',
+        'consecutive_points','score_diff'
     ]
 
     matches = matches[used_column]
-
-    player_codes, player_uniques = pd.factorize(matches['player'])
-    matches['player'] = player_codes + 1
-    args['player_num'] = len(player_uniques) + 1
 
     type_codes, type_uniques = pd.factorize(matches['type'])
     matches['type'] = type_codes + 1
@@ -148,7 +143,7 @@ def prepare_kfold_datasets(args, k_folds=5):
     test_dataloader = DataLoader(test_dataset, batch_size=args['test_batch_size'], shuffle=False, num_workers=8)
     
     fold_datasets = []
-    for i in range(1, 6):
+    for i in range(1, k_folds+1):
         train_rally_data = pd.read_csv(os.path.join(data_dir, f'train_fold_{i}.csv'))
         valid_rally_data = pd.read_csv(os.path.join(data_dir, f'val_fold_{i}.csv'))
         # 检查 player_id 分布

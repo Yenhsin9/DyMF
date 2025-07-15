@@ -101,9 +101,38 @@ def DataCleaner(args):
         match_data = []
         for csv in set_csv:
             set_data = pd.read_csv(csv)
-            set_data['player'] = set_data['player'].replace(['A', 'B'], [winner, loser])
-            set_data['set'] = re.findall(r'\d+', os.path.basename(csv))[0]
-            match_data.append(set_data)
+            rally_id_grouped = set_data.groupby('rally').groups
+            conpoint = 0
+            scoreDiff = 0
+            pre_getPoint = None
+            pre_diff = None
+            processed_rallies = []
+            for rally_id in rally_id_grouped.values():
+                rally_id = rally_id.to_numpy()
+                one_rally = set_data.iloc[rally_id].reset_index(drop=True)
+                tmpGetPoint = one_rally['getpoint_player'].iloc[-1]
+                scoreA = one_rally[['roundscore_A']].values.reshape(-1)[0]
+                scoreB = one_rally[['roundscore_B']].values.reshape(-1)[0]
+                tmp = scoreA-scoreB
+     
+                if pre_diff==None: 
+                    scoreDiff = 0
+                    conpoint = 0
+                else:
+                    scoreDiff = pre_diff
+                    if pre_getPoint == 'A':
+                        conpoint += 1
+                    else:
+                        conpoint = 0
+                pre_getPoint = tmpGetPoint
+                pre_diff = tmp
+                one_rally['consecutive_points'] = conpoint
+                one_rally['score_diff'] = scoreDiff
+                processed_rallies.append(one_rally)
+
+            set_processed = pd.concat(processed_rallies, ignore_index=True)
+            set_processed['set'] = re.findall(r'\d+', os.path.basename(csv))[0]
+            match_data.append(set_processed)
 
         match = pd.concat(match_data, ignore_index=True, sort=False).assign(match_id=match_idx)
         
