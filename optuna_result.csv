@@ -1,0 +1,10 @@
+30 sets
+
+✅ 最佳參數組合:
+lr: 0.0019058190436263514
+weight_decay: 0.00014720596411164832
+dropout: 0.6972311852453993
+train_batch_size: 128
+hidden_size: 64
+num_basis: 3
+📈 最佳驗證 AUC: 0.7980

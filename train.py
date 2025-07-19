@@ -29,20 +29,20 @@ def main():
     args.add_argument("--train_batch_size", type=int, default=64)
     args.add_argument("--valid_batch_size", type=int, default=32) 
     args.add_argument("--test_batch_size", type=int, default=32)
-    args.add_argument("--hidden_size", type=int, default=32)
+    args.add_argument("--hidden_size", type=int, default=64)
     args.add_argument("--model_type", type=str, required=True)
-    args.add_argument("--lr", type=float, default=0.0005)
+    args.add_argument("--lr", type=float, default=0.0019)
     args.add_argument("--player_dim", type=int, default=16)
     args.add_argument("--type_dim", type=int, default=16)
     args.add_argument("--location_dim", type=int, default=16)
     args.add_argument("--num_layer", type=int, default=2)
-    args.add_argument("--weight_decay", type=float, default=0.0001)
+    args.add_argument("--weight_decay", type=float, default=0.000147)
 
     args.add_argument("--epochs", type=int, default=50)
     #args.add_argument("--encode_length", type=int, required=True)
-    args.add_argument("--dropout", type=float, default=0.5)
+    args.add_argument("--dropout", type=float, default=0.69723)
 
-    args.add_argument("--num_basis", type=int, default=2)
+    args.add_argument("--num_basis", type=int, default=3)
 
     # ablation
     args.add_argument("--use_complete_graph", type=int, default=0)
@@ -61,7 +61,7 @@ def main():
     args.add_argument("--sample_num", type=int, default=1)
 
     # k-fold 參數
-    args.add_argument("--k_folds", type=int, default=1)
+    args.add_argument("--k_folds", type=int, default=5)
 
     args = args.parse_args()
     args = vars(args)
@@ -232,20 +232,6 @@ def main():
         fold_datasets, test_dataloader,encoder, location_criterion, shot_type_criterion, 
         encoder_optimizer, args, device=device
     )
-    results_file = 'grid_search_results.csv'
-    if not os.path.exists(results_file) or os.stat(results_file).st_size == 0:
-        with open(results_file, 'w', newline='') as csvfile:
-            fieldnames = ['dropout', 'weight_decay', 'lr', 'avg_val_loss']
-            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-            writer.writeheader()
-    with open(results_file, 'a', newline='') as csvfile:
-        writer = csv.DictWriter(csvfile, fieldnames=['dropout', 'weight_decay', 'lr', 'avg_val_loss'])
-        writer.writerow({
-            'dropout': args['dropout'],
-            'weight_decay': args['weight_decay'],
-            'lr': args['lr'],
-            'avg_val_loss': avg_val_loss
-        })
 
 if __name__ == "__main__":
     main()
