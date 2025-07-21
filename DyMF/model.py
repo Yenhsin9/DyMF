@@ -554,25 +554,6 @@ class Encoder(nn.Module):
         node_embedding[:, 0::2, :] = full_graph_node_embedding[:, 0::2, :] * w_rgcn_A.unsqueeze(1) + player_A_node_embedding * w_gcn_A.unsqueeze(1)
         node_embedding[:, 1::2, :] = full_graph_node_embedding[:, 1::2, :] * w_rgcn_B.unsqueeze(1) + player_B_node_embedding * w_gcn_B.unsqueeze(1)
 
-        # # 計算節點注意力權重
-        # node_attention_scores = self.node_attention(node_embedding).squeeze(-1)  # [batch_size, seq_len]
-        # node_attention_scores = node_attention_scores.masked_fill(node_mask.squeeze(-1) == 0, -float('inf'))
-        # node_attention_weights = self.softmax(node_attention_scores)  # [batch_size, seq_len]
-
-        # # 計算邊注意力權重
-        # edge_attention_weights = []
-        # for i in range(batch_size):
-        #     adj = adjacency_matrix[i, 1:, :, :]  # 跳過填充邊類型
-        #     src, dst = torch.nonzero(adj.sum(dim=0), as_tuple=True)
-        #     if len(src) > 0:
-        #         edge_features = torch.cat((node_embedding[i, src, :], node_embedding[i, dst, :]), dim=-1)
-        #         edge_scores = self.edge_attention(edge_features).squeeze(-1)
-        #         edge_weights = self.softmax(edge_scores)
-        #         edge_attention_weights.append(edge_weights)
-        #     else:
-        #         edge_attention_weights.append(torch.zeros(0, device=node_embedding.device))
-        # edge_attention_weights = torch.stack(edge_attention_weights) if edge_attention_weights else torch.zeros((batch_size, 0), device=node_embedding.device)
-
         idx = (thisRallyL).squeeze(-1).long()   # shape [32]
         batch_idx = torch.arange(node_embedding.size(0), device=node_embedding.device)  # [32]
         lastNode1 = node_embedding[batch_idx, idx-1, :] #[32,16]

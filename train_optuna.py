@@ -120,7 +120,7 @@ def main():
 
             encoder.to(device), location_criterion.to(device), shot_type_criterion.to(device)
 
-            avg_val_loss, avg_val_auc, avg_val_brier, _, _, _ = train_kfold(
+            avg_val_loss, avg_val_auc, avg_val_brier, avg_val_acc, test_loss, test_auc, test_brier, test_acc= train_kfold(
                 fold_datasets, test_dataloader, encoder, location_criterion,
                 shot_type_criterion, encoder_optimizer, args, device=device
             )

@@ -8,184 +8,108 @@ from torch.nn import BCEWithLogitsLoss
 from sklearn.metrics import roc_auc_score, brier_score_loss, accuracy_score
 from torch.nn import BCELoss
 from DyMF.draw_plot import draw_plot
-from sklearn.linear_model import LogisticRegression
-import numpy as np
-import json
-PAD = 0
+import pandas as pd
+import pickle
+try:
+    import seaborn as sns
+    import matplotlib.pyplot as plt
+    seaborn_available = True
+except ImportError:
+    seaborn_available = False
+    print("Seaborn not installed. Skipping heatmap visualization.")
 
-def Gaussian2D_loss(V_pred, V_trgt):
-    #mux, muy, sx, sy, corr
-    #assert V_pred.shape == V_trgt.shape
-    normx = V_trgt[:, 0] - V_pred[:, 0]
-    normy = V_trgt[:, 1] - V_pred[:, 1]
-
-    sx = torch.exp(V_pred[:, 2]) #sx
-    sy = torch.exp(V_pred[:, 3]) #sy
-    corr = torch.tanh(V_pred[:, 4]) #corr
-    
-    sxsy = sx * sy
-
-    z = (normx/sx)**2 + (normy/sy)**2 - 2*((corr*normx*normy)/sxsy)
-    negRho = 1 - corr**2
-
-    # Numerator
-    result = torch.exp(-z/(2*negRho))
-    # Normalization factor
-    denom = 2 * np.pi * (sxsy * torch.sqrt(negRho))
-
-    # Final PDF calculation
-    result = result / denom
-
-    # Numerical stability
-    epsilon = 1e-20
-
-    result = -torch.log(torch.clamp(result, min=epsilon))
-    result = torch.sum(result)
-    
-    return result
-
-def train_kfold(fold_datasets,test_dataloader, encoder, location_criterion, shot_type_criterion, encoder_optimizer, args, device="cpu"):
+def train_kfold(fold_datasets, test_dataloader, encoder, location_criterion, shot_type_criterion, encoder_optimizer, args, device="cpu"):
     bce_loss = BCEWithLogitsLoss()
-    best_val_loss = float('inf')
     patience = args.get('patience', 5)
     
-    # 儲存每個折的指標
+    # Store metrics for all folds
+    fold_results = {
+        'train_auc_list': [],
+        'val_auc_list': [],
+        'train_brier_list': [],
+        'val_brier_list': [],
+        'train_loss_list': [],
+        'val_loss_list': [],
+        'train_acc_list': [],
+        'val_acc_list': [],
+    }
     fold_val_losses = []
     fold_val_aucs = []
     fold_val_briers = []
-    best_fold = 0  # 記錄最佳折
+    fold_val_acc = []
+    best_val_loss = float('inf')
+    best_fold = 0
     
     for fold, (train_dataloader, valid_dataloader, args) in enumerate(fold_datasets):
         print(f"\nTraining Fold {fold + 1}/{len(fold_datasets)}")
         
-        # 重置模型參數
-        encoder.apply(lambda m: m.reset_parameters() if hasattr(m, 'reset_parameters') else None)
-        encoder_optimizer = torch.optim.Adam(encoder.parameters(), lr=args['lr'], weight_decay=0.00006)
+        # Debug: Check data structure
+        for rally_batch, target in train_dataloader:
+            print(f"rally_batch length: {len(rally_batch)}")
+            for idx in range(len(rally_batch)):
+                print(f"rally_batch[{idx}] shape: {rally_batch[idx].shape}")
+            print(f"target shape: {target.shape}")
+            break
         
-        train_auc_list = []
-        val_auc_list = []
-        train_brier_list = []
-        val_brier_list = []
-        train_loss_list = []
-        val_loss_list = []
+        # Reset model parameters
+        encoder.apply(lambda m: m.reset_parameters() if hasattr(m, 'reset_parameters') else None)
+        encoder_optimizer = torch.optim.Adam(encoder.parameters(), lr=args['lr'], weight_decay=args['weight_decay'])
+
+        train_auc_list, val_auc_list = [], []
+        train_brier_list, val_brier_list = [], []
+        train_loss_list, val_loss_list = [], []
+        train_acc_list, val_acc_list = [], []
         best_fold_val_loss = float('inf')
         no_improve = 0
-        
         max_length = train_dataloader.dataset.encode_length
         
         for epoch in tqdm(range(args['epochs'])):
-            train_loss = 0.0
-            n_train = 0
-            x_true, x_prob = [], []
             encoder.train()
-            
+            train_loss, train_preds, train_labels = 0.0, [], []
             for rally_batch, target in train_dataloader:
-                encoder_optimizer.zero_grad()
+                rally_batch = [b.to(device) for b in rally_batch]
                 target = target.to(device).float()
+                encoder_optimizer.zero_grad()
                 win_logit = encoder(
-                    rally_batch[0].to(device),
-                    rally_batch[1].to(device),
-                    rally_batch[2].to(device),
-                    rally_batch[3].to(device),
-                    rally_batch[4].to(device),
-                    rally_batch[5].to(device),
-                    rally_batch[7].to(device),
-                    rally_batch[8].to(device),
-                    rally_batch[9].to(device),
-                    rally_batch[10].to(device),
-                    rally_batch[11].to(device),
-                    rally_batch[12].to(device),
-                    rally_batch[13].to(device),
-                    rally_batch[14].to(device),
-                    rally_batch[15].to(device),
-                    max_length,
+                    rally_batch[0], rally_batch[1], rally_batch[2], rally_batch[3],
+                    rally_batch[4], rally_batch[5], rally_batch[7], rally_batch[8],
+                    rally_batch[9], rally_batch[10], rally_batch[11], rally_batch[12],
+                    rally_batch[13], rally_batch[14], rally_batch[15], max_length
                 )
-                
-                x_prob.extend(torch.sigmoid(win_logit).detach().cpu().numpy())
-                x_true.extend(target.detach().cpu().numpy())
                 loss = bce_loss(win_logit, target)
                 loss.backward()
                 encoder_optimizer.step()
-
                 train_loss += loss.item() * rally_batch[0].size(0)
-                n_train += rally_batch[0].size(0)
-
-            avg_train_loss = train_loss / n_train if n_train else 0.0
-            x_pred = [1 if p >= 0.5 else 0 for p in x_prob]
-            try:
-                T_auc = roc_auc_score(x_true, x_prob)
-            except ValueError:
-                T_auc = float('nan')
-            T_brier = brier_score_loss(x_true, x_prob)
-            train_auc_list.append(T_auc)
-            train_brier_list.append(T_brier)
-            train_loss_list.append(avg_train_loss)
-            print(f'Fold {fold + 1} Epoch {epoch + 1} - Avg Train Loss: {avg_train_loss:.4f}, Train AUC: {T_auc:.4f}, Train Brier: {T_brier:.4f}')
-
-            # 驗證階段
-            encoder.eval()
-            with torch.no_grad():
-                val_loss = 0.0
-                n_val = 0
-                y_true, y_prob = [], []
-                valid_max_length = valid_dataloader.dataset.encode_length
-                for rally_batch, target in valid_dataloader:
-                    target = target.to(device).float()
-                    win_logit= encoder(
-                        rally_batch[0].to(device),
-                        rally_batch[1].to(device),
-                        rally_batch[2].to(device),
-                        rally_batch[3].to(device),
-                        rally_batch[4].to(device),
-                        rally_batch[5].to(device),
-                        rally_batch[7].to(device),
-                        rally_batch[8].to(device),
-                        rally_batch[9].to(device),
-                        rally_batch[10].to(device),
-                        rally_batch[11].to(device),
-                        rally_batch[12].to(device),
-                        rally_batch[13].to(device),
-                        rally_batch[14].to(device),
-                        rally_batch[15].to(device),
-                        valid_max_length,
-                    )
-                    y_prob.extend(torch.sigmoid(win_logit).detach().cpu().numpy())
-                    y_true.extend(target.cpu().numpy())
-
-                    l = bce_loss(win_logit, target)
-                    val_loss += l.item() * rally_batch[0].size(0)
-                    n_val += rally_batch[0].size(0)
-
-            avg_val_loss = val_loss / n_val if n_val else 0.0
-            y_pred = [1 if p >= 0.5 else 0 for p in y_prob]
-            acc = accuracy_score(y_true, y_pred)
-            try:
-                auc = roc_auc_score(y_true, y_prob)
-            except ValueError:
-                auc = float('nan')
-            brier = brier_score_loss(y_true, y_prob)
-            val_auc_list.append(auc)
-            val_brier_list.append(brier)
-            val_loss_list.append(avg_val_loss)
-            print(
-                f"Fold {fold + 1} Epoch {epoch + 1} - "
-                f"Val Loss: {avg_val_loss:.4f}, "
-                f"Acc: {acc:.4f}, "
-                f"Val AUC: {auc:.4f}, "
-                f"Val Brier: {brier:.4f}"
-            )
+                train_preds.extend(torch.sigmoid(win_logit).detach().cpu().numpy())
+                train_labels.extend(target.detach().cpu().numpy())
+            train_loss /= len(train_dataloader.dataset)
+            train_auc = roc_auc_score(train_labels, train_preds) if train_labels else float('nan')
+            train_brier = brier_score_loss(train_labels, train_preds)
+            train_acc = accuracy_score(train_labels, [1 if p >= 0.5 else 0 for p in train_preds])
+            train_loss_list.append(train_loss)
+            train_auc_list.append(train_auc)
+            train_brier_list.append(train_brier)
+            train_acc_list.append(train_acc)
+            print(f'Fold {fold + 1} Epoch {epoch + 1} - Avg Train Loss: {train_loss:.4f}, Train AUC: {train_auc:.4f}, Train Brier: {train_brier:.4f}, Train Acc: {train_acc:.4f}')
             
-            # 早停
-            if avg_val_loss < best_fold_val_loss:
-                best_fold_val_loss = avg_val_loss
+            # Validation
+            val_loss, val_auc, val_brier, val_acc = evaluate(valid_dataloader, encoder, args, device)
+            val_loss_list.append(val_loss)
+            val_auc_list.append(val_auc)
+            val_brier_list.append(val_brier)
+            val_acc_list.append(val_acc)
+            print(f'Fold {fold + 1} Epoch {epoch + 1} - Val Loss: {val_loss:.4f}, Val AUC: {val_auc:.4f}, Val Brier: {val_brier:.4f}, Val Acc: {val_acc:.4f}')
+            
+            # Early stopping
+            if val_loss < best_fold_val_loss:
+                best_fold_val_loss = val_loss
                 no_improve = 0
                 output_folder_name = os.path.join(args['model_folder'], f'fold_{fold + 1}')
                 if not os.path.exists(output_folder_name):
                     os.makedirs(output_folder_name)
-                torch.save(encoder.state_dict(), f"{output_folder_name}/encoder")
+                torch.save(encoder.state_dict(), os.path.join(output_folder_name, 'encoder'))
                 print(f"  ✔ Fold {fold + 1} New best model saved.")
                 
-                # 更新全局最佳折
                 if best_fold_val_loss < best_val_loss:
                     best_val_loss = best_fold_val_loss
                     best_fold = fold + 1
@@ -195,42 +119,76 @@ def train_kfold(fold_datasets,test_dataloader, encoder, location_criterion, shot
                 if no_improve >= patience:
                     print(f"🔚 Fold {fold + 1} Early stopping triggered.")
                     break
-        draw_plot(train_auc_list,val_auc_list,train_brier_list,val_brier_list,train_loss_list,val_loss_list)
-        # 記錄該折的最佳驗證指標
+        
+        # Save fold metrics
+        fold_results['train_auc_list'].append(train_auc_list)
+        fold_results['val_auc_list'].append(val_auc_list)
+        fold_results['train_brier_list'].append(train_brier_list)
+        fold_results['val_brier_list'].append(val_brier_list)
+        fold_results['train_loss_list'].append(train_loss_list)
+        fold_results['val_loss_list'].append(val_loss_list)
+        fold_results['train_acc_list'].append(train_acc_list)
+        fold_results['val_acc_list'].append(val_acc_list)
+        
+        # Plot metrics
+        draw_plot(
+            train_auc_list=train_auc_list,
+            val_auc_list=val_auc_list,
+            train_brier_list=train_brier_list,
+            val_brier_list=val_brier_list,
+            train_loss_list=train_loss_list,
+            val_loss_list=val_loss_list,
+            train_acc_list=train_acc_list,
+            val_acc_list=val_acc_list,
+            output_folder=os.path.join(args['model_folder'], f'fold_{fold + 1}')
+        )
+        
+        # Save per-fold metrics to pickle
+        with open(os.path.join(args['model_folder'], f'fold_{fold + 1}', 'fold_metrics.pkl'), 'wb') as f:
+            pickle.dump({
+                'train_auc_list': train_auc_list,
+                'val_auc_list': val_auc_list,
+                'train_brier_list': train_brier_list,
+                'val_brier_list': val_brier_list,
+                'train_loss_list': train_loss_list,
+                'val_loss_list': val_loss_list,
+                'train_acc_list': train_acc_list,
+                'val_acc_list': val_acc_list
+            }, f)
+        
+        # Record best validation metrics
         fold_val_losses.append(best_fold_val_loss)
         fold_val_aucs.append(max(val_auc_list))
         fold_val_briers.append(min(val_brier_list))
-
-    # 計算所有折的平均指標
+        fold_val_acc.append(max(val_acc_list))
+    
+    # Compute average metrics
     avg_val_loss = np.mean(fold_val_losses)
     avg_val_auc = np.mean(fold_val_aucs)
     avg_val_brier = np.mean(fold_val_briers)
+    avg_val_acc = np.mean(fold_val_acc)
     std_val_auc = np.std(fold_val_aucs)
+    
+    # Save all fold metrics
+    with open(os.path.join(args['model_folder'], 'all_fold_metrics.pkl'), 'wb') as f:
+        pickle.dump(fold_results, f)
     
     print(f"\nK-Fold Cross-Validation Results:")
     print(f"Average Val Loss: {avg_val_loss:.4f}")
     print(f"Average Val AUC: {avg_val_auc:.4f} (±{std_val_auc:.4f})")
     print(f"Average Val Brier: {avg_val_brier:.4f}")
+    print(f"Average Val Acc: {avg_val_acc:.4f}")
     
-    # 在測試集上評估最佳折的模型
+    # Evaluate best model on test set
     print(f"\nEvaluating best model (Fold {best_fold}) on test dataset...")
-    encoder.load_state_dict(torch.load(os.path.join(args['model_folder'], f'fold_{best_fold}/encoder')))
-    test_loss, test_auc, test_brier = evaluate(test_dataloader, encoder, args, device)
-    
-    return avg_val_loss, avg_val_auc, avg_val_brier,test_loss, test_auc, test_brier
+    encoder.load_state_dict(torch.load(os.path.join(args['model_folder'], f'fold_{best_fold}', 'encoder')))
+    test_loss, test_auc, test_brier, test_acc = evaluate(test_dataloader, encoder, args, device)
 
-def evaluate(test_dataloader,
-             encoder,
-             args,
-             device="cpu"):
-    
+    return avg_val_loss, avg_val_auc, avg_val_brier, avg_val_acc, test_loss, test_auc, test_brier, test_acc
+
+def evaluate(test_dataloader, encoder, args, device="cpu"):
     max_length = test_dataloader.dataset.encode_length
     bce_loss = BCEWithLogitsLoss()
-    test_auc_list=[]  
-    test_brier_list=[] 
-
-    # 保存注意力權重和轉折點
-    rally_analysis = []
     encoder.eval()
     with torch.no_grad():
         test_loss = 0.0
@@ -238,47 +196,19 @@ def evaluate(test_dataloader,
         y_true, y_prob = [], []
         for rally_batch, target in test_dataloader:
             target = target.to(device).float()
-
-            # forward
             win_logit = encoder(
-                rally_batch[0].to(device),#player
-                    rally_batch[1].to(device),#shot type
-                    rally_batch[2].to(device),#playerAX
-                    rally_batch[3].to(device),#playerAY
-                    rally_batch[4].to(device),#playerBX
-                    rally_batch[5].to(device),#playerBY
-                    rally_batch[7].to(device),#aj matrix
-                    rally_batch[8].to(device),#score diff
-                    rally_batch[9].to(device),#conpoint
-                    rally_batch[10].to(device),#playerA_loc
-                    rally_batch[11].to(device),#playerB_loc
-                    rally_batch[12].to(device),#mask
-                    rally_batch[13].to(device),#hit area
-                    rally_batch[14].to(device),#backhand
-                    rally_batch[15].to(device),#aroundhead
-                    max_length,
+                rally_batch[0].to(device), rally_batch[1].to(device), rally_batch[2].to(device),
+                rally_batch[3].to(device), rally_batch[4].to(device), rally_batch[5].to(device),
+                rally_batch[7].to(device), rally_batch[8].to(device), rally_batch[9].to(device),
+                rally_batch[10].to(device), rally_batch[11].to(device), rally_batch[12].to(device),
+                rally_batch[13].to(device), rally_batch[14].to(device), rally_batch[15].to(device),
+                max_length
             )
             y_prob.extend(torch.sigmoid(win_logit).detach().cpu().numpy())
             y_true.extend(target.cpu().numpy())
-
             l = bce_loss(win_logit, target)
             test_loss += l.item() * rally_batch[0].size(0)
             n_test += rally_batch[0].size(0)
-
-            # # 保存注意力權重和相關數據
-            # for i in range(rally_batch[0].size(0)):
-            #     rally_data = {
-            #         'rally_id': i,
-            #         'node_attention': node_attention_weights[i].detach().cpu().numpy().tolist(),
-            #         'edge_attention': edge_attention_weights[i].detach().cpu().numpy().tolist(),
-            #         'shot_type': rally_batch[1][i].detach().cpu().numpy().tolist(),
-            #         'player_A_loc': rally_batch[10][i].detach().cpu().numpy().tolist(),
-            #         'player_B_loc': rally_batch[11][i].detach().cpu().numpy().tolist(),
-            #         'hit_area': rally_batch[13][i].detach().cpu().numpy().tolist(),
-            #         'win_prob': torch.sigmoid(win_logit[i]).detach().cpu().numpy().item()
-            #     }
-            #     rally_analysis.append(rally_data)
-
     avg_test_loss = test_loss / n_test if n_test else 0.0
     y_pred = [1 if p >= 0.5 else 0 for p in y_prob]
     acc = accuracy_score(y_true, y_pred)
@@ -286,36 +216,13 @@ def evaluate(test_dataloader,
         auc = roc_auc_score(y_true, y_prob)
     except ValueError:
         auc = float('nan')
-    # 計算 Brier score
     brier = brier_score_loss(y_true, y_prob)
-    test_auc_list.append(auc)
-    test_brier_list.append(brier)
-    print(
-        f"Test Loss: {avg_test_loss:.4f}, "
-        f"Acc: {acc:.4f}, "
-        f"Test AUC: {auc:.4f}, "
-        f"Test Brier: {brier:.4f}"
-    )
-
-    # # 保存注意力分析結果
-    # output_folder_name = args['model_folder']
-    # with open(os.path.join(output_folder_name, 'rally_analysis.json'), 'w') as f:
-    #     json.dump(rally_analysis, f, indent=2)
-
-    # # 可視化關鍵擊球和位置
-    # visualize_key_shots_and_locations(rally_analysis, output_folder_name)
-
-    # # 檢測轉折點
-    # turning_points = detect_turning_points(rally_analysis)
-    # with open(os.path.join(output_folder_name, 'turning_points.json'), 'w') as f:
-    #     json.dump(turning_points, f, indent=2)
-
-    return avg_test_loss, auc, brier
+    print(f"Test Loss: {avg_test_loss:.4f}, Test Acc: {acc:.4f}, Test AUC: {auc:.4f}, Test Brier: {brier:.4f}")
+    return avg_test_loss, auc, brier, acc
 
 def save(encoder, decoder, args):
     output_folder_name = args['model_folder']
     if not os.path.exists(output_folder_name):
         os.makedirs(output_folder_name)
-    
-    torch.save(encoder.state_dict(), output_folder_name + '/encoder')
-    torch.save(decoder.state_dict(), output_folder_name + '/decoder')
+    torch.save(encoder.state_dict(), os.path.join(output_folder_name, 'encoder'))
+    torch.save(decoder.state_dict(), os.path.join(output_folder_name, 'decoder'))

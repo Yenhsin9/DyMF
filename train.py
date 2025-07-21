@@ -60,7 +60,7 @@ def main():
     args.add_argument("--sample_num", type=int, default=1)
 
     # k-fold 參數
-    args.add_argument("--k_folds", type=int, default=5)
+    args.add_argument("--k_folds", type=int, default=1)
 
     args = args.parse_args()
     args = vars(args)
@@ -227,7 +227,7 @@ def main():
     # print("total loss: {}".format(train_loss))
     # print("location loss: {}".format(train_loss_location))
     # print("type loss: {}".format(train_loss_type))
-    avg_val_loss, avg_val_auc, avg_val_brier,test_loss, test_auc, test_brier = train_kfold(
+    avg_val_loss, avg_val_auc, avg_val_brier, avg_val_acc, test_loss, test_auc, test_brier, test_acc = train_kfold(
         fold_datasets, test_dataloader,encoder, location_criterion, shot_type_criterion, 
         encoder_optimizer, args, device=device
     )
