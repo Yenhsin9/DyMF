@@ -5,8 +5,7 @@ import torch.nn as nn
 import random
 import numpy as np
 import pandas as pd
-from prepare_dataset import prepare_kfold_datasets
-from prepare_dataset import prepare_dataset
+from prepare_dataset import prepare_test_datasets
 from utils import load_args_file
 
 import os
@@ -29,22 +28,22 @@ def main():
     # training
     args.add_argument("--seed", type=int, default=22)
     args.add_argument("--train_batch_size", type=int, default=64)
-    args.add_argument("--valid_batch_size", type=int, default=64) 
-    args.add_argument("--test_batch_size", type=int, default=64)
-    args.add_argument("--hidden_size", type=int, default=48)
+    args.add_argument("--valid_batch_size", type=int, default=32) 
+    args.add_argument("--test_batch_size", type=int, default=32)
+    args.add_argument("--hidden_size", type=int, default=64)
     args.add_argument("--model_type", type=str, default='DyMF')
-    args.add_argument("--lr", type=float, default=0.003)
+    args.add_argument("--lr", type=float, default=0.0019)
     args.add_argument("--player_dim", type=int, default=16)
     args.add_argument("--type_dim", type=int, default=16)
     args.add_argument("--location_dim", type=int, default=16)
     args.add_argument("--num_layer", type=int, default=2)
-    args.add_argument("--weight_decay", type=float, default=0.005)
+    args.add_argument("--weight_decay", type=float, default=0.000147)
 
     args.add_argument("--epochs", type=int, default=50)
     #args.add_argument("--encode_length", type=int, required=True)
-    args.add_argument("--dropout", type=float, default=0.5)
+    args.add_argument("--dropout", type=float, default=0.69723)
 
-    args.add_argument("--num_basis", type=int, default=2)
+    args.add_argument("--num_basis", type=int, default=3)
 
     # ablation
     args.add_argument("--use_complete_graph", type=int, default=0)
@@ -99,9 +98,9 @@ def main():
     print(f"Using device: {device}")
 
     if args['model_folder'] == None:
-        args['model_folder'] = './model/DyMF_2025-07-07-16:30/fold_3' 
+        args['model_folder'] = './model/DyMF_2025-07-21-01:20/fold_1' 
 
-    fold_datasets,test_dataloader = prepare_kfold_datasets(args, k_folds=args['k_folds'])
+    test_dataloader = prepare_test_datasets(args)
 
 
     if args['model_type'] == 'DNRI':

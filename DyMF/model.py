@@ -360,7 +360,6 @@ class relational_GCN(nn.Module):
 class Encoder(nn.Module):
     def __init__(self, args, device):
         super(Encoder, self).__init__()
-        #player_dim = args['player_dim']
         type_num = args['type_num']
         type_dim = args['type_dim']
         location_dim = args['location_dim']
@@ -369,9 +368,6 @@ class Encoder(nn.Module):
         max_len =  args['max_length']
 
         self.device = device
-        #self.player_num = player_num
-
-        #self.player_embedding = nn.Embedding(player_num, player_dim,padding_idx=0)
         self.coordination_transform = nn.Linear(2, location_dim)
         self.time_emb = nn.Embedding(max_len + 1,8,padding_idx=0)
         self.shot_emb   = nn.Embedding(type_num, type_dim,padding_idx=0)
@@ -383,20 +379,13 @@ class Encoder(nn.Module):
             padding_idx=0                     
         )
 
-        self.model_input_linear = nn.Linear(1 + location_dim + type_dim + location_dim + 2, hidden_size)
+        self.model_input_linear = nn.Linear(1 + location_dim + type_dim , hidden_size)
 
         self.rGCN = relational_GCN(hidden_size, type_num, args['num_basis'], num_layer,args, device) # into 2 type (passive and active) and padding
         self.gcn = GCN(args['hidden_size'], args['hidden_size'], args['dropout'], num_layer, args, device)
         
         self.rgcn_weight = nn.Linear(args['hidden_size'], 1)
         self.gcn_weight = nn.Linear(args['hidden_size'], 1)
-
-        self.weight_rgcn = nn.Linear(hidden_size, 1)
-        self.weight_dgcn = nn.Linear(hidden_size, 1)
-        self.weight_rgcn_A = nn.Linear(hidden_size, 1)
-        self.weight_dgcn_A = nn.Linear(hidden_size, 1)
-        self.weight_rgcn_B = nn.Linear(hidden_size, 1)
-        self.weight_dgcn_B = nn.Linear(hidden_size, 1)
 
         self.co_attention = ParallelCoAttentionNetwork(args['hidden_size'], args['hidden_size'], src_length_masking=True)
         self.co_attention_linear_A = nn.Linear(args['hidden_size'], 1)
@@ -409,23 +398,19 @@ class Encoder(nn.Module):
         self.consec_score_fc  = nn.Linear(1, 8)
 
         self.linear_for_dynmaic_gcn = nn.Linear(1+ args['hidden_size'], args['hidden_size'])
-        self.win_head = nn.Linear(args['hidden_size']*2+16, 1) 
-        self.attention = nn.Linear(hidden_size, 1)
-        nn.init.xavier_uniform_(self.attention.weight)
-        nn.init.constant_(self.attention.bias, 0)
-        self.softmax = nn.Softmax(dim=1)
-        self.mha = nn.MultiheadAttention(
-            embed_dim=hidden_size+1,      # 输入特征维度
-            num_heads=1,      # 注意力头数
-            dropout=args['dropout'],          # Dropout 比例
-            batch_first=True          # 输入格式为 (batch_size, seq_len, embed_dim)
-        )
+        self.win_head = nn.Linear(args['hidden_size']*2, 1) 
 
-        self.ln = nn.LayerNorm(hidden_size+1, eps=1e-5, elementwise_affine=True)
-        self.ffn = nn.Sequential(
-            nn.Linear(hidden_size+1, 32),
-            nn.Linear(32, hidden_size+1)
-        )
+        # 添加注意力層用於節點重要性
+        self.node_attention = nn.Linear(hidden_size, 1)
+        nn.init.xavier_uniform_(self.node_attention.weight)
+        nn.init.constant_(self.node_attention.bias, 0)
+        self.softmax = nn.Softmax(dim=1)
+
+        # 添加邊注意力層
+        self.edge_attention = nn.Linear(hidden_size * 2, 1)
+        nn.init.xavier_uniform_(self.edge_attention.weight)
+        nn.init.constant_(self.edge_attention.bias, 0)
+
     def forward(self,
                 player,     
                 shot_type,    
@@ -466,8 +451,8 @@ class Encoder(nn.Module):
         shot_mu = self.shot_mu(shot_emb)
         shot_theta = self.shot_theta(shot_emb)
 
-        hit_area = hit_area.repeat_interleave(2, dim=1)
-        hit_area_emb = self.area_embedding(hit_area)
+        # hit_area = hit_area.repeat_interleave(2, dim=1)
+        # hit_area_emb = self.area_embedding(hit_area)
      
         out = player.new_zeros((batch_size, 2*encode_length))
         time_out = player.new_zeros((batch_size, 2*encode_length), dtype=torch.float)
@@ -504,12 +489,12 @@ class Encoder(nn.Module):
         shotEnhanced = self.sigmoid(shotEnhanced)
         enhanced_shot_features = torch.mul(shot_emb , shotEnhanced)
 
-        aroundhead = aroundhead.repeat_interleave(2, dim=1)
-        aroundhead = aroundhead.unsqueeze(-1)  # [32,120,1]
-        backhand = backhand.repeat_interleave(2, dim=1)
-        backhand = backhand.unsqueeze(-1)  # [32,120,1]
+        # aroundhead = aroundhead.repeat_interleave(2, dim=1)
+        # aroundhead = aroundhead.unsqueeze(-1)  # [32,120,1]
+        # backhand = backhand.repeat_interleave(2, dim=1)
+        # backhand = backhand.unsqueeze(-1)  # [32,120,1]
        
-        rally_information = torch.cat((embedded_player_area, player,enhanced_shot_features,hit_area_emb,aroundhead,backhand), dim=-1)
+        rally_information = torch.cat((embedded_player_area, player,enhanced_shot_features), dim=-1)
         model_input = self.model_input_linear(rally_information)
 
         node_mask = mask.repeat_interleave(2, dim=1)    #[32,120]
@@ -569,64 +554,37 @@ class Encoder(nn.Module):
         node_embedding[:, 0::2, :] = full_graph_node_embedding[:, 0::2, :] * w_rgcn_A.unsqueeze(1) + player_A_node_embedding * w_gcn_A.unsqueeze(1)
         node_embedding[:, 1::2, :] = full_graph_node_embedding[:, 1::2, :] * w_rgcn_B.unsqueeze(1) + player_B_node_embedding * w_gcn_B.unsqueeze(1)
 
+        # # 計算節點注意力權重
+        # node_attention_scores = self.node_attention(node_embedding).squeeze(-1)  # [batch_size, seq_len]
+        # node_attention_scores = node_attention_scores.masked_fill(node_mask.squeeze(-1) == 0, -float('inf'))
+        # node_attention_weights = self.softmax(node_attention_scores)  # [batch_size, seq_len]
+
+        # # 計算邊注意力權重
+        # edge_attention_weights = []
+        # for i in range(batch_size):
+        #     adj = adjacency_matrix[i, 1:, :, :]  # 跳過填充邊類型
+        #     src, dst = torch.nonzero(adj.sum(dim=0), as_tuple=True)
+        #     if len(src) > 0:
+        #         edge_features = torch.cat((node_embedding[i, src, :], node_embedding[i, dst, :]), dim=-1)
+        #         edge_scores = self.edge_attention(edge_features).squeeze(-1)
+        #         edge_weights = self.softmax(edge_scores)
+        #         edge_attention_weights.append(edge_weights)
+        #     else:
+        #         edge_attention_weights.append(torch.zeros(0, device=node_embedding.device))
+        # edge_attention_weights = torch.stack(edge_attention_weights) if edge_attention_weights else torch.zeros((batch_size, 0), device=node_embedding.device)
+
         idx = (thisRallyL).squeeze(-1).long()   # shape [32]
         batch_idx = torch.arange(node_embedding.size(0), device=node_embedding.device)  # [32]
         lastNode1 = node_embedding[batch_idx, idx-1, :] #[32,16]
         lastNode2 = node_embedding[batch_idx, idx-2, :] #[32 16]
-        score_diff = score_diff[:, 0].float().unsqueeze(1)  # shape: [64] → [64, 1]
-        conpoint = conpoint[:, 0].float().unsqueeze(1)  # shape: [64] → [64, 1]
-        score_diff = self.score_diff_fc(score_diff)
-        conpoint = self.consec_score_fc(conpoint)
+        # score_diff = score_diff[:, 0].float().unsqueeze(1)  # shape: [64] → [64, 1]
+        # conpoint = conpoint[:, 0].float().unsqueeze(1)  # shape: [64] → [64, 1]
+        # score_diff = self.score_diff_fc(score_diff)
+        # conpoint = self.consec_score_fc(conpoint)
 
-        combineLast = torch.cat([lastNode1,lastNode2,score_diff,conpoint], dim=-1) #[32,32]
+        combineLast = torch.cat([lastNode1,lastNode2], dim=-1) #[32,32]
         logits = self.win_head(combineLast).squeeze(-1)  
         #win_logit = torch.sigmoid(logits)             
         
+        # return logits, node_attention_weights, edge_attention_weights
         return logits
-
-
-# Compute attention scores
-        # attention_scores = self.attention(node_embedding).squeeze(-1)  # [batch_size, seq_len]
-
-        # # Apply mask and compute attention weights
-        # attention_scores = attention_scores.masked_fill(node_mask.squeeze(-1) == 0, -float('inf'))  # Zero out padded positions
-        # attention_weights = self.softmax(attention_scores)  # [batch_size, seq_len]
-
-        # # Select top 2 shots based on attention weights
-        # _, top_indices = torch.topk(attention_weights, 2, dim=1)  # [batch_size, 2]
-        # batch_idx = torch.arange(node_embedding.size(0), device=node_embedding.device)  # [batch_size, 1]
-
-        # # Extract the top 2 node embeddings (using original node_embedding)
-        # Node1 = node_embedding[batch_idx, top_indices[:, 0], :].squeeze(1)  # [batch_size, hidden_size]
-        # Node2 = node_embedding[batch_idx, top_indices[:, 1], :].squeeze(1) # [batch_size, hidden_size]
-# node_embedding[:, 0::2, :] = full_graph_node_embedding[:, 0::2, :]  + player_A_node_embedding 
-        # node_embedding[:, 1::2, :] = full_graph_node_embedding[:, 1::2, :]  + player_B_node_embedding 
-        # node_embedding[:, 0::2, :]=torch.cat([full_graph_node_embedding[:, 0::2, :], player_A_node_embedding], dim=-1)
-        # node_embedding[:, 1::2, :]=torch.cat([full_graph_node_embedding[:, 1::2, :], player_A_node_embedding], dim=-1)
-
-
-        # idx = (thisRallyL).squeeze(-1).long()   # shape [32]
-        # batch_idx = torch.arange(full_graph_node_embedding.size(0), device=full_graph_node_embedding.device)  # [32]
-        # lastNode1 = full_graph_node_embedding[batch_idx, idx-1, :] #[32,16]
-        # lastNode2 = full_graph_node_embedding[batch_idx, idx-2, :] #[3216]
-        # sd = score_diff.unsqueeze(1)   
-        # cp = conpoint.unsqueeze(1)
-        # combineLast = torch.cat([lastNode1, lastNode2,sd,cp], dim=-1) #[32,32]
-        # logits = self.win_head(combineLast).squeeze(-1)  
-        # win_logit = torch.sigmoid(logits)  
-
-
-
-
-        # debug_path = "mask_debug.txt"  
-        # # 把 mask 拷到 CPU 并转成 Python 列表
-        # mask_list = mask.tolist()  
-        # with open(debug_path, "w") as f:
-        #     for i, row in enumerate(mask_list):
-        #         f.write(f"batch {i}: {row}\n")
-
-
-
-        # pooled_vec, attn_w = self.transformer_block(node_embedding,key_padding_mask = mask.repeat_interleave(2, dim=1) )  # pooled_vec: (B, D)
-        # logit = self.final_linear(pooled_vec)        
-        # win_logit = torch.sigmoid(logit).squeeze(-1)   

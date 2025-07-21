@@ -1,0 +1,20 @@
+without score diff and conpoint
+
+Average Val Loss: 0.5425
+Average Val AUC: 0.7983 (±0.0000)
+Average Val Brier: 0.1811
+
+❯ python evaluate.py
+Using device: mps
+Test Loss: 0.5536, Acc: 0.7266, Test AUC: 0.7860, Test Brier: 0.1852
+
+
+without score diff, conpoint, hit area, aroundhead, backhand
+
+K-Fold Cross-Validation Results:
+Average Val Loss: 0.5465
+Average Val AUC: 0.8002 (±0.0114)
+Average Val Brier: 0.1829
+
+Evaluating best model (Fold 5) on test dataset...
+Test Loss: 0.5449, Acc: 0.7352, Test AUC: 0.7947, Test Brier: 0.1823
