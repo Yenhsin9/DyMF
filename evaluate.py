@@ -186,8 +186,8 @@ def main():
 
     encoder.to(device)
 
-    avg_loss, auc, brier = evaluate(test_dataloader, encoder, args, device=device)
-    
+    loss, auc, brier, acc = evaluate(test_dataloader, encoder, args, device=device)
+    print(f"Test Loss: {loss:.4f}, Test Acc: {acc:.4f}, Test AUC: {auc:.4f}, Test Brier: {brier:.4f}")
 
 if __name__ == "__main__":
     main()

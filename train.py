@@ -100,7 +100,7 @@ def main():
 
     #train_dataloader, valid_dataloader, test_dataloader, args = prepare_dataset(args)
     # 獲取 k-fold 數據集
-    fold_datasets,test_dataloader = prepare_kfold_datasets(args, k_folds=args['k_folds'])
+    test_dataloader, data_dir, used_column = prepare_kfold_datasets(args)
 
 
     if args['model_type'] == 'DNRI':
@@ -228,7 +228,7 @@ def main():
     # print("location loss: {}".format(train_loss_location))
     # print("type loss: {}".format(train_loss_type))
     avg_val_loss, avg_val_auc, avg_val_brier, avg_val_acc, test_loss, test_auc, test_brier, test_acc = train_kfold(
-        fold_datasets, test_dataloader,encoder, location_criterion, shot_type_criterion, 
+        data_dir, used_column, args['k_folds'], test_dataloader, encoder, location_criterion, shot_type_criterion, 
         encoder_optimizer, args, device=device
     )
 

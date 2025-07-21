@@ -10,6 +10,8 @@ from torch.nn import BCELoss
 from DyMF.draw_plot import draw_plot
 import pandas as pd
 import pickle
+from prepare_dataset import get_fold_dataloader
+import gc
 try:
     import seaborn as sns
     import matplotlib.pyplot as plt
@@ -18,7 +20,7 @@ except ImportError:
     seaborn_available = False
     print("Seaborn not installed. Skipping heatmap visualization.")
 
-def train_kfold(fold_datasets, test_dataloader, encoder, location_criterion, shot_type_criterion, encoder_optimizer, args, device="cpu"):
+def train_kfold(data_dir, used_column, k_folds, test_dataloader, encoder, location_criterion, shot_type_criterion, encoder_optimizer, args, device="cpu"):
     bce_loss = BCEWithLogitsLoss()
     patience = args.get('patience', 5)
     
@@ -40,8 +42,11 @@ def train_kfold(fold_datasets, test_dataloader, encoder, location_criterion, sho
     best_val_loss = float('inf')
     best_fold = 0
     
-    for fold, (train_dataloader, valid_dataloader, args) in enumerate(fold_datasets):
-        print(f"\nTraining Fold {fold + 1}/{len(fold_datasets)}")
+    for fold in range(k_folds):
+        print(f"\nTraining Fold {fold + 1}/{k_folds}")
+        
+        # Load data for current fold only
+        train_dataloader, valid_dataloader = get_fold_dataloader(fold, data_dir, used_column, args)
         
         # Debug: Check data structure
         for rally_batch, target in train_dataloader:
@@ -82,6 +87,10 @@ def train_kfold(fold_datasets, test_dataloader, encoder, location_criterion, sho
                 train_loss += loss.item() * rally_batch[0].size(0)
                 train_preds.extend(torch.sigmoid(win_logit).detach().cpu().numpy())
                 train_labels.extend(target.detach().cpu().numpy())
+                # Clear memory
+                del win_logit, loss
+                torch.cuda.empty_cache() if device == "cuda" else None
+                gc.collect()
             train_loss /= len(train_dataloader.dataset)
             train_auc = roc_auc_score(train_labels, train_preds) if train_labels else float('nan')
             train_brier = brier_score_loss(train_labels, train_preds)
@@ -107,8 +116,9 @@ def train_kfold(fold_datasets, test_dataloader, encoder, location_criterion, sho
                 output_folder_name = os.path.join(args['model_folder'], f'fold_{fold + 1}')
                 if not os.path.exists(output_folder_name):
                     os.makedirs(output_folder_name)
-                torch.save(encoder.state_dict(), os.path.join(output_folder_name, 'encoder'))
-                print(f"  ✔ Fold {fold + 1} New best model saved.")
+                save_path = os.path.join(output_folder_name, 'encoder')
+                torch.save(encoder.state_dict(), save_path)
+                print(f"  ✔ Fold {fold + 1} New best model saved at: {save_path}")
                 
                 if best_fold_val_loss < best_val_loss:
                     best_val_loss = best_fold_val_loss
@@ -161,6 +171,11 @@ def train_kfold(fold_datasets, test_dataloader, encoder, location_criterion, sho
         fold_val_aucs.append(max(val_auc_list))
         fold_val_briers.append(min(val_brier_list))
         fold_val_acc.append(max(val_acc_list))
+        
+        # Clear memory after fold
+        del train_dataloader, valid_dataloader
+        torch.cuda.empty_cache() if device == "cuda" else None
+        gc.collect()
     
     # Compute average metrics
     avg_val_loss = np.mean(fold_val_losses)
@@ -181,7 +196,7 @@ def train_kfold(fold_datasets, test_dataloader, encoder, location_criterion, sho
     
     # Evaluate best model on test set
     print(f"\nEvaluating best model (Fold {best_fold}) on test dataset...")
-    encoder.load_state_dict(torch.load(os.path.join(args['model_folder'], f'fold_{best_fold}', 'encoder')))
+    encoder.load_state_dict(torch.load(os.path.join(args['model_folder'], f'fold_{best_fold}', 'encoder.pth')))
     test_loss, test_auc, test_brier, test_acc = evaluate(test_dataloader, encoder, args, device)
 
     return avg_val_loss, avg_val_auc, avg_val_brier, avg_val_acc, test_loss, test_auc, test_brier, test_acc
@@ -209,6 +224,9 @@ def evaluate(test_dataloader, encoder, args, device="cpu"):
             l = bce_loss(win_logit, target)
             test_loss += l.item() * rally_batch[0].size(0)
             n_test += rally_batch[0].size(0)
+            del win_logit, l
+            torch.cuda.empty_cache() if device == "cuda" else None
+            gc.collect()
     avg_test_loss = test_loss / n_test if n_test else 0.0
     y_pred = [1 if p >= 0.5 else 0 for p in y_prob]
     acc = accuracy_score(y_true, y_pred)
@@ -217,12 +235,12 @@ def evaluate(test_dataloader, encoder, args, device="cpu"):
     except ValueError:
         auc = float('nan')
     brier = brier_score_loss(y_true, y_prob)
-    print(f"Test Loss: {avg_test_loss:.4f}, Test Acc: {acc:.4f}, Test AUC: {auc:.4f}, Test Brier: {brier:.4f}")
+    
     return avg_test_loss, auc, brier, acc
 
 def save(encoder, decoder, args):
     output_folder_name = args['model_folder']
     if not os.path.exists(output_folder_name):
         os.makedirs(output_folder_name)
-    torch.save(encoder.state_dict(), os.path.join(output_folder_name, 'encoder'))
-    torch.save(decoder.state_dict(), os.path.join(output_folder_name, 'decoder'))
+    torch.save(encoder.state_dict(), os.path.join(output_folder_name, 'encoder.pth'))
+    torch.save(decoder.state_dict(), os.path.join(output_folder_name, 'decoder.pth'))
