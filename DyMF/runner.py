@@ -24,7 +24,7 @@ def train_kfold(data_dir, used_column, k_folds, test_dataloader, encoder, locati
     bce_loss = BCEWithLogitsLoss()
     patience = args.get('patience', 5)
     encoder.to(device)  # Ensure model is on correct device
-    
+
     # Store metrics for all folds
     fold_results = {
         'train_auc_list': [],
@@ -197,7 +197,7 @@ def train_kfold(data_dir, used_column, k_folds, test_dataloader, encoder, locati
     
     # Evaluate best model on test set
     print(f"\nEvaluating best model (Fold {best_fold}) on test dataset...")
-    encoder.load_state_dict(torch.load(os.path.join(args['model_folder'], f'fold_{best_fold}', 'encoder.pth')))
+    encoder.load_state_dict(torch.load(os.path.join(args['model_folder'], f'fold_{best_fold}', 'encoder')))
     test_loss, test_auc, test_brier, test_acc = evaluate(test_dataloader, encoder, args, device)
 
     return avg_val_loss, avg_val_auc, avg_val_brier, avg_val_acc, test_loss, test_auc, test_brier, test_acc
