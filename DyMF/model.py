@@ -379,7 +379,7 @@ class Encoder(nn.Module):
             padding_idx=0                     
         )
 
-        self.model_input_linear = nn.Linear(1 + location_dim + type_dim , hidden_size)
+        self.model_input_linear = nn.Linear(1 + location_dim + type_dim+location_dim+2 , hidden_size)
 
         self.rGCN = relational_GCN(hidden_size, type_num, args['num_basis'], num_layer,args, device) # into 2 type (passive and active) and padding
         self.gcn = GCN(args['hidden_size'], args['hidden_size'], args['dropout'], num_layer, args, device)
@@ -398,7 +398,7 @@ class Encoder(nn.Module):
         self.consec_score_fc  = nn.Linear(1, 8)
 
         self.linear_for_dynmaic_gcn = nn.Linear(1+ args['hidden_size'], args['hidden_size'])
-        self.win_head = nn.Linear(args['hidden_size']*2, 1) 
+        self.win_head = nn.Linear(args['hidden_size']*2+16, 1) 
 
         # 添加注意力層用於節點重要性
         self.node_attention = nn.Linear(hidden_size, 1)
@@ -451,8 +451,8 @@ class Encoder(nn.Module):
         shot_mu = self.shot_mu(shot_emb)
         shot_theta = self.shot_theta(shot_emb)
 
-        # hit_area = hit_area.repeat_interleave(2, dim=1)
-        # hit_area_emb = self.area_embedding(hit_area)
+        hit_area = hit_area.repeat_interleave(2, dim=1)
+        hit_area_emb = self.area_embedding(hit_area)
      
         out = player.new_zeros((batch_size, 2*encode_length))
         time_out = player.new_zeros((batch_size, 2*encode_length), dtype=torch.float)
@@ -489,12 +489,12 @@ class Encoder(nn.Module):
         shotEnhanced = self.sigmoid(shotEnhanced)
         enhanced_shot_features = torch.mul(shot_emb , shotEnhanced)
 
-        # aroundhead = aroundhead.repeat_interleave(2, dim=1)
-        # aroundhead = aroundhead.unsqueeze(-1)  # [32,120,1]
-        # backhand = backhand.repeat_interleave(2, dim=1)
-        # backhand = backhand.unsqueeze(-1)  # [32,120,1]
-       
-        rally_information = torch.cat((embedded_player_area, player,enhanced_shot_features), dim=-1)
+        aroundhead = aroundhead.repeat_interleave(2, dim=1)
+        aroundhead = aroundhead.unsqueeze(-1)  # [32,120,1]
+        backhand = backhand.repeat_interleave(2, dim=1)
+        backhand = backhand.unsqueeze(-1)  # [32,120,1]
+
+        rally_information = torch.cat((embedded_player_area, player,enhanced_shot_features,hit_area_emb,aroundhead,backhand), dim=-1)
         model_input = self.model_input_linear(rally_information)
 
         node_mask = mask.repeat_interleave(2, dim=1)    #[32,120]
@@ -558,12 +558,12 @@ class Encoder(nn.Module):
         batch_idx = torch.arange(node_embedding.size(0), device=node_embedding.device)  # [32]
         lastNode1 = node_embedding[batch_idx, idx-1, :] #[32,16]
         lastNode2 = node_embedding[batch_idx, idx-2, :] #[32 16]
-        # score_diff = score_diff[:, 0].float().unsqueeze(1)  # shape: [64] → [64, 1]
-        # conpoint = conpoint[:, 0].float().unsqueeze(1)  # shape: [64] → [64, 1]
-        # score_diff = self.score_diff_fc(score_diff)
-        # conpoint = self.consec_score_fc(conpoint)
+        score_diff = score_diff[:, 0].float().unsqueeze(1)  # shape: [64] → [64, 1]
+        conpoint = conpoint[:, 0].float().unsqueeze(1)  # shape: [64] → [64, 1]
+        score_diff = self.score_diff_fc(score_diff)
+        conpoint = self.consec_score_fc(conpoint)
 
-        combineLast = torch.cat([lastNode1,lastNode2], dim=-1) #[32,32]
+        combineLast = torch.cat([lastNode1,lastNode2,score_diff,conpoint], dim=-1) #[32,32]
         logits = self.win_head(combineLast).squeeze(-1)  
         #win_logit = torch.sigmoid(logits)             
         
