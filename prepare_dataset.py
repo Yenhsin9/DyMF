@@ -68,10 +68,15 @@ def get_fold_dataloader(fold_idx, data_dir, used_column, args):
     """Load data for a single fold."""
     train_rally_data = pd.read_csv(os.path.join(data_dir, f'train_fold_{fold_idx + 1}.csv'))
     valid_rally_data = pd.read_csv(os.path.join(data_dir, f'val_fold_{fold_idx + 1}.csv'))
-    
     # Check player distribution
     print(f"Fold {fold_idx + 1} Train player distribution:\n", train_rally_data['player'].value_counts(normalize=True).sort_index())
     print(f"Fold {fold_idx + 1} Validation player distribution:\n", valid_rally_data['player'].value_counts(normalize=True).sort_index())
+
+    # 移除或填補 NaN/Inf
+    train_rally_data = train_rally_data.fillna(0)  # 示例：用 0 填補 NaN
+    train_rally_data = train_rally_data.replace([np.inf, -np.inf], 0)
+    valid_rally_data = valid_rally_data.fillna(0)
+    valid_rally_data = valid_rally_data.replace([np.inf, -np.inf], 0)
 
     # Create datasets
     train_dataset = BadmintonDataset(train_rally_data, used_column, args)

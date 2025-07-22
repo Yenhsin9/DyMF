@@ -23,6 +23,7 @@ except ImportError:
 def train_kfold(data_dir, used_column, k_folds, test_dataloader, encoder, location_criterion, shot_type_criterion, encoder_optimizer, args, device="cpu"):
     bce_loss = BCEWithLogitsLoss()
     patience = args.get('patience', 5)
+    encoder.to(device)  # Ensure model is on correct device
     
     # Store metrics for all folds
     fold_results = {
