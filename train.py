@@ -60,7 +60,7 @@ def main():
     args.add_argument("--sample_num", type=int, default=1)
 
     # k-fold 參數
-    args.add_argument("--k_folds", type=int, default=1)
+    args.add_argument("--k_folds", type=int, default=5)
 
     args = args.parse_args()
     args = vars(args)
