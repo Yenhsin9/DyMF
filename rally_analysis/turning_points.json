@@ -1,0 +1,7616 @@
+[
+  {
+    "rally_id": 0,
+    "turning_point_shot": 15,
+    "attention_change": 0.041712380945682526,
+    "win_probability": 0.5738677382469177
+  },
+  {
+    "rally_id": 1,
+    "turning_point_shot": 4,
+    "attention_change": 0.10016480088233948,
+    "win_probability": 0.8959295153617859
+  },
+  {
+    "rally_id": 2,
+    "turning_point_shot": 21,
+    "attention_change": 0.029485244303941727,
+    "win_probability": 0.5758969187736511
+  },
+  {
+    "rally_id": 3,
+    "turning_point_shot": 17,
+    "attention_change": 0.0329768992960453,
+    "win_probability": 0.575901448726654
+  },
+  {
+    "rally_id": 4,
+    "turning_point_shot": 6,
+    "attention_change": 0.08501996099948883,
+    "win_probability": 0.803041934967041
+  },
+  {
+    "rally_id": 5,
+    "turning_point_shot": 5,
+    "attention_change": 0.08687673509120941,
+    "win_probability": 0.8965528011322021
+  },
+  {
+    "rally_id": 6,
+    "turning_point_shot": 16,
+    "attention_change": 0.03163071721792221,
+    "win_probability": 0.8786801099777222
+  },
+  {
+    "rally_id": 7,
+    "turning_point_shot": 2,
+    "attention_change": 0.21517938375473022,
+    "win_probability": 0.5745652914047241
+  },
+  {
+    "rally_id": 8,
+    "turning_point_shot": 6,
+    "attention_change": 0.09795964509248734,
+    "win_probability": 0.8355444669723511
+  },
+  {
+    "rally_id": 9,
+    "turning_point_shot": 17,
+    "attention_change": 0.033995043486356735,
+    "win_probability": 0.5755553245544434
+  },
+  {
+    "rally_id": 10,
+    "turning_point_shot": 19,
+    "attention_change": 0.030444582924246788,
+    "win_probability": 0.5832977294921875
+  },
+  {
+    "rally_id": 11,
+    "turning_point_shot": 14,
+    "attention_change": 0.0407227948307991,
+    "win_probability": 0.8621180057525635
+  },
+  {
+    "rally_id": 12,
+    "turning_point_shot": 28,
+    "attention_change": 0.013828566297888756,
+    "win_probability": 0.1508146971464157
+  },
+  {
+    "rally_id": 13,
+    "turning_point_shot": 13,
+    "attention_change": 0.02871316485106945,
+    "win_probability": 0.14575810730457306
+  },
+  {
+    "rally_id": 14,
+    "turning_point_shot": 15,
+    "attention_change": 0.031945426017045975,
+    "win_probability": 0.8877962827682495
+  },
+  {
+    "rally_id": 15,
+    "turning_point_shot": 42,
+    "attention_change": 0.013158684596419334,
+    "win_probability": 0.5768665075302124
+  },
+  {
+    "rally_id": 16,
+    "turning_point_shot": 9,
+    "attention_change": 0.04055158421397209,
+    "win_probability": 0.13229386508464813
+  },
+  {
+    "rally_id": 17,
+    "turning_point_shot": 38,
+    "attention_change": 0.012761062942445278,
+    "win_probability": 0.881739616394043
+  },
+  {
+    "rally_id": 18,
+    "turning_point_shot": 6,
+    "attention_change": 0.08989225327968597,
+    "win_probability": 0.8529518842697144
+  },
+  {
+    "rally_id": 19,
+    "turning_point_shot": 6,
+    "attention_change": 0.05935082212090492,
+    "win_probability": 0.2306835800409317
+  },
+  {
+    "rally_id": 20,
+    "turning_point_shot": 23,
+    "attention_change": 0.022854400798678398,
+    "win_probability": 0.5693076252937317
+  },
+  {
+    "rally_id": 21,
+    "turning_point_shot": 1,
+    "attention_change": 0.26941075921058655,
+    "win_probability": 0.5862661600112915
+  },
+  {
+    "rally_id": 22,
+    "turning_point_shot": 7,
+    "attention_change": 0.06552460789680481,
+    "win_probability": 0.5905595421791077
+  },
+  {
+    "rally_id": 23,
+    "turning_point_shot": 27,
+    "attention_change": 0.017869945615530014,
+    "win_probability": 0.8965392708778381
+  },
+  {
+    "rally_id": 24,
+    "turning_point_shot": 6,
+    "attention_change": 0.056352995336055756,
+    "win_probability": 0.12084312736988068
+  },
+  {
+    "rally_id": 25,
+    "turning_point_shot": 9,
+    "attention_change": 0.05053384229540825,
+    "win_probability": 0.8566582202911377
+  },
+  {
+    "rally_id": 26,
+    "turning_point_shot": 10,
+    "attention_change": 0.047194723039865494,
+    "win_probability": 0.8972457647323608
+  },
+  {
+    "rally_id": 27,
+    "turning_point_shot": 3,
+    "attention_change": 0.10001718252897263,
+    "win_probability": 0.16023708879947662
+  },
+  {
+    "rally_id": 28,
+    "turning_point_shot": 20,
+    "attention_change": 0.03370656445622444,
+    "win_probability": 0.5797116756439209
+  },
+  {
+    "rally_id": 29,
+    "turning_point_shot": 13,
+    "attention_change": 0.03653307631611824,
+    "win_probability": 0.8624919652938843
+  },
+  {
+    "rally_id": 30,
+    "turning_point_shot": 6,
+    "attention_change": 0.07184235006570816,
+    "win_probability": 0.5825761556625366
+  },
+  {
+    "rally_id": 31,
+    "turning_point_shot": 9,
+    "attention_change": 0.052236903458833694,
+    "win_probability": 0.8917058706283569
+  },
+  {
+    "rally_id": 0,
+    "turning_point_shot": 7,
+    "attention_change": 0.06564486026763916,
+    "win_probability": 0.8684773445129395
+  },
+  {
+    "rally_id": 1,
+    "turning_point_shot": 17,
+    "attention_change": 0.02980017103254795,
+    "win_probability": 0.5833461284637451
+  },
+  {
+    "rally_id": 2,
+    "turning_point_shot": 10,
+    "attention_change": 0.043095219880342484,
+    "win_probability": 0.5760588645935059
+  },
+  {
+    "rally_id": 3,
+    "turning_point_shot": 12,
+    "attention_change": 0.05171709880232811,
+    "win_probability": 0.5828986167907715
+  },
+  {
+    "rally_id": 4,
+    "turning_point_shot": 15,
+    "attention_change": 0.033707380294799805,
+    "win_probability": 0.831792950630188
+  },
+  {
+    "rally_id": 5,
+    "turning_point_shot": 7,
+    "attention_change": 0.06063731759786606,
+    "win_probability": 0.8917593359947205
+  },
+  {
+    "rally_id": 6,
+    "turning_point_shot": 25,
+    "attention_change": 0.021293198689818382,
+    "win_probability": 0.8344927430152893
+  },
+  {
+    "rally_id": 7,
+    "turning_point_shot": 10,
+    "attention_change": 0.029914723709225655,
+    "win_probability": 0.09853681921958923
+  },
+  {
+    "rally_id": 8,
+    "turning_point_shot": 15,
+    "attention_change": 0.035712599754333496,
+    "win_probability": 0.5769969820976257
+  },
+  {
+    "rally_id": 9,
+    "turning_point_shot": 13,
+    "attention_change": 0.04140951484441757,
+    "win_probability": 0.5778132081031799
+  },
+  {
+    "rally_id": 10,
+    "turning_point_shot": 10,
+    "attention_change": 0.06606470048427582,
+    "win_probability": 0.5873144865036011
+  },
+  {
+    "rally_id": 11,
+    "turning_point_shot": 14,
+    "attention_change": 0.04999881610274315,
+    "win_probability": 0.5779959559440613
+  },
+  {
+    "rally_id": 12,
+    "turning_point_shot": 8,
+    "attention_change": 0.07805055379867554,
+    "win_probability": 0.8066147565841675
+  },
+  {
+    "rally_id": 13,
+    "turning_point_shot": 8,
+    "attention_change": 0.07722325623035431,
+    "win_probability": 0.5770749449729919
+  },
+  {
+    "rally_id": 14,
+    "turning_point_shot": 19,
+    "attention_change": 0.030842510983347893,
+    "win_probability": 0.5748808979988098
+  },
+  {
+    "rally_id": 15,
+    "turning_point_shot": 4,
+    "attention_change": 0.08278243988752365,
+    "win_probability": 0.15349309146404266
+  },
+  {
+    "rally_id": 16,
+    "turning_point_shot": 4,
+    "attention_change": 0.04475275054574013,
+    "win_probability": 0.16758336126804352
+  },
+  {
+    "rally_id": 17,
+    "turning_point_shot": 6,
+    "attention_change": 0.0609625019133091,
+    "win_probability": 0.5379308462142944
+  },
+  {
+    "rally_id": 18,
+    "turning_point_shot": 1,
+    "attention_change": 0.25433990359306335,
+    "win_probability": 0.859977662563324
+  },
+  {
+    "rally_id": 19,
+    "turning_point_shot": 7,
+    "attention_change": 0.07976667582988739,
+    "win_probability": 0.5733690857887268
+  },
+  {
+    "rally_id": 20,
+    "turning_point_shot": 5,
+    "attention_change": 0.0961940586566925,
+    "win_probability": 0.5770470499992371
+  },
+  {
+    "rally_id": 21,
+    "turning_point_shot": 7,
+    "attention_change": 0.05032660439610481,
+    "win_probability": 0.2042054980993271
+  },
+  {
+    "rally_id": 22,
+    "turning_point_shot": 5,
+    "attention_change": 0.09017114341259003,
+    "win_probability": 0.5853379964828491
+  },
+  {
+    "rally_id": 23,
+    "turning_point_shot": 10,
+    "attention_change": 0.04706659913063049,
+    "win_probability": 0.8965697884559631
+  },
+  {
+    "rally_id": 24,
+    "turning_point_shot": 11,
+    "attention_change": 0.04236527532339096,
+    "win_probability": 0.8960384726524353
+  },
+  {
+    "rally_id": 25,
+    "turning_point_shot": 7,
+    "attention_change": 0.06459014862775803,
+    "win_probability": 0.8579508066177368
+  },
+  {
+    "rally_id": 26,
+    "turning_point_shot": 9,
+    "attention_change": 0.05911416932940483,
+    "win_probability": 0.5799909234046936
+  },
+  {
+    "rally_id": 27,
+    "turning_point_shot": 4,
+    "attention_change": 0.1308002471923828,
+    "win_probability": 0.8076626658439636
+  },
+  {
+    "rally_id": 28,
+    "turning_point_shot": 9,
+    "attention_change": 0.059236329048871994,
+    "win_probability": 0.576895534992218
+  },
+  {
+    "rally_id": 29,
+    "turning_point_shot": 18,
+    "attention_change": 0.039137616753578186,
+    "win_probability": 0.5827943086624146
+  },
+  {
+    "rally_id": 30,
+    "turning_point_shot": 16,
+    "attention_change": 0.041983675211668015,
+    "win_probability": 0.5834410190582275
+  },
+  {
+    "rally_id": 31,
+    "turning_point_shot": 18,
+    "attention_change": 0.029879767447710037,
+    "win_probability": 0.5762094259262085
+  },
+  {
+    "rally_id": 0,
+    "turning_point_shot": 11,
+    "attention_change": 0.049486853182315826,
+    "win_probability": 0.5524452328681946
+  },
+  {
+    "rally_id": 1,
+    "turning_point_shot": 25,
+    "attention_change": 0.021800393238663673,
+    "win_probability": 0.5851602554321289
+  },
+  {
+    "rally_id": 2,
+    "turning_point_shot": 4,
+    "attention_change": 0.08985687047243118,
+    "win_probability": 0.5731878876686096
+  },
+  {
+    "rally_id": 3,
+    "turning_point_shot": 12,
+    "attention_change": 0.05525699257850647,
+    "win_probability": 0.5784147381782532
+  },
+  {
+    "rally_id": 4,
+    "turning_point_shot": 8,
+    "attention_change": 0.04778473451733589,
+    "win_probability": 0.18965013325214386
+  },
+  {
+    "rally_id": 5,
+    "turning_point_shot": 6,
+    "attention_change": 0.06943333148956299,
+    "win_probability": 0.5773221850395203
+  },
+  {
+    "rally_id": 6,
+    "turning_point_shot": 22,
+    "attention_change": 0.020569676533341408,
+    "win_probability": 0.5805099010467529
+  },
+  {
+    "rally_id": 7,
+    "turning_point_shot": 13,
+    "attention_change": 0.041623346507549286,
+    "win_probability": 0.5764232277870178
+  },
+  {
+    "rally_id": 8,
+    "turning_point_shot": 10,
+    "attention_change": 0.04355916380882263,
+    "win_probability": 0.3233473598957062
+  },
+  {
+    "rally_id": 9,
+    "turning_point_shot": 22,
+    "attention_change": 0.02535550855100155,
+    "win_probability": 0.8095926642417908
+  },
+  {
+    "rally_id": 10,
+    "turning_point_shot": 2,
+    "attention_change": 0.2211594432592392,
+    "win_probability": 0.5795632600784302
+  },
+  {
+    "rally_id": 11,
+    "turning_point_shot": 1,
+    "attention_change": 0.2254761904478073,
+    "win_probability": 0.15548931062221527
+  },
+  {
+    "rally_id": 12,
+    "turning_point_shot": 5,
+    "attention_change": 0.09073808789253235,
+    "win_probability": 0.5783224701881409
+  },
+  {
+    "rally_id": 13,
+    "turning_point_shot": 19,
+    "attention_change": 0.025904856622219086,
+    "win_probability": 0.84876948595047
+  },
+  {
+    "rally_id": 14,
+    "turning_point_shot": 16,
+    "attention_change": 0.02350771613419056,
+    "win_probability": 0.21393927931785583
+  },
+  {
+    "rally_id": 15,
+    "turning_point_shot": 14,
+    "attention_change": 0.033598851412534714,
+    "win_probability": 0.7747575044631958
+  },
+  {
+    "rally_id": 16,
+    "turning_point_shot": 12,
+    "attention_change": 0.03586073964834213,
+    "win_probability": 0.20724576711654663
+  },
+  {
+    "rally_id": 17,
+    "turning_point_shot": 8,
+    "attention_change": 0.05682675912976265,
+    "win_probability": 0.8965418934822083
+  },
+  {
+    "rally_id": 18,
+    "turning_point_shot": 13,
+    "attention_change": 0.04488961771130562,
+    "win_probability": 0.5764611959457397
+  },
+  {
+    "rally_id": 19,
+    "turning_point_shot": 13,
+    "attention_change": 0.03777669370174408,
+    "win_probability": 0.8530226945877075
+  },
+  {
+    "rally_id": 20,
+    "turning_point_shot": 5,
+    "attention_change": 0.09555065631866455,
+    "win_probability": 0.5818182229995728
+  },
+  {
+    "rally_id": 21,
+    "turning_point_shot": 10,
+    "attention_change": 0.05177527666091919,
+    "win_probability": 0.874208927154541
+  },
+  {
+    "rally_id": 22,
+    "turning_point_shot": 5,
+    "attention_change": 0.08571800589561462,
+    "win_probability": 0.8462306261062622
+  },
+  {
+    "rally_id": 23,
+    "turning_point_shot": 13,
+    "attention_change": 0.0278999712318182,
+    "win_probability": 0.1387646496295929
+  },
+  {
+    "rally_id": 24,
+    "turning_point_shot": 11,
+    "attention_change": 0.05277232080698013,
+    "win_probability": 0.5772063732147217
+  },
+  {
+    "rally_id": 25,
+    "turning_point_shot": 17,
+    "attention_change": 0.03305486589670181,
+    "win_probability": 0.8169368505477905
+  },
+  {
+    "rally_id": 26,
+    "turning_point_shot": 3,
+    "attention_change": 0.12319255620241165,
+    "win_probability": 0.8899489641189575
+  },
+  {
+    "rally_id": 27,
+    "turning_point_shot": 14,
+    "attention_change": 0.020298412069678307,
+    "win_probability": 0.11196636408567429
+  },
+  {
+    "rally_id": 28,
+    "turning_point_shot": 25,
+    "attention_change": 0.015151884406805038,
+    "win_probability": 0.16687090694904327
+  },
+  {
+    "rally_id": 29,
+    "turning_point_shot": 20,
+    "attention_change": 0.029639076441526413,
+    "win_probability": 0.8526254296302795
+  },
+  {
+    "rally_id": 30,
+    "turning_point_shot": 13,
+    "attention_change": 0.04073094576597214,
+    "win_probability": 0.5726479291915894
+  },
+  {
+    "rally_id": 31,
+    "turning_point_shot": 17,
+    "attention_change": 0.03697017952799797,
+    "win_probability": 0.5778366923332214
+  },
+  {
+    "rally_id": 0,
+    "turning_point_shot": 1,
+    "attention_change": 0.21325866878032684,
+    "win_probability": 0.13933800160884857
+  },
+  {
+    "rally_id": 1,
+    "turning_point_shot": 6,
+    "attention_change": 0.0632123276591301,
+    "win_probability": 0.574647843837738
+  },
+  {
+    "rally_id": 2,
+    "turning_point_shot": 5,
+    "attention_change": 0.07217176258563995,
+    "win_probability": 0.14477108418941498
+  },
+  {
+    "rally_id": 3,
+    "turning_point_shot": 8,
+    "attention_change": 0.028060151264071465,
+    "win_probability": 0.15425322949886322
+  },
+  {
+    "rally_id": 4,
+    "turning_point_shot": 2,
+    "attention_change": 0.14265282452106476,
+    "win_probability": 0.1440512239933014
+  },
+  {
+    "rally_id": 5,
+    "turning_point_shot": 13,
+    "attention_change": 0.04002737998962402,
+    "win_probability": 0.7754256129264832
+  },
+  {
+    "rally_id": 6,
+    "turning_point_shot": 4,
+    "attention_change": 0.14909815788269043,
+    "win_probability": 0.5842136144638062
+  },
+  {
+    "rally_id": 7,
+    "turning_point_shot": 4,
+    "attention_change": 0.08320466428995132,
+    "win_probability": 0.2386355847120285
+  },
+  {
+    "rally_id": 8,
+    "turning_point_shot": 2,
+    "attention_change": 0.15885694324970245,
+    "win_probability": 0.5864548683166504
+  },
+  {
+    "rally_id": 9,
+    "turning_point_shot": 8,
+    "attention_change": 0.0333882849663496,
+    "win_probability": 0.11416841298341751
+  },
+  {
+    "rally_id": 10,
+    "turning_point_shot": 5,
+    "attention_change": 0.08049537241458893,
+    "win_probability": 0.8918530941009521
+  },
+  {
+    "rally_id": 11,
+    "turning_point_shot": 4,
+    "attention_change": 0.1275368630886078,
+    "win_probability": 0.8537797331809998
+  },
+  {
+    "rally_id": 12,
+    "turning_point_shot": 12,
+    "attention_change": 0.037326112389564514,
+    "win_probability": 0.8326324820518494
+  },
+  {
+    "rally_id": 13,
+    "turning_point_shot": 31,
+    "attention_change": 0.017053956165909767,
+    "win_probability": 0.7790506482124329
+  },
+  {
+    "rally_id": 14,
+    "turning_point_shot": 8,
+    "attention_change": 0.05528142675757408,
+    "win_probability": 0.8974329233169556
+  },
+  {
+    "rally_id": 15,
+    "turning_point_shot": 24,
+    "attention_change": 0.030179549008607864,
+    "win_probability": 0.5827788710594177
+  },
+  {
+    "rally_id": 16,
+    "turning_point_shot": 3,
+    "attention_change": 0.14488902688026428,
+    "win_probability": 0.5796843767166138
+  },
+  {
+    "rally_id": 17,
+    "turning_point_shot": 5,
+    "attention_change": 0.08864353597164154,
+    "win_probability": 0.8475983738899231
+  },
+  {
+    "rally_id": 18,
+    "turning_point_shot": 3,
+    "attention_change": 0.16230836510658264,
+    "win_probability": 0.5747265219688416
+  },
+  {
+    "rally_id": 19,
+    "turning_point_shot": 4,
+    "attention_change": 0.12997956573963165,
+    "win_probability": 0.582994818687439
+  },
+  {
+    "rally_id": 20,
+    "turning_point_shot": 18,
+    "attention_change": 0.03776128590106964,
+    "win_probability": 0.5737850666046143
+  },
+  {
+    "rally_id": 21,
+    "turning_point_shot": 2,
+    "attention_change": 0.07375475764274597,
+    "win_probability": 0.10167919844388962
+  },
+  {
+    "rally_id": 22,
+    "turning_point_shot": 39,
+    "attention_change": 0.014343885704874992,
+    "win_probability": 0.5792283415794373
+  },
+  {
+    "rally_id": 23,
+    "turning_point_shot": 9,
+    "attention_change": 0.054888367652893066,
+    "win_probability": 0.858363687992096
+  },
+  {
+    "rally_id": 24,
+    "turning_point_shot": 7,
+    "attention_change": 0.06330759823322296,
+    "win_probability": 0.6967841386795044
+  },
+  {
+    "rally_id": 25,
+    "turning_point_shot": 20,
+    "attention_change": 0.024765845388174057,
+    "win_probability": 0.8630344867706299
+  },
+  {
+    "rally_id": 26,
+    "turning_point_shot": 14,
+    "attention_change": 0.044841695576906204,
+    "win_probability": 0.5775311589241028
+  },
+  {
+    "rally_id": 27,
+    "turning_point_shot": 7,
+    "attention_change": 0.0711779072880745,
+    "win_probability": 0.8346109390258789
+  },
+  {
+    "rally_id": 28,
+    "turning_point_shot": 9,
+    "attention_change": 0.046451859176158905,
+    "win_probability": 0.201278954744339
+  },
+  {
+    "rally_id": 29,
+    "turning_point_shot": 4,
+    "attention_change": 0.07335048913955688,
+    "win_probability": 0.10042111575603485
+  },
+  {
+    "rally_id": 30,
+    "turning_point_shot": 2,
+    "attention_change": 0.23997525870800018,
+    "win_probability": 0.5846356153488159
+  },
+  {
+    "rally_id": 31,
+    "turning_point_shot": 8,
+    "attention_change": 0.04330069199204445,
+    "win_probability": 0.19332046806812286
+  },
+  {
+    "rally_id": 0,
+    "turning_point_shot": 7,
+    "attention_change": 0.05210082605481148,
+    "win_probability": 0.1262238323688507
+  },
+  {
+    "rally_id": 1,
+    "turning_point_shot": 7,
+    "attention_change": 0.0734548568725586,
+    "win_probability": 0.57640540599823
+  },
+  {
+    "rally_id": 2,
+    "turning_point_shot": 4,
+    "attention_change": 0.10061083734035492,
+    "win_probability": 0.7562193274497986
+  },
+  {
+    "rally_id": 3,
+    "turning_point_shot": 8,
+    "attention_change": 0.08358747512102127,
+    "win_probability": 0.5799097418785095
+  },
+  {
+    "rally_id": 4,
+    "turning_point_shot": 14,
+    "attention_change": 0.027049802243709564,
+    "win_probability": 0.15399304032325745
+  },
+  {
+    "rally_id": 5,
+    "turning_point_shot": 19,
+    "attention_change": 0.03092455491423607,
+    "win_probability": 0.5787625908851624
+  },
+  {
+    "rally_id": 6,
+    "turning_point_shot": 5,
+    "attention_change": 0.10204040259122849,
+    "win_probability": 0.5768821239471436
+  },
+  {
+    "rally_id": 7,
+    "turning_point_shot": 19,
+    "attention_change": 0.029286786913871765,
+    "win_probability": 0.7320488691329956
+  },
+  {
+    "rally_id": 8,
+    "turning_point_shot": 11,
+    "attention_change": 0.04206519201397896,
+    "win_probability": 0.84332674741745
+  },
+  {
+    "rally_id": 9,
+    "turning_point_shot": 1,
+    "attention_change": 0.27088794112205505,
+    "win_probability": 0.8148006200790405
+  },
+  {
+    "rally_id": 10,
+    "turning_point_shot": 3,
+    "attention_change": 0.14049257338047028,
+    "win_probability": 0.7206425070762634
+  },
+  {
+    "rally_id": 11,
+    "turning_point_shot": 13,
+    "attention_change": 0.04662489518523216,
+    "win_probability": 0.578853964805603
+  },
+  {
+    "rally_id": 12,
+    "turning_point_shot": 29,
+    "attention_change": 0.015986455604434013,
+    "win_probability": 0.23832204937934875
+  },
+  {
+    "rally_id": 13,
+    "turning_point_shot": 2,
+    "attention_change": 0.16083356738090515,
+    "win_probability": 0.26746296882629395
+  },
+  {
+    "rally_id": 14,
+    "turning_point_shot": 11,
+    "attention_change": 0.03436688333749771,
+    "win_probability": 0.16547143459320068
+  },
+  {
+    "rally_id": 15,
+    "turning_point_shot": 8,
+    "attention_change": 0.0755217969417572,
+    "win_probability": 0.5779452919960022
+  },
+  {
+    "rally_id": 16,
+    "turning_point_shot": 17,
+    "attention_change": 0.023661555722355843,
+    "win_probability": 0.23364479839801788
+  },
+  {
+    "rally_id": 17,
+    "turning_point_shot": 2,
+    "attention_change": 0.2061356157064438,
+    "win_probability": 0.8516666293144226
+  },
+  {
+    "rally_id": 18,
+    "turning_point_shot": 8,
+    "attention_change": 0.04229608178138733,
+    "win_probability": 0.11189842969179153
+  },
+  {
+    "rally_id": 19,
+    "turning_point_shot": 13,
+    "attention_change": 0.02811450883746147,
+    "win_probability": 0.19098985195159912
+  },
+  {
+    "rally_id": 20,
+    "turning_point_shot": 18,
+    "attention_change": 0.027270587161183357,
+    "win_probability": 0.5854641795158386
+  },
+  {
+    "rally_id": 21,
+    "turning_point_shot": 24,
+    "attention_change": 0.029666930437088013,
+    "win_probability": 0.5881885290145874
+  },
+  {
+    "rally_id": 22,
+    "turning_point_shot": 3,
+    "attention_change": 0.13586261868476868,
+    "win_probability": 0.5925673842430115
+  },
+  {
+    "rally_id": 23,
+    "turning_point_shot": 4,
+    "attention_change": 0.07955017685890198,
+    "win_probability": 0.15255938470363617
+  },
+  {
+    "rally_id": 24,
+    "turning_point_shot": 4,
+    "attention_change": 0.10267134755849838,
+    "win_probability": 0.5831208229064941
+  },
+  {
+    "rally_id": 25,
+    "turning_point_shot": 4,
+    "attention_change": 0.09424912184476852,
+    "win_probability": 0.16024243831634521
+  },
+  {
+    "rally_id": 26,
+    "turning_point_shot": 19,
+    "attention_change": 0.028107566758990288,
+    "win_probability": 0.8418874144554138
+  },
+  {
+    "rally_id": 27,
+    "turning_point_shot": 10,
+    "attention_change": 0.042903319001197815,
+    "win_probability": 0.582069456577301
+  },
+  {
+    "rally_id": 28,
+    "turning_point_shot": 1,
+    "attention_change": 0.21325866878032684,
+    "win_probability": 0.13933800160884857
+  },
+  {
+    "rally_id": 29,
+    "turning_point_shot": 4,
+    "attention_change": 0.11152874678373337,
+    "win_probability": 0.579468309879303
+  },
+  {
+    "rally_id": 30,
+    "turning_point_shot": 12,
+    "attention_change": 0.04641057550907135,
+    "win_probability": 0.8508246541023254
+  },
+  {
+    "rally_id": 31,
+    "turning_point_shot": 22,
+    "attention_change": 0.015331209637224674,
+    "win_probability": 0.1501816362142563
+  },
+  {
+    "rally_id": 0,
+    "turning_point_shot": 3,
+    "attention_change": 0.15095527470111847,
+    "win_probability": 0.5809365510940552
+  },
+  {
+    "rally_id": 1,
+    "turning_point_shot": 3,
+    "attention_change": 0.12913978099822998,
+    "win_probability": 0.8349377512931824
+  },
+  {
+    "rally_id": 2,
+    "turning_point_shot": 12,
+    "attention_change": 0.05163050442934036,
+    "win_probability": 0.5838909149169922
+  },
+  {
+    "rally_id": 3,
+    "turning_point_shot": 2,
+    "attention_change": 0.16347740590572357,
+    "win_probability": 0.7735086679458618
+  },
+  {
+    "rally_id": 4,
+    "turning_point_shot": 11,
+    "attention_change": 0.043307218700647354,
+    "win_probability": 0.8684900403022766
+  },
+  {
+    "rally_id": 5,
+    "turning_point_shot": 3,
+    "attention_change": 0.09936043620109558,
+    "win_probability": 0.1971699297428131
+  },
+  {
+    "rally_id": 6,
+    "turning_point_shot": 10,
+    "attention_change": 0.05004822462797165,
+    "win_probability": 0.8703758716583252
+  },
+  {
+    "rally_id": 7,
+    "turning_point_shot": 2,
+    "attention_change": 0.15885694324970245,
+    "win_probability": 0.5864548683166504
+  },
+  {
+    "rally_id": 8,
+    "turning_point_shot": 4,
+    "attention_change": 0.08886927366256714,
+    "win_probability": 0.5710731148719788
+  },
+  {
+    "rally_id": 9,
+    "turning_point_shot": 4,
+    "attention_change": 0.050257544964551926,
+    "win_probability": 0.13359111547470093
+  },
+  {
+    "rally_id": 10,
+    "turning_point_shot": 1,
+    "attention_change": 0.3152772784233093,
+    "win_probability": 0.5782619714736938
+  },
+  {
+    "rally_id": 11,
+    "turning_point_shot": 31,
+    "attention_change": 0.017048971727490425,
+    "win_probability": 0.8613875508308411
+  },
+  {
+    "rally_id": 12,
+    "turning_point_shot": 12,
+    "attention_change": 0.037264950573444366,
+    "win_probability": 0.2677081525325775
+  },
+  {
+    "rally_id": 13,
+    "turning_point_shot": 4,
+    "attention_change": 0.015055759809911251,
+    "win_probability": 0.1435246467590332
+  },
+  {
+    "rally_id": 14,
+    "turning_point_shot": 16,
+    "attention_change": 0.03490883857011795,
+    "win_probability": 0.8649457693099976
+  },
+  {
+    "rally_id": 15,
+    "turning_point_shot": 6,
+    "attention_change": 0.04089155048131943,
+    "win_probability": 0.10803572833538055
+  },
+  {
+    "rally_id": 16,
+    "turning_point_shot": 12,
+    "attention_change": 0.030752502381801605,
+    "win_probability": 0.20913462340831757
+  },
+  {
+    "rally_id": 17,
+    "turning_point_shot": 20,
+    "attention_change": 0.020397406071424484,
+    "win_probability": 0.15266883373260498
+  },
+  {
+    "rally_id": 18,
+    "turning_point_shot": 4,
+    "attention_change": 0.09146233648061752,
+    "win_probability": 0.5657158493995667
+  },
+  {
+    "rally_id": 19,
+    "turning_point_shot": 15,
+    "attention_change": 0.03229228034615517,
+    "win_probability": 0.8899068236351013
+  },
+  {
+    "rally_id": 20,
+    "turning_point_shot": 1,
+    "attention_change": 0.26432403922080994,
+    "win_probability": 0.5922836661338806
+  },
+  {
+    "rally_id": 21,
+    "turning_point_shot": 3,
+    "attention_change": 0.1490781009197235,
+    "win_probability": 0.5758894681930542
+  },
+  {
+    "rally_id": 22,
+    "turning_point_shot": 7,
+    "attention_change": 0.050533171743154526,
+    "win_probability": 0.12177980691194534
+  },
+  {
+    "rally_id": 23,
+    "turning_point_shot": 12,
+    "attention_change": 0.055109500885009766,
+    "win_probability": 0.5808932185173035
+  },
+  {
+    "rally_id": 24,
+    "turning_point_shot": 6,
+    "attention_change": 0.05480673164129257,
+    "win_probability": 0.1741173267364502
+  },
+  {
+    "rally_id": 25,
+    "turning_point_shot": 17,
+    "attention_change": 0.031102394685149193,
+    "win_probability": 0.8480607271194458
+  },
+  {
+    "rally_id": 26,
+    "turning_point_shot": 4,
+    "attention_change": 0.09452475607395172,
+    "win_probability": 0.5781362652778625
+  },
+  {
+    "rally_id": 27,
+    "turning_point_shot": 35,
+    "attention_change": 0.015958227217197418,
+    "win_probability": 0.5808876752853394
+  },
+  {
+    "rally_id": 28,
+    "turning_point_shot": 12,
+    "attention_change": 0.030650295317173004,
+    "win_probability": 0.15649205446243286
+  },
+  {
+    "rally_id": 29,
+    "turning_point_shot": 11,
+    "attention_change": 0.0492112971842289,
+    "win_probability": 0.5751955509185791
+  },
+  {
+    "rally_id": 30,
+    "turning_point_shot": 4,
+    "attention_change": 0.09391003102064133,
+    "win_probability": 0.8697462677955627
+  },
+  {
+    "rally_id": 31,
+    "turning_point_shot": 7,
+    "attention_change": 0.04977374151349068,
+    "win_probability": 0.15402376651763916
+  },
+  {
+    "rally_id": 0,
+    "turning_point_shot": 27,
+    "attention_change": 0.015862872824072838,
+    "win_probability": 0.21221306920051575
+  },
+  {
+    "rally_id": 1,
+    "turning_point_shot": 4,
+    "attention_change": 0.1365901082754135,
+    "win_probability": 0.5776236653327942
+  },
+  {
+    "rally_id": 2,
+    "turning_point_shot": 2,
+    "attention_change": 0.1585591584444046,
+    "win_probability": 0.5808463096618652
+  },
+  {
+    "rally_id": 3,
+    "turning_point_shot": 1,
+    "attention_change": 0.2254761904478073,
+    "win_probability": 0.15548931062221527
+  },
+  {
+    "rally_id": 4,
+    "turning_point_shot": 20,
+    "attention_change": 0.015453635714948177,
+    "win_probability": 0.735874593257904
+  },
+  {
+    "rally_id": 5,
+    "turning_point_shot": 10,
+    "attention_change": 0.04525870084762573,
+    "win_probability": 0.5795883536338806
+  },
+  {
+    "rally_id": 6,
+    "turning_point_shot": 13,
+    "attention_change": 0.037030234932899475,
+    "win_probability": 0.8141615986824036
+  },
+  {
+    "rally_id": 7,
+    "turning_point_shot": 1,
+    "attention_change": 0.26966261863708496,
+    "win_probability": 0.5662208795547485
+  },
+  {
+    "rally_id": 8,
+    "turning_point_shot": 3,
+    "attention_change": 0.14370280504226685,
+    "win_probability": 0.5760161280632019
+  },
+  {
+    "rally_id": 9,
+    "turning_point_shot": 10,
+    "attention_change": 0.06690972298383713,
+    "win_probability": 0.5781932473182678
+  },
+  {
+    "rally_id": 10,
+    "turning_point_shot": 10,
+    "attention_change": 0.037747085094451904,
+    "win_probability": 0.17150816321372986
+  },
+  {
+    "rally_id": 11,
+    "turning_point_shot": 6,
+    "attention_change": 0.08507374674081802,
+    "win_probability": 0.8589664697647095
+  },
+  {
+    "rally_id": 12,
+    "turning_point_shot": 17,
+    "attention_change": 0.022675765678286552,
+    "win_probability": 0.1425119787454605
+  },
+  {
+    "rally_id": 13,
+    "turning_point_shot": 1,
+    "attention_change": 0.3152772784233093,
+    "win_probability": 0.5782619714736938
+  },
+  {
+    "rally_id": 14,
+    "turning_point_shot": 1,
+    "attention_change": 0.3152772784233093,
+    "win_probability": 0.5782619714736938
+  },
+  {
+    "rally_id": 15,
+    "turning_point_shot": 29,
+    "attention_change": 0.013501612469553947,
+    "win_probability": 0.1447419822216034
+  },
+  {
+    "rally_id": 16,
+    "turning_point_shot": 4,
+    "attention_change": 0.09891420602798462,
+    "win_probability": 0.8679646253585815
+  },
+  {
+    "rally_id": 17,
+    "turning_point_shot": 3,
+    "attention_change": 0.137003093957901,
+    "win_probability": 0.583794355392456
+  },
+  {
+    "rally_id": 18,
+    "turning_point_shot": 6,
+    "attention_change": 0.06983514130115509,
+    "win_probability": 0.8943864703178406
+  },
+  {
+    "rally_id": 19,
+    "turning_point_shot": 9,
+    "attention_change": 0.060201503336429596,
+    "win_probability": 0.5789116621017456
+  },
+  {
+    "rally_id": 20,
+    "turning_point_shot": 22,
+    "attention_change": 0.022787176072597504,
+    "win_probability": 0.8658299446105957
+  },
+  {
+    "rally_id": 21,
+    "turning_point_shot": 5,
+    "attention_change": 0.07199353724718094,
+    "win_probability": 0.129657581448555
+  },
+  {
+    "rally_id": 22,
+    "turning_point_shot": 16,
+    "attention_change": 0.02948647364974022,
+    "win_probability": 0.5803334712982178
+  },
+  {
+    "rally_id": 23,
+    "turning_point_shot": 7,
+    "attention_change": 0.07533885538578033,
+    "win_probability": 0.5775752067565918
+  },
+  {
+    "rally_id": 24,
+    "turning_point_shot": 2,
+    "attention_change": 0.1499675065279007,
+    "win_probability": 0.166017547249794
+  },
+  {
+    "rally_id": 25,
+    "turning_point_shot": 29,
+    "attention_change": 0.020015085116028786,
+    "win_probability": 0.5770111680030823
+  },
+  {
+    "rally_id": 26,
+    "turning_point_shot": 8,
+    "attention_change": 0.0795288160443306,
+    "win_probability": 0.5773884057998657
+  },
+  {
+    "rally_id": 27,
+    "turning_point_shot": 4,
+    "attention_change": 0.09151052683591843,
+    "win_probability": 0.5740059018135071
+  },
+  {
+    "rally_id": 28,
+    "turning_point_shot": 7,
+    "attention_change": 0.061955105513334274,
+    "win_probability": 0.8959178924560547
+  },
+  {
+    "rally_id": 29,
+    "turning_point_shot": 2,
+    "attention_change": 0.15087462961673737,
+    "win_probability": 0.2122122198343277
+  },
+  {
+    "rally_id": 30,
+    "turning_point_shot": 16,
+    "attention_change": 0.03458942472934723,
+    "win_probability": 0.8554564118385315
+  },
+  {
+    "rally_id": 31,
+    "turning_point_shot": 5,
+    "attention_change": 0.08570562303066254,
+    "win_probability": 0.8566536903381348
+  },
+  {
+    "rally_id": 0,
+    "turning_point_shot": 8,
+    "attention_change": 0.07339616119861603,
+    "win_probability": 0.5781497359275818
+  },
+  {
+    "rally_id": 1,
+    "turning_point_shot": 6,
+    "attention_change": 0.05645964667201042,
+    "win_probability": 0.15077465772628784
+  },
+  {
+    "rally_id": 2,
+    "turning_point_shot": 7,
+    "attention_change": 0.06881111860275269,
+    "win_probability": 0.5818526148796082
+  },
+  {
+    "rally_id": 3,
+    "turning_point_shot": 7,
+    "attention_change": 0.07151112705469131,
+    "win_probability": 0.809238851070404
+  },
+  {
+    "rally_id": 4,
+    "turning_point_shot": 5,
+    "attention_change": 0.09377298504114151,
+    "win_probability": 0.834950864315033
+  },
+  {
+    "rally_id": 5,
+    "turning_point_shot": 23,
+    "attention_change": 0.023676257580518723,
+    "win_probability": 0.5848286747932434
+  },
+  {
+    "rally_id": 6,
+    "turning_point_shot": 3,
+    "attention_change": 0.14997342228889465,
+    "win_probability": 0.5757869482040405
+  },
+  {
+    "rally_id": 7,
+    "turning_point_shot": 13,
+    "attention_change": 0.030650008469820023,
+    "win_probability": 0.287471204996109
+  },
+  {
+    "rally_id": 8,
+    "turning_point_shot": 3,
+    "attention_change": 0.10796385258436203,
+    "win_probability": 0.28207075595855713
+  },
+  {
+    "rally_id": 9,
+    "turning_point_shot": 7,
+    "attention_change": 0.08399488776922226,
+    "win_probability": 0.5774499773979187
+  },
+  {
+    "rally_id": 10,
+    "turning_point_shot": 12,
+    "attention_change": 0.03092445246875286,
+    "win_probability": 0.10613680630922318
+  },
+  {
+    "rally_id": 11,
+    "turning_point_shot": 4,
+    "attention_change": 0.09542640298604965,
+    "win_probability": 0.5797110795974731
+  },
+  {
+    "rally_id": 12,
+    "turning_point_shot": 15,
+    "attention_change": 0.035212986171245575,
+    "win_probability": 0.807309091091156
+  },
+  {
+    "rally_id": 13,
+    "turning_point_shot": 9,
+    "attention_change": 0.066128671169281,
+    "win_probability": 0.5788148045539856
+  },
+  {
+    "rally_id": 14,
+    "turning_point_shot": 14,
+    "attention_change": 0.024644408375024796,
+    "win_probability": 0.13250775635242462
+  },
+  {
+    "rally_id": 15,
+    "turning_point_shot": 2,
+    "attention_change": 0.21946509182453156,
+    "win_probability": 0.8387467265129089
+  },
+  {
+    "rally_id": 16,
+    "turning_point_shot": 4,
+    "attention_change": 0.03084271028637886,
+    "win_probability": 0.30937445163726807
+  },
+  {
+    "rally_id": 17,
+    "turning_point_shot": 12,
+    "attention_change": 0.036364078521728516,
+    "win_probability": 0.5804895758628845
+  },
+  {
+    "rally_id": 18,
+    "turning_point_shot": 3,
+    "attention_change": 0.14798538386821747,
+    "win_probability": 0.5752081871032715
+  },
+  {
+    "rally_id": 19,
+    "turning_point_shot": 5,
+    "attention_change": 0.10601983219385147,
+    "win_probability": 0.5772074460983276
+  },
+  {
+    "rally_id": 20,
+    "turning_point_shot": 10,
+    "attention_change": 0.03348410129547119,
+    "win_probability": 0.12292113155126572
+  },
+  {
+    "rally_id": 21,
+    "turning_point_shot": 12,
+    "attention_change": 0.03482675924897194,
+    "win_probability": 0.2787942588329315
+  },
+  {
+    "rally_id": 22,
+    "turning_point_shot": 18,
+    "attention_change": 0.024277212098240852,
+    "win_probability": 0.178805872797966
+  },
+  {
+    "rally_id": 23,
+    "turning_point_shot": 11,
+    "attention_change": 0.050985850393772125,
+    "win_probability": 0.5646531581878662
+  },
+  {
+    "rally_id": 24,
+    "turning_point_shot": 6,
+    "attention_change": 0.07017913460731506,
+    "win_probability": 0.8778457641601562
+  },
+  {
+    "rally_id": 25,
+    "turning_point_shot": 9,
+    "attention_change": 0.05299895256757736,
+    "win_probability": 0.8573101758956909
+  },
+  {
+    "rally_id": 26,
+    "turning_point_shot": 3,
+    "attention_change": 0.13138191401958466,
+    "win_probability": 0.8415687084197998
+  },
+  {
+    "rally_id": 27,
+    "turning_point_shot": 17,
+    "attention_change": 0.023792706429958344,
+    "win_probability": 0.1849675327539444
+  },
+  {
+    "rally_id": 28,
+    "turning_point_shot": 8,
+    "attention_change": 0.04900818690657616,
+    "win_probability": 0.5646376013755798
+  },
+  {
+    "rally_id": 29,
+    "turning_point_shot": 11,
+    "attention_change": 0.042469438165426254,
+    "win_probability": 0.8942413330078125
+  },
+  {
+    "rally_id": 30,
+    "turning_point_shot": 32,
+    "attention_change": 0.016032062470912933,
+    "win_probability": 0.8766664266586304
+  },
+  {
+    "rally_id": 31,
+    "turning_point_shot": 12,
+    "attention_change": 0.0124739995226264,
+    "win_probability": 0.14343614876270294
+  },
+  {
+    "rally_id": 0,
+    "turning_point_shot": 3,
+    "attention_change": 0.1439356952905655,
+    "win_probability": 0.5771764516830444
+  },
+  {
+    "rally_id": 1,
+    "turning_point_shot": 3,
+    "attention_change": 0.12522713840007782,
+    "win_probability": 0.8870694637298584
+  },
+  {
+    "rally_id": 2,
+    "turning_point_shot": 3,
+    "attention_change": 0.13511791825294495,
+    "win_probability": 0.6781848669052124
+  },
+  {
+    "rally_id": 3,
+    "turning_point_shot": 19,
+    "attention_change": 0.02690616063773632,
+    "win_probability": 0.5849116444587708
+  },
+  {
+    "rally_id": 4,
+    "turning_point_shot": 15,
+    "attention_change": 0.03332612290978432,
+    "win_probability": 0.5828899145126343
+  },
+  {
+    "rally_id": 5,
+    "turning_point_shot": 4,
+    "attention_change": 0.14525972306728363,
+    "win_probability": 0.5810477137565613
+  },
+  {
+    "rally_id": 6,
+    "turning_point_shot": 37,
+    "attention_change": 0.018479103222489357,
+    "win_probability": 0.5814898014068604
+  },
+  {
+    "rally_id": 7,
+    "turning_point_shot": 1,
+    "attention_change": 0.21585942804813385,
+    "win_probability": 0.179805725812912
+  },
+  {
+    "rally_id": 8,
+    "turning_point_shot": 3,
+    "attention_change": 0.1059119924902916,
+    "win_probability": 0.1899634152650833
+  },
+  {
+    "rally_id": 9,
+    "turning_point_shot": 1,
+    "attention_change": 0.20524364709854126,
+    "win_probability": 0.17270910739898682
+  },
+  {
+    "rally_id": 10,
+    "turning_point_shot": 4,
+    "attention_change": 0.04517832770943642,
+    "win_probability": 0.11170010268688202
+  },
+  {
+    "rally_id": 11,
+    "turning_point_shot": 6,
+    "attention_change": 0.10057292878627777,
+    "win_probability": 0.5768271684646606
+  },
+  {
+    "rally_id": 12,
+    "turning_point_shot": 11,
+    "attention_change": 0.054384395480155945,
+    "win_probability": 0.575552225112915
+  },
+  {
+    "rally_id": 13,
+    "turning_point_shot": 12,
+    "attention_change": 0.02896702289581299,
+    "win_probability": 0.11617141962051392
+  },
+  {
+    "rally_id": 14,
+    "turning_point_shot": 19,
+    "attention_change": 0.029336057603359222,
+    "win_probability": 0.5816845893859863
+  },
+  {
+    "rally_id": 15,
+    "turning_point_shot": 3,
+    "attention_change": 0.13280314207077026,
+    "win_probability": 0.8469057083129883
+  },
+  {
+    "rally_id": 16,
+    "turning_point_shot": 5,
+    "attention_change": 0.06742984056472778,
+    "win_probability": 0.22163712978363037
+  },
+  {
+    "rally_id": 17,
+    "turning_point_shot": 3,
+    "attention_change": 0.14016705751419067,
+    "win_probability": 0.5774070024490356
+  },
+  {
+    "rally_id": 18,
+    "turning_point_shot": 3,
+    "attention_change": 0.12878254055976868,
+    "win_probability": 0.8957031965255737
+  },
+  {
+    "rally_id": 19,
+    "turning_point_shot": 12,
+    "attention_change": 0.043218500912189484,
+    "win_probability": 0.5824723243713379
+  },
+  {
+    "rally_id": 20,
+    "turning_point_shot": 6,
+    "attention_change": 0.052024923264980316,
+    "win_probability": 0.11490967124700546
+  },
+  {
+    "rally_id": 21,
+    "turning_point_shot": 10,
+    "attention_change": 0.05576954782009125,
+    "win_probability": 0.8650440573692322
+  },
+  {
+    "rally_id": 22,
+    "turning_point_shot": 13,
+    "attention_change": 0.04360377788543701,
+    "win_probability": 0.578912615776062
+  },
+  {
+    "rally_id": 23,
+    "turning_point_shot": 18,
+    "attention_change": 0.029197916388511658,
+    "win_probability": 0.8669301867485046
+  },
+  {
+    "rally_id": 24,
+    "turning_point_shot": 6,
+    "attention_change": 0.0691734179854393,
+    "win_probability": 0.17229875922203064
+  },
+  {
+    "rally_id": 25,
+    "turning_point_shot": 6,
+    "attention_change": 0.06982440501451492,
+    "win_probability": 0.7792927026748657
+  },
+  {
+    "rally_id": 26,
+    "turning_point_shot": 2,
+    "attention_change": 0.04092136025428772,
+    "win_probability": 0.15970253944396973
+  },
+  {
+    "rally_id": 27,
+    "turning_point_shot": 9,
+    "attention_change": 0.051616113632917404,
+    "win_probability": 0.7893900871276855
+  },
+  {
+    "rally_id": 28,
+    "turning_point_shot": 12,
+    "attention_change": 0.059511542320251465,
+    "win_probability": 0.6081451177597046
+  },
+  {
+    "rally_id": 29,
+    "turning_point_shot": 8,
+    "attention_change": 0.08289986103773117,
+    "win_probability": 0.5740669369697571
+  },
+  {
+    "rally_id": 30,
+    "turning_point_shot": 11,
+    "attention_change": 0.0462733618915081,
+    "win_probability": 0.859441339969635
+  },
+  {
+    "rally_id": 31,
+    "turning_point_shot": 7,
+    "attention_change": 0.07614601403474808,
+    "win_probability": 0.5932909846305847
+  },
+  {
+    "rally_id": 0,
+    "turning_point_shot": 2,
+    "attention_change": 0.16111132502555847,
+    "win_probability": 0.5753934979438782
+  },
+  {
+    "rally_id": 1,
+    "turning_point_shot": 41,
+    "attention_change": 0.013559903018176556,
+    "win_probability": 0.8134610652923584
+  },
+  {
+    "rally_id": 2,
+    "turning_point_shot": 10,
+    "attention_change": 0.03920261561870575,
+    "win_probability": 0.2232694923877716
+  },
+  {
+    "rally_id": 3,
+    "turning_point_shot": 8,
+    "attention_change": 0.0780067890882492,
+    "win_probability": 0.5827656984329224
+  },
+  {
+    "rally_id": 4,
+    "turning_point_shot": 15,
+    "attention_change": 0.0333988219499588,
+    "win_probability": 0.690178394317627
+  },
+  {
+    "rally_id": 5,
+    "turning_point_shot": 17,
+    "attention_change": 0.032172806560993195,
+    "win_probability": 0.5705470442771912
+  },
+  {
+    "rally_id": 6,
+    "turning_point_shot": 10,
+    "attention_change": 0.046810001134872437,
+    "win_probability": 0.897354781627655
+  },
+  {
+    "rally_id": 7,
+    "turning_point_shot": 14,
+    "attention_change": 0.02941754460334778,
+    "win_probability": 0.2363498955965042
+  },
+  {
+    "rally_id": 8,
+    "turning_point_shot": 5,
+    "attention_change": 0.06854933500289917,
+    "win_probability": 0.1839628517627716
+  },
+  {
+    "rally_id": 9,
+    "turning_point_shot": 9,
+    "attention_change": 0.07047167420387268,
+    "win_probability": 0.5742655992507935
+  },
+  {
+    "rally_id": 10,
+    "turning_point_shot": 9,
+    "attention_change": 0.04959610477089882,
+    "win_probability": 0.8479065895080566
+  },
+  {
+    "rally_id": 11,
+    "turning_point_shot": 10,
+    "attention_change": 0.04134530574083328,
+    "win_probability": 0.30130428075790405
+  },
+  {
+    "rally_id": 12,
+    "turning_point_shot": 18,
+    "attention_change": 0.02321621961891651,
+    "win_probability": 0.4205625057220459
+  },
+  {
+    "rally_id": 13,
+    "turning_point_shot": 11,
+    "attention_change": 0.045302800834178925,
+    "win_probability": 0.828921377658844
+  },
+  {
+    "rally_id": 14,
+    "turning_point_shot": 9,
+    "attention_change": 0.052637673914432526,
+    "win_probability": 0.8858537673950195
+  },
+  {
+    "rally_id": 15,
+    "turning_point_shot": 23,
+    "attention_change": 0.024244893342256546,
+    "win_probability": 0.5828350186347961
+  },
+  {
+    "rally_id": 16,
+    "turning_point_shot": 11,
+    "attention_change": 0.04711150377988815,
+    "win_probability": 0.5832833051681519
+  },
+  {
+    "rally_id": 17,
+    "turning_point_shot": 12,
+    "attention_change": 0.05382717773318291,
+    "win_probability": 0.5739032030105591
+  },
+  {
+    "rally_id": 18,
+    "turning_point_shot": 2,
+    "attention_change": 0.05700505152344704,
+    "win_probability": 0.14048326015472412
+  },
+  {
+    "rally_id": 19,
+    "turning_point_shot": 6,
+    "attention_change": 0.0688299909234047,
+    "win_probability": 0.5791613459587097
+  },
+  {
+    "rally_id": 20,
+    "turning_point_shot": 3,
+    "attention_change": 0.14547516405582428,
+    "win_probability": 0.5753174424171448
+  },
+  {
+    "rally_id": 21,
+    "turning_point_shot": 2,
+    "attention_change": 0.1297997385263443,
+    "win_probability": 0.11056961864233017
+  },
+  {
+    "rally_id": 22,
+    "turning_point_shot": 6,
+    "attention_change": 0.08972731232643127,
+    "win_probability": 0.8577590584754944
+  },
+  {
+    "rally_id": 23,
+    "turning_point_shot": 1,
+    "attention_change": 0.28572553396224976,
+    "win_probability": 0.575429379940033
+  },
+  {
+    "rally_id": 24,
+    "turning_point_shot": 4,
+    "attention_change": 0.08719582110643387,
+    "win_probability": 0.22758972644805908
+  },
+  {
+    "rally_id": 25,
+    "turning_point_shot": 19,
+    "attention_change": 0.025848599150776863,
+    "win_probability": 0.8625763058662415
+  },
+  {
+    "rally_id": 26,
+    "turning_point_shot": 7,
+    "attention_change": 0.06430229544639587,
+    "win_probability": 0.8631950616836548
+  },
+  {
+    "rally_id": 27,
+    "turning_point_shot": 5,
+    "attention_change": 0.0989544540643692,
+    "win_probability": 0.5777430534362793
+  },
+  {
+    "rally_id": 28,
+    "turning_point_shot": 4,
+    "attention_change": 0.09192916005849838,
+    "win_probability": 0.5740059018135071
+  },
+  {
+    "rally_id": 29,
+    "turning_point_shot": 11,
+    "attention_change": 0.0423467643558979,
+    "win_probability": 0.8941687345504761
+  },
+  {
+    "rally_id": 30,
+    "turning_point_shot": 21,
+    "attention_change": 0.02700682543218136,
+    "win_probability": 0.577552318572998
+  },
+  {
+    "rally_id": 31,
+    "turning_point_shot": 8,
+    "attention_change": 0.07472188025712967,
+    "win_probability": 0.698962390422821
+  },
+  {
+    "rally_id": 0,
+    "turning_point_shot": 9,
+    "attention_change": 0.05703845992684364,
+    "win_probability": 0.5732496976852417
+  },
+  {
+    "rally_id": 1,
+    "turning_point_shot": 8,
+    "attention_change": 0.04859557002782822,
+    "win_probability": 0.5642260909080505
+  },
+  {
+    "rally_id": 2,
+    "turning_point_shot": 10,
+    "attention_change": 0.04385652765631676,
+    "win_probability": 0.5803226232528687
+  },
+  {
+    "rally_id": 3,
+    "turning_point_shot": 11,
+    "attention_change": 0.045952245593070984,
+    "win_probability": 0.5866745114326477
+  },
+  {
+    "rally_id": 4,
+    "turning_point_shot": 5,
+    "attention_change": 0.10797464847564697,
+    "win_probability": 0.5774509310722351
+  },
+  {
+    "rally_id": 5,
+    "turning_point_shot": 17,
+    "attention_change": 0.029337191954255104,
+    "win_probability": 0.895930290222168
+  },
+  {
+    "rally_id": 6,
+    "turning_point_shot": 17,
+    "attention_change": 0.030454600229859352,
+    "win_probability": 0.7574740052223206
+  },
+  {
+    "rally_id": 7,
+    "turning_point_shot": 7,
+    "attention_change": 0.06912853568792343,
+    "win_probability": 0.7167122960090637
+  },
+  {
+    "rally_id": 8,
+    "turning_point_shot": 11,
+    "attention_change": 0.04984607920050621,
+    "win_probability": 0.5805346369743347
+  },
+  {
+    "rally_id": 9,
+    "turning_point_shot": 13,
+    "attention_change": 0.03707341477274895,
+    "win_probability": 0.6266147494316101
+  },
+  {
+    "rally_id": 10,
+    "turning_point_shot": 9,
+    "attention_change": 0.0579974539577961,
+    "win_probability": 0.5738961696624756
+  },
+  {
+    "rally_id": 11,
+    "turning_point_shot": 10,
+    "attention_change": 0.04537435621023178,
+    "win_probability": 0.8958701491355896
+  },
+  {
+    "rally_id": 12,
+    "turning_point_shot": 13,
+    "attention_change": 0.03857427090406418,
+    "win_probability": 0.8494306206703186
+  },
+  {
+    "rally_id": 13,
+    "turning_point_shot": 18,
+    "attention_change": 0.027311351150274277,
+    "win_probability": 0.5848716497421265
+  },
+  {
+    "rally_id": 14,
+    "turning_point_shot": 3,
+    "attention_change": 0.14324474334716797,
+    "win_probability": 0.5757927298545837
+  },
+  {
+    "rally_id": 15,
+    "turning_point_shot": 2,
+    "attention_change": 0.15885694324970245,
+    "win_probability": 0.5864548683166504
+  },
+  {
+    "rally_id": 16,
+    "turning_point_shot": 9,
+    "attention_change": 0.03765280172228813,
+    "win_probability": 0.14822742342948914
+  },
+  {
+    "rally_id": 17,
+    "turning_point_shot": 13,
+    "attention_change": 0.04329328238964081,
+    "win_probability": 0.5785097479820251
+  },
+  {
+    "rally_id": 18,
+    "turning_point_shot": 16,
+    "attention_change": 0.04452954977750778,
+    "win_probability": 0.583183228969574
+  },
+  {
+    "rally_id": 19,
+    "turning_point_shot": 13,
+    "attention_change": 0.03897677734494209,
+    "win_probability": 0.8156630396842957
+  },
+  {
+    "rally_id": 20,
+    "turning_point_shot": 17,
+    "attention_change": 0.03965812548995018,
+    "win_probability": 0.5723623633384705
+  },
+  {
+    "rally_id": 21,
+    "turning_point_shot": 25,
+    "attention_change": 0.021407250314950943,
+    "win_probability": 0.7892457842826843
+  },
+  {
+    "rally_id": 22,
+    "turning_point_shot": 13,
+    "attention_change": 0.03691776469349861,
+    "win_probability": 0.8513622283935547
+  },
+  {
+    "rally_id": 23,
+    "turning_point_shot": 2,
+    "attention_change": 0.2235475331544876,
+    "win_probability": 0.5807621479034424
+  },
+  {
+    "rally_id": 24,
+    "turning_point_shot": 13,
+    "attention_change": 0.038142550736665726,
+    "win_probability": 0.8067049980163574
+  },
+  {
+    "rally_id": 25,
+    "turning_point_shot": 7,
+    "attention_change": 0.07409626990556717,
+    "win_probability": 0.5819958448410034
+  },
+  {
+    "rally_id": 26,
+    "turning_point_shot": 2,
+    "attention_change": 0.15777400135993958,
+    "win_probability": 0.16378112137317657
+  },
+  {
+    "rally_id": 27,
+    "turning_point_shot": 5,
+    "attention_change": 0.09014850854873657,
+    "win_probability": 0.8150754570960999
+  },
+  {
+    "rally_id": 28,
+    "turning_point_shot": 4,
+    "attention_change": 0.12105617672204971,
+    "win_probability": 0.7294878959655762
+  },
+  {
+    "rally_id": 29,
+    "turning_point_shot": 6,
+    "attention_change": 0.0720573291182518,
+    "win_probability": 0.5842030644416809
+  },
+  {
+    "rally_id": 30,
+    "turning_point_shot": 13,
+    "attention_change": 0.04441272094845772,
+    "win_probability": 0.5773414373397827
+  },
+  {
+    "rally_id": 31,
+    "turning_point_shot": 1,
+    "attention_change": 0.27833813428878784,
+    "win_probability": 0.5400521755218506
+  },
+  {
+    "rally_id": 0,
+    "turning_point_shot": 11,
+    "attention_change": 0.05883035436272621,
+    "win_probability": 0.5728080868721008
+  },
+  {
+    "rally_id": 1,
+    "turning_point_shot": 15,
+    "attention_change": 0.025797735899686813,
+    "win_probability": 0.12334737181663513
+  },
+  {
+    "rally_id": 2,
+    "turning_point_shot": 7,
+    "attention_change": 0.0646539181470871,
+    "win_probability": 0.8963491320610046
+  },
+  {
+    "rally_id": 3,
+    "turning_point_shot": 27,
+    "attention_change": 0.02011149376630783,
+    "win_probability": 0.7886676788330078
+  },
+  {
+    "rally_id": 4,
+    "turning_point_shot": 1,
+    "attention_change": 0.21325866878032684,
+    "win_probability": 0.13933800160884857
+  },
+  {
+    "rally_id": 5,
+    "turning_point_shot": 2,
+    "attention_change": 0.1483423113822937,
+    "win_probability": 0.14321184158325195
+  },
+  {
+    "rally_id": 6,
+    "turning_point_shot": 4,
+    "attention_change": 0.07457249611616135,
+    "win_probability": 0.10267014056444168
+  },
+  {
+    "rally_id": 7,
+    "turning_point_shot": 21,
+    "attention_change": 0.03288820758461952,
+    "win_probability": 0.5738186836242676
+  },
+  {
+    "rally_id": 8,
+    "turning_point_shot": 3,
+    "attention_change": 0.14134444296360016,
+    "win_probability": 0.8096123933792114
+  },
+  {
+    "rally_id": 9,
+    "turning_point_shot": 15,
+    "attention_change": 0.03345930948853493,
+    "win_probability": 0.5834324955940247
+  },
+  {
+    "rally_id": 10,
+    "turning_point_shot": 15,
+    "attention_change": 0.035080838948488235,
+    "win_probability": 0.5754404664039612
+  },
+  {
+    "rally_id": 11,
+    "turning_point_shot": 7,
+    "attention_change": 0.06809821724891663,
+    "win_probability": 0.8514586687088013
+  },
+  {
+    "rally_id": 12,
+    "turning_point_shot": 21,
+    "attention_change": 0.023421961814165115,
+    "win_probability": 0.8317688703536987
+  },
+  {
+    "rally_id": 13,
+    "turning_point_shot": 7,
+    "attention_change": 0.07155849039554596,
+    "win_probability": 0.5758285522460938
+  },
+  {
+    "rally_id": 14,
+    "turning_point_shot": 2,
+    "attention_change": 0.14936740696430206,
+    "win_probability": 0.13604289293289185
+  },
+  {
+    "rally_id": 15,
+    "turning_point_shot": 3,
+    "attention_change": 0.1521281898021698,
+    "win_probability": 0.5798349380493164
+  },
+  {
+    "rally_id": 16,
+    "turning_point_shot": 17,
+    "attention_change": 0.028786728158593178,
+    "win_probability": 0.895930290222168
+  },
+  {
+    "rally_id": 17,
+    "turning_point_shot": 2,
+    "attention_change": 0.13032668828964233,
+    "win_probability": 0.11137648671865463
+  },
+  {
+    "rally_id": 18,
+    "turning_point_shot": 6,
+    "attention_change": 0.06542059034109116,
+    "win_probability": 0.26514115929603577
+  },
+  {
+    "rally_id": 19,
+    "turning_point_shot": 12,
+    "attention_change": 0.03609107434749603,
+    "win_probability": 0.28741255402565
+  },
+  {
+    "rally_id": 20,
+    "turning_point_shot": 7,
+    "attention_change": 0.07470276206731796,
+    "win_probability": 0.5757984519004822
+  },
+  {
+    "rally_id": 21,
+    "turning_point_shot": 11,
+    "attention_change": 0.04218928888440132,
+    "win_probability": 0.889327347278595
+  },
+  {
+    "rally_id": 22,
+    "turning_point_shot": 10,
+    "attention_change": 0.05367583781480789,
+    "win_probability": 0.5748270153999329
+  },
+  {
+    "rally_id": 23,
+    "turning_point_shot": 4,
+    "attention_change": 0.10664938390254974,
+    "win_probability": 0.58251953125
+  },
+  {
+    "rally_id": 24,
+    "turning_point_shot": 5,
+    "attention_change": 0.0850100964307785,
+    "win_probability": 0.7908551692962646
+  },
+  {
+    "rally_id": 25,
+    "turning_point_shot": 14,
+    "attention_change": 0.029927123337984085,
+    "win_probability": 0.2027633786201477
+  },
+  {
+    "rally_id": 26,
+    "turning_point_shot": 4,
+    "attention_change": 0.08569216728210449,
+    "win_probability": 0.18852075934410095
+  },
+  {
+    "rally_id": 27,
+    "turning_point_shot": 3,
+    "attention_change": 0.13672208786010742,
+    "win_probability": 0.6828274130821228
+  },
+  {
+    "rally_id": 28,
+    "turning_point_shot": 4,
+    "attention_change": 0.10832918435335159,
+    "win_probability": 0.58244788646698
+  },
+  {
+    "rally_id": 29,
+    "turning_point_shot": 7,
+    "attention_change": 0.04858710989356041,
+    "win_probability": 0.1946301907300949
+  },
+  {
+    "rally_id": 30,
+    "turning_point_shot": 24,
+    "attention_change": 0.01656775362789631,
+    "win_probability": 0.22844459116458893
+  },
+  {
+    "rally_id": 31,
+    "turning_point_shot": 3,
+    "attention_change": 0.1395917534828186,
+    "win_probability": 0.5732938051223755
+  },
+  {
+    "rally_id": 0,
+    "turning_point_shot": 23,
+    "attention_change": 0.023836903274059296,
+    "win_probability": 0.5865870118141174
+  },
+  {
+    "rally_id": 1,
+    "turning_point_shot": 4,
+    "attention_change": 0.10565278679132462,
+    "win_probability": 0.8980542421340942
+  },
+  {
+    "rally_id": 2,
+    "turning_point_shot": 3,
+    "attention_change": 0.1475529819726944,
+    "win_probability": 0.8045299053192139
+  },
+  {
+    "rally_id": 3,
+    "turning_point_shot": 16,
+    "attention_change": 0.015075812116265297,
+    "win_probability": 0.27402153611183167
+  },
+  {
+    "rally_id": 4,
+    "turning_point_shot": 6,
+    "attention_change": 0.0990249291062355,
+    "win_probability": 0.5774704217910767
+  },
+  {
+    "rally_id": 5,
+    "turning_point_shot": 20,
+    "attention_change": 0.027468914166092873,
+    "win_probability": 0.8674721121788025
+  },
+  {
+    "rally_id": 6,
+    "turning_point_shot": 11,
+    "attention_change": 0.044862277805805206,
+    "win_probability": 0.5919767618179321
+  },
+  {
+    "rally_id": 7,
+    "turning_point_shot": 9,
+    "attention_change": 0.03821932151913643,
+    "win_probability": 0.15212269127368927
+  },
+  {
+    "rally_id": 8,
+    "turning_point_shot": 1,
+    "attention_change": 0.25443312525749207,
+    "win_probability": 0.7581806778907776
+  },
+  {
+    "rally_id": 9,
+    "turning_point_shot": 7,
+    "attention_change": 0.07014650106430054,
+    "win_probability": 0.803895890712738
+  },
+  {
+    "rally_id": 10,
+    "turning_point_shot": 9,
+    "attention_change": 0.061781201511621475,
+    "win_probability": 0.5793671011924744
+  },
+  {
+    "rally_id": 11,
+    "turning_point_shot": 3,
+    "attention_change": 0.10713809728622437,
+    "win_probability": 0.1405583918094635
+  },
+  {
+    "rally_id": 12,
+    "turning_point_shot": 11,
+    "attention_change": 0.050598710775375366,
+    "win_probability": 0.5859106183052063
+  },
+  {
+    "rally_id": 13,
+    "turning_point_shot": 14,
+    "attention_change": 0.039663203060626984,
+    "win_probability": 0.7996135354042053
+  },
+  {
+    "rally_id": 14,
+    "turning_point_shot": 2,
+    "attention_change": 0.15150918066501617,
+    "win_probability": 0.1709728240966797
+  },
+  {
+    "rally_id": 15,
+    "turning_point_shot": 9,
+    "attention_change": 0.0615968182682991,
+    "win_probability": 0.5946744084358215
+  },
+  {
+    "rally_id": 16,
+    "turning_point_shot": 23,
+    "attention_change": 0.023378852754831314,
+    "win_probability": 0.8588604927062988
+  },
+  {
+    "rally_id": 17,
+    "turning_point_shot": 2,
+    "attention_change": 0.14164966344833374,
+    "win_probability": 0.1723378449678421
+  },
+  {
+    "rally_id": 18,
+    "turning_point_shot": 12,
+    "attention_change": 0.03970740735530853,
+    "win_probability": 0.895721971988678
+  },
+  {
+    "rally_id": 19,
+    "turning_point_shot": 3,
+    "attention_change": 0.14305302500724792,
+    "win_probability": 0.8031233549118042
+  },
+  {
+    "rally_id": 20,
+    "turning_point_shot": 6,
+    "attention_change": 0.06797749549150467,
+    "win_probability": 0.5773221850395203
+  },
+  {
+    "rally_id": 21,
+    "turning_point_shot": 2,
+    "attention_change": 0.2211594432592392,
+    "win_probability": 0.5795632600784302
+  },
+  {
+    "rally_id": 22,
+    "turning_point_shot": 18,
+    "attention_change": 0.035864222794771194,
+    "win_probability": 0.7803765535354614
+  },
+  {
+    "rally_id": 23,
+    "turning_point_shot": 12,
+    "attention_change": 0.029172206297516823,
+    "win_probability": 0.1013091430068016
+  },
+  {
+    "rally_id": 24,
+    "turning_point_shot": 18,
+    "attention_change": 0.03882073611021042,
+    "win_probability": 0.5800384879112244
+  },
+  {
+    "rally_id": 25,
+    "turning_point_shot": 27,
+    "attention_change": 0.014825117774307728,
+    "win_probability": 0.2047925442457199
+  },
+  {
+    "rally_id": 26,
+    "turning_point_shot": 24,
+    "attention_change": 0.02652500942349434,
+    "win_probability": 0.6994136571884155
+  },
+  {
+    "rally_id": 27,
+    "turning_point_shot": 8,
+    "attention_change": 0.04524552449584007,
+    "win_probability": 0.15866677463054657
+  },
+  {
+    "rally_id": 28,
+    "turning_point_shot": 4,
+    "attention_change": 0.13714544475078583,
+    "win_probability": 0.5828046202659607
+  },
+  {
+    "rally_id": 29,
+    "turning_point_shot": 2,
+    "attention_change": 0.16503697633743286,
+    "win_probability": 0.7759218215942383
+  },
+  {
+    "rally_id": 30,
+    "turning_point_shot": 6,
+    "attention_change": 0.0836428850889206,
+    "win_probability": 0.8661074042320251
+  },
+  {
+    "rally_id": 31,
+    "turning_point_shot": 13,
+    "attention_change": 0.03876342624425888,
+    "win_probability": 0.5778432488441467
+  },
+  {
+    "rally_id": 0,
+    "turning_point_shot": 5,
+    "attention_change": 0.09236463159322739,
+    "win_probability": 0.5548481941223145
+  },
+  {
+    "rally_id": 1,
+    "turning_point_shot": 3,
+    "attention_change": 0.10775382071733475,
+    "win_probability": 0.14863817393779755
+  },
+  {
+    "rally_id": 2,
+    "turning_point_shot": 7,
+    "attention_change": 0.06476198881864548,
+    "win_probability": 0.8961760997772217
+  },
+  {
+    "rally_id": 3,
+    "turning_point_shot": 24,
+    "attention_change": 0.022707024589180946,
+    "win_probability": 0.5816983580589294
+  },
+  {
+    "rally_id": 4,
+    "turning_point_shot": 6,
+    "attention_change": 0.07333140075206757,
+    "win_probability": 0.7822539806365967
+  },
+  {
+    "rally_id": 5,
+    "turning_point_shot": 8,
+    "attention_change": 0.05829869210720062,
+    "win_probability": 0.8958045840263367
+  },
+  {
+    "rally_id": 6,
+    "turning_point_shot": 4,
+    "attention_change": 0.090242400765419,
+    "win_probability": 0.5691648125648499
+  },
+  {
+    "rally_id": 7,
+    "turning_point_shot": 16,
+    "attention_change": 0.028673242777585983,
+    "win_probability": 0.5836134552955627
+  },
+  {
+    "rally_id": 8,
+    "turning_point_shot": 2,
+    "attention_change": 0.1517501324415207,
+    "win_probability": 0.575008749961853
+  },
+  {
+    "rally_id": 9,
+    "turning_point_shot": 7,
+    "attention_change": 0.07750885933637619,
+    "win_probability": 0.5774713158607483
+  },
+  {
+    "rally_id": 10,
+    "turning_point_shot": 15,
+    "attention_change": 0.03734905645251274,
+    "win_probability": 0.7947172522544861
+  },
+  {
+    "rally_id": 11,
+    "turning_point_shot": 1,
+    "attention_change": 0.2994212210178375,
+    "win_probability": 0.5747749209403992
+  },
+  {
+    "rally_id": 12,
+    "turning_point_shot": 3,
+    "attention_change": 0.14791055023670197,
+    "win_probability": 0.5739420056343079
+  },
+  {
+    "rally_id": 13,
+    "turning_point_shot": 4,
+    "attention_change": 0.10575807094573975,
+    "win_probability": 0.8533815145492554
+  },
+  {
+    "rally_id": 14,
+    "turning_point_shot": 4,
+    "attention_change": 0.09491875022649765,
+    "win_probability": 0.29842644929885864
+  },
+  {
+    "rally_id": 15,
+    "turning_point_shot": 12,
+    "attention_change": 0.05372389033436775,
+    "win_probability": 0.5832352042198181
+  },
+  {
+    "rally_id": 16,
+    "turning_point_shot": 1,
+    "attention_change": 0.2254761904478073,
+    "win_probability": 0.15548931062221527
+  },
+  {
+    "rally_id": 17,
+    "turning_point_shot": 6,
+    "attention_change": 0.08295013755559921,
+    "win_probability": 0.7282205820083618
+  },
+  {
+    "rally_id": 18,
+    "turning_point_shot": 1,
+    "attention_change": 0.2994212210178375,
+    "win_probability": 0.5747749209403992
+  },
+  {
+    "rally_id": 19,
+    "turning_point_shot": 2,
+    "attention_change": 0.189193457365036,
+    "win_probability": 0.866174578666687
+  },
+  {
+    "rally_id": 20,
+    "turning_point_shot": 3,
+    "attention_change": 0.14930957555770874,
+    "win_probability": 0.5760861039161682
+  },
+  {
+    "rally_id": 21,
+    "turning_point_shot": 2,
+    "attention_change": 0.15777400135993958,
+    "win_probability": 0.16378112137317657
+  },
+  {
+    "rally_id": 22,
+    "turning_point_shot": 10,
+    "attention_change": 0.04858378320932388,
+    "win_probability": 0.8766136765480042
+  },
+  {
+    "rally_id": 23,
+    "turning_point_shot": 2,
+    "attention_change": 0.07549069821834564,
+    "win_probability": 0.12246432155370712
+  },
+  {
+    "rally_id": 24,
+    "turning_point_shot": 5,
+    "attention_change": 0.0954630970954895,
+    "win_probability": 0.5719668865203857
+  },
+  {
+    "rally_id": 25,
+    "turning_point_shot": 12,
+    "attention_change": 0.04529789835214615,
+    "win_probability": 0.7890681028366089
+  },
+  {
+    "rally_id": 26,
+    "turning_point_shot": 4,
+    "attention_change": 0.14843811094760895,
+    "win_probability": 0.6097030639648438
+  },
+  {
+    "rally_id": 27,
+    "turning_point_shot": 7,
+    "attention_change": 0.06186388432979584,
+    "win_probability": 0.8901177048683167
+  },
+  {
+    "rally_id": 28,
+    "turning_point_shot": 3,
+    "attention_change": 0.15235288441181183,
+    "win_probability": 0.5820665955543518
+  },
+  {
+    "rally_id": 29,
+    "turning_point_shot": 4,
+    "attention_change": 0.14860029518604279,
+    "win_probability": 0.5808077454566956
+  },
+  {
+    "rally_id": 30,
+    "turning_point_shot": 13,
+    "attention_change": 0.03549376130104065,
+    "win_probability": 0.8894516825675964
+  },
+  {
+    "rally_id": 31,
+    "turning_point_shot": 3,
+    "attention_change": 0.1413320153951645,
+    "win_probability": 0.5778807997703552
+  },
+  {
+    "rally_id": 0,
+    "turning_point_shot": 3,
+    "attention_change": 0.14917948842048645,
+    "win_probability": 0.5749757289886475
+  },
+  {
+    "rally_id": 1,
+    "turning_point_shot": 2,
+    "attention_change": 0.21023854613304138,
+    "win_probability": 0.8513298034667969
+  },
+  {
+    "rally_id": 2,
+    "turning_point_shot": 4,
+    "attention_change": 0.07674597948789597,
+    "win_probability": 0.13356858491897583
+  },
+  {
+    "rally_id": 3,
+    "turning_point_shot": 3,
+    "attention_change": 0.14069005846977234,
+    "win_probability": 0.8177902698516846
+  },
+  {
+    "rally_id": 4,
+    "turning_point_shot": 9,
+    "attention_change": 0.060668159276247025,
+    "win_probability": 0.57547926902771
+  },
+  {
+    "rally_id": 5,
+    "turning_point_shot": 1,
+    "attention_change": 0.3272300958633423,
+    "win_probability": 0.5775815844535828
+  },
+  {
+    "rally_id": 6,
+    "turning_point_shot": 11,
+    "attention_change": 0.043413352221250534,
+    "win_probability": 0.7228609323501587
+  },
+  {
+    "rally_id": 7,
+    "turning_point_shot": 20,
+    "attention_change": 0.027296900749206543,
+    "win_probability": 0.8028539419174194
+  },
+  {
+    "rally_id": 8,
+    "turning_point_shot": 9,
+    "attention_change": 0.04725762829184532,
+    "win_probability": 0.29438406229019165
+  },
+  {
+    "rally_id": 9,
+    "turning_point_shot": 7,
+    "attention_change": 0.07475261390209198,
+    "win_probability": 0.5837527513504028
+  },
+  {
+    "rally_id": 10,
+    "turning_point_shot": 8,
+    "attention_change": 0.05888717994093895,
+    "win_probability": 0.8729066252708435
+  },
+  {
+    "rally_id": 11,
+    "turning_point_shot": 8,
+    "attention_change": 0.04811834916472435,
+    "win_probability": 0.1949881613254547
+  },
+  {
+    "rally_id": 12,
+    "turning_point_shot": 2,
+    "attention_change": 0.14065247774124146,
+    "win_probability": 0.14518418908119202
+  },
+  {
+    "rally_id": 13,
+    "turning_point_shot": 7,
+    "attention_change": 0.07145126909017563,
+    "win_probability": 0.5762994885444641
+  },
+  {
+    "rally_id": 14,
+    "turning_point_shot": 1,
+    "attention_change": 0.20524364709854126,
+    "win_probability": 0.17270910739898682
+  },
+  {
+    "rally_id": 15,
+    "turning_point_shot": 10,
+    "attention_change": 0.033796943724155426,
+    "win_probability": 0.1674242913722992
+  },
+  {
+    "rally_id": 16,
+    "turning_point_shot": 14,
+    "attention_change": 0.044031497091054916,
+    "win_probability": 0.6823622584342957
+  },
+  {
+    "rally_id": 17,
+    "turning_point_shot": 9,
+    "attention_change": 0.052910853177309036,
+    "win_probability": 0.8193859457969666
+  },
+  {
+    "rally_id": 18,
+    "turning_point_shot": 5,
+    "attention_change": 0.06427749246358871,
+    "win_probability": 0.11206166446208954
+  },
+  {
+    "rally_id": 19,
+    "turning_point_shot": 17,
+    "attention_change": 0.030626464635133743,
+    "win_probability": 0.5809735655784607
+  },
+  {
+    "rally_id": 20,
+    "turning_point_shot": 6,
+    "attention_change": 0.07608421891927719,
+    "win_probability": 0.5835883617401123
+  },
+  {
+    "rally_id": 21,
+    "turning_point_shot": 6,
+    "attention_change": 0.0668385699391365,
+    "win_probability": 0.21758101880550385
+  },
+  {
+    "rally_id": 22,
+    "turning_point_shot": 7,
+    "attention_change": 0.07855329662561417,
+    "win_probability": 0.5968402624130249
+  },
+  {
+    "rally_id": 23,
+    "turning_point_shot": 5,
+    "attention_change": 0.10157797485589981,
+    "win_probability": 0.5811353325843811
+  },
+  {
+    "rally_id": 24,
+    "turning_point_shot": 13,
+    "attention_change": 0.027960877865552902,
+    "win_probability": 0.18026655912399292
+  },
+  {
+    "rally_id": 25,
+    "turning_point_shot": 12,
+    "attention_change": 0.04316633567214012,
+    "win_probability": 0.5838091373443604
+  },
+  {
+    "rally_id": 26,
+    "turning_point_shot": 29,
+    "attention_change": 0.017382550984621048,
+    "win_probability": 0.6799327731132507
+  },
+  {
+    "rally_id": 27,
+    "turning_point_shot": 2,
+    "attention_change": 0.15150918066501617,
+    "win_probability": 0.1709728240966797
+  },
+  {
+    "rally_id": 28,
+    "turning_point_shot": 32,
+    "attention_change": 0.008969762362539768,
+    "win_probability": 0.1553094983100891
+  },
+  {
+    "rally_id": 29,
+    "turning_point_shot": 2,
+    "attention_change": 0.13233204185962677,
+    "win_probability": 0.13441546261310577
+  },
+  {
+    "rally_id": 30,
+    "turning_point_shot": 1,
+    "attention_change": 0.25675779581069946,
+    "win_probability": 0.43718773126602173
+  },
+  {
+    "rally_id": 31,
+    "turning_point_shot": 5,
+    "attention_change": 0.0832974910736084,
+    "win_probability": 0.8901733160018921
+  },
+  {
+    "rally_id": 0,
+    "turning_point_shot": 8,
+    "attention_change": 0.08130113035440445,
+    "win_probability": 0.6081736087799072
+  },
+  {
+    "rally_id": 1,
+    "turning_point_shot": 9,
+    "attention_change": 0.04960855841636658,
+    "win_probability": 0.896327018737793
+  },
+  {
+    "rally_id": 2,
+    "turning_point_shot": 2,
+    "attention_change": 0.07455823570489883,
+    "win_probability": 0.12733153998851776
+  },
+  {
+    "rally_id": 3,
+    "turning_point_shot": 11,
+    "attention_change": 0.05233268812298775,
+    "win_probability": 0.5529448390007019
+  },
+  {
+    "rally_id": 4,
+    "turning_point_shot": 5,
+    "attention_change": 0.06756342202425003,
+    "win_probability": 0.10757222771644592
+  },
+  {
+    "rally_id": 5,
+    "turning_point_shot": 1,
+    "attention_change": 0.26432403922080994,
+    "win_probability": 0.5922836661338806
+  },
+  {
+    "rally_id": 6,
+    "turning_point_shot": 10,
+    "attention_change": 0.047628212720155716,
+    "win_probability": 0.583602786064148
+  },
+  {
+    "rally_id": 7,
+    "turning_point_shot": 4,
+    "attention_change": 0.0952398031949997,
+    "win_probability": 0.5815080404281616
+  },
+  {
+    "rally_id": 8,
+    "turning_point_shot": 5,
+    "attention_change": 0.11178497225046158,
+    "win_probability": 0.5743023157119751
+  },
+  {
+    "rally_id": 9,
+    "turning_point_shot": 12,
+    "attention_change": 0.05742969736456871,
+    "win_probability": 0.5832021236419678
+  },
+  {
+    "rally_id": 10,
+    "turning_point_shot": 13,
+    "attention_change": 0.03770250454545021,
+    "win_probability": 0.8400483131408691
+  },
+  {
+    "rally_id": 11,
+    "turning_point_shot": 8,
+    "attention_change": 0.06138153374195099,
+    "win_probability": 0.5829111933708191
+  },
+  {
+    "rally_id": 12,
+    "turning_point_shot": 1,
+    "attention_change": 0.254258394241333,
+    "win_probability": 0.7299033999443054
+  },
+  {
+    "rally_id": 13,
+    "turning_point_shot": 2,
+    "attention_change": 0.1599580943584442,
+    "win_probability": 0.2766875624656677
+  },
+  {
+    "rally_id": 14,
+    "turning_point_shot": 11,
+    "attention_change": 0.04820346459746361,
+    "win_probability": 0.5785092711448669
+  },
+  {
+    "rally_id": 15,
+    "turning_point_shot": 5,
+    "attention_change": 0.09080368280410767,
+    "win_probability": 0.7898591756820679
+  },
+  {
+    "rally_id": 16,
+    "turning_point_shot": 6,
+    "attention_change": 0.06312956660985947,
+    "win_probability": 0.5618033409118652
+  },
+  {
+    "rally_id": 17,
+    "turning_point_shot": 13,
+    "attention_change": 0.038253411650657654,
+    "win_probability": 0.7622252702713013
+  },
+  {
+    "rally_id": 18,
+    "turning_point_shot": 32,
+    "attention_change": 0.013143984600901604,
+    "win_probability": 0.2588368356227875
+  },
+  {
+    "rally_id": 19,
+    "turning_point_shot": 23,
+    "attention_change": 0.02361915074288845,
+    "win_probability": 0.5750988721847534
+  },
+  {
+    "rally_id": 20,
+    "turning_point_shot": 22,
+    "attention_change": 0.02318776585161686,
+    "win_probability": 0.5790773034095764
+  },
+  {
+    "rally_id": 21,
+    "turning_point_shot": 5,
+    "attention_change": 0.06536100059747696,
+    "win_probability": 0.15206654369831085
+  },
+  {
+    "rally_id": 22,
+    "turning_point_shot": 5,
+    "attention_change": 0.06860680878162384,
+    "win_probability": 0.12895707786083221
+  },
+  {
+    "rally_id": 23,
+    "turning_point_shot": 12,
+    "attention_change": 0.056898001581430435,
+    "win_probability": 0.5828986167907715
+  },
+  {
+    "rally_id": 24,
+    "turning_point_shot": 10,
+    "attention_change": 0.06988257169723511,
+    "win_probability": 0.5981686115264893
+  },
+  {
+    "rally_id": 25,
+    "turning_point_shot": 18,
+    "attention_change": 0.02235579863190651,
+    "win_probability": 0.1853644847869873
+  },
+  {
+    "rally_id": 26,
+    "turning_point_shot": 16,
+    "attention_change": 0.02768225036561489,
+    "win_probability": 0.5820440053939819
+  },
+  {
+    "rally_id": 27,
+    "turning_point_shot": 25,
+    "attention_change": 0.02948419749736786,
+    "win_probability": 0.5713449716567993
+  },
+  {
+    "rally_id": 28,
+    "turning_point_shot": 8,
+    "attention_change": 0.04814234375953674,
+    "win_probability": 0.22139568626880646
+  },
+  {
+    "rally_id": 29,
+    "turning_point_shot": 1,
+    "attention_change": 0.26966261863708496,
+    "win_probability": 0.5662208795547485
+  },
+  {
+    "rally_id": 30,
+    "turning_point_shot": 23,
+    "attention_change": 0.023195190355181694,
+    "win_probability": 0.5594003796577454
+  },
+  {
+    "rally_id": 31,
+    "turning_point_shot": 23,
+    "attention_change": 0.023576688021421432,
+    "win_probability": 0.8628534078598022
+  },
+  {
+    "rally_id": 0,
+    "turning_point_shot": 2,
+    "attention_change": 0.2061356157064438,
+    "win_probability": 0.8516666293144226
+  },
+  {
+    "rally_id": 1,
+    "turning_point_shot": 2,
+    "attention_change": 0.15930789709091187,
+    "win_probability": 0.5797294974327087
+  },
+  {
+    "rally_id": 2,
+    "turning_point_shot": 4,
+    "attention_change": 0.10385224223136902,
+    "win_probability": 0.8968327641487122
+  },
+  {
+    "rally_id": 3,
+    "turning_point_shot": 13,
+    "attention_change": 0.04000422731041908,
+    "win_probability": 0.7927756309509277
+  },
+  {
+    "rally_id": 4,
+    "turning_point_shot": 3,
+    "attention_change": 0.13442207872867584,
+    "win_probability": 0.5833099484443665
+  },
+  {
+    "rally_id": 5,
+    "turning_point_shot": 3,
+    "attention_change": 0.15201540291309357,
+    "win_probability": 0.5705722570419312
+  },
+  {
+    "rally_id": 6,
+    "turning_point_shot": 18,
+    "attention_change": 0.019650805741548538,
+    "win_probability": 0.11386259645223618
+  },
+  {
+    "rally_id": 7,
+    "turning_point_shot": 2,
+    "attention_change": 0.14995843172073364,
+    "win_probability": 0.14346729218959808
+  },
+  {
+    "rally_id": 8,
+    "turning_point_shot": 22,
+    "attention_change": 0.021592305973172188,
+    "win_probability": 0.7741271257400513
+  },
+  {
+    "rally_id": 9,
+    "turning_point_shot": 3,
+    "attention_change": 0.1320905238389969,
+    "win_probability": 0.8298221230506897
+  },
+  {
+    "rally_id": 10,
+    "turning_point_shot": 12,
+    "attention_change": 0.056234780699014664,
+    "win_probability": 0.5799524784088135
+  },
+  {
+    "rally_id": 11,
+    "turning_point_shot": 8,
+    "attention_change": 0.04679672420024872,
+    "win_probability": 0.1525895893573761
+  },
+  {
+    "rally_id": 12,
+    "turning_point_shot": 5,
+    "attention_change": 0.08548671752214432,
+    "win_probability": 0.8958221673965454
+  },
+  {
+    "rally_id": 13,
+    "turning_point_shot": 3,
+    "attention_change": 0.12281634658575058,
+    "win_probability": 0.6830201745033264
+  },
+  {
+    "rally_id": 14,
+    "turning_point_shot": 6,
+    "attention_change": 0.06697216629981995,
+    "win_probability": 0.21001732349395752
+  },
+  {
+    "rally_id": 15,
+    "turning_point_shot": 23,
+    "attention_change": 0.021850939840078354,
+    "win_probability": 0.8959298133850098
+  },
+  {
+    "rally_id": 16,
+    "turning_point_shot": 8,
+    "attention_change": 0.07690558582544327,
+    "win_probability": 0.5832175016403198
+  },
+  {
+    "rally_id": 17,
+    "turning_point_shot": 15,
+    "attention_change": 0.031127160415053368,
+    "win_probability": 0.8957560658454895
+  },
+  {
+    "rally_id": 18,
+    "turning_point_shot": 15,
+    "attention_change": 0.041419465094804764,
+    "win_probability": 0.576554536819458
+  },
+  {
+    "rally_id": 19,
+    "turning_point_shot": 5,
+    "attention_change": 0.06689684838056564,
+    "win_probability": 0.14526274800300598
+  },
+  {
+    "rally_id": 20,
+    "turning_point_shot": 6,
+    "attention_change": 0.06829986721277237,
+    "win_probability": 0.8928296566009521
+  },
+  {
+    "rally_id": 21,
+    "turning_point_shot": 15,
+    "attention_change": 0.03567219525575638,
+    "win_probability": 0.850054144859314
+  },
+  {
+    "rally_id": 22,
+    "turning_point_shot": 8,
+    "attention_change": 0.05279724299907684,
+    "win_probability": 0.4934954345226288
+  },
+  {
+    "rally_id": 23,
+    "turning_point_shot": 6,
+    "attention_change": 0.09893537312746048,
+    "win_probability": 0.58304363489151
+  },
+  {
+    "rally_id": 24,
+    "turning_point_shot": 2,
+    "attention_change": 0.15930789709091187,
+    "win_probability": 0.5797294974327087
+  },
+  {
+    "rally_id": 25,
+    "turning_point_shot": 2,
+    "attention_change": 0.21430106461048126,
+    "win_probability": 0.576409101486206
+  },
+  {
+    "rally_id": 26,
+    "turning_point_shot": 5,
+    "attention_change": 0.10528676956892014,
+    "win_probability": 0.5752635598182678
+  },
+  {
+    "rally_id": 27,
+    "turning_point_shot": 8,
+    "attention_change": 0.0574430488049984,
+    "win_probability": 0.7775232791900635
+  },
+  {
+    "rally_id": 28,
+    "turning_point_shot": 12,
+    "attention_change": 0.03167213499546051,
+    "win_probability": 0.5516668558120728
+  },
+  {
+    "rally_id": 29,
+    "turning_point_shot": 10,
+    "attention_change": 0.04897759482264519,
+    "win_probability": 0.5818508267402649
+  },
+  {
+    "rally_id": 30,
+    "turning_point_shot": 9,
+    "attention_change": 0.067558154463768,
+    "win_probability": 0.5763391852378845
+  },
+  {
+    "rally_id": 31,
+    "turning_point_shot": 14,
+    "attention_change": 0.04092898964881897,
+    "win_probability": 0.7220181822776794
+  },
+  {
+    "rally_id": 0,
+    "turning_point_shot": 28,
+    "attention_change": 0.018718747422099113,
+    "win_probability": 0.8517753481864929
+  },
+  {
+    "rally_id": 1,
+    "turning_point_shot": 7,
+    "attention_change": 0.07971444725990295,
+    "win_probability": 0.5905022025108337
+  },
+  {
+    "rally_id": 2,
+    "turning_point_shot": 11,
+    "attention_change": 0.05573142692446709,
+    "win_probability": 0.5742775201797485
+  },
+  {
+    "rally_id": 3,
+    "turning_point_shot": 32,
+    "attention_change": 0.01316858734935522,
+    "win_probability": 0.21435683965682983
+  },
+  {
+    "rally_id": 4,
+    "turning_point_shot": 8,
+    "attention_change": 0.04236709699034691,
+    "win_probability": 0.1998714655637741
+  },
+  {
+    "rally_id": 5,
+    "turning_point_shot": 24,
+    "attention_change": 0.01900576613843441,
+    "win_probability": 0.5820463299751282
+  },
+  {
+    "rally_id": 6,
+    "turning_point_shot": 9,
+    "attention_change": 0.05238718166947365,
+    "win_probability": 0.8262414336204529
+  },
+  {
+    "rally_id": 7,
+    "turning_point_shot": 9,
+    "attention_change": 0.05252908915281296,
+    "win_probability": 0.8960974812507629
+  },
+  {
+    "rally_id": 8,
+    "turning_point_shot": 60,
+    "attention_change": 0.00829797238111496,
+    "win_probability": 0.5799311995506287
+  },
+  {
+    "rally_id": 9,
+    "turning_point_shot": 8,
+    "attention_change": 0.06543877720832825,
+    "win_probability": 0.5727750062942505
+  },
+  {
+    "rally_id": 10,
+    "turning_point_shot": 3,
+    "attention_change": 0.11273512989282608,
+    "win_probability": 0.1392953246831894
+  },
+  {
+    "rally_id": 11,
+    "turning_point_shot": 57,
+    "attention_change": 0.010390020906925201,
+    "win_probability": 0.5787375569343567
+  },
+  {
+    "rally_id": 12,
+    "turning_point_shot": 5,
+    "attention_change": 0.10643275082111359,
+    "win_probability": 0.5813452005386353
+  },
+  {
+    "rally_id": 13,
+    "turning_point_shot": 31,
+    "attention_change": 0.017052428796887398,
+    "win_probability": 0.5844655632972717
+  },
+  {
+    "rally_id": 14,
+    "turning_point_shot": 9,
+    "attention_change": 0.056775711476802826,
+    "win_probability": 0.5830524563789368
+  },
+  {
+    "rally_id": 15,
+    "turning_point_shot": 37,
+    "attention_change": 0.017243048176169395,
+    "win_probability": 0.5909634232521057
+  },
+  {
+    "rally_id": 16,
+    "turning_point_shot": 4,
+    "attention_change": 0.09493263065814972,
+    "win_probability": 0.27093514800071716
+  },
+  {
+    "rally_id": 17,
+    "turning_point_shot": 33,
+    "attention_change": 0.016978219151496887,
+    "win_probability": 0.853841245174408
+  },
+  {
+    "rally_id": 18,
+    "turning_point_shot": 12,
+    "attention_change": 0.04087390378117561,
+    "win_probability": 0.5821513533592224
+  },
+  {
+    "rally_id": 19,
+    "turning_point_shot": 17,
+    "attention_change": 0.034468114376068115,
+    "win_probability": 0.580379843711853
+  },
+  {
+    "rally_id": 20,
+    "turning_point_shot": 18,
+    "attention_change": 0.028006359934806824,
+    "win_probability": 0.8266229033470154
+  },
+  {
+    "rally_id": 21,
+    "turning_point_shot": 3,
+    "attention_change": 0.1516425907611847,
+    "win_probability": 0.5775241255760193
+  },
+  {
+    "rally_id": 22,
+    "turning_point_shot": 5,
+    "attention_change": 0.08544772863388062,
+    "win_probability": 0.8949230909347534
+  },
+  {
+    "rally_id": 23,
+    "turning_point_shot": 6,
+    "attention_change": 0.07992453128099442,
+    "win_probability": 0.8292272686958313
+  },
+  {
+    "rally_id": 24,
+    "turning_point_shot": 19,
+    "attention_change": 0.026045873761177063,
+    "win_probability": 0.8959721326828003
+  },
+  {
+    "rally_id": 25,
+    "turning_point_shot": 15,
+    "attention_change": 0.03889860957860947,
+    "win_probability": 0.575907289981842
+  },
+  {
+    "rally_id": 26,
+    "turning_point_shot": 12,
+    "attention_change": 0.0369732528924942,
+    "win_probability": 0.576306164264679
+  },
+  {
+    "rally_id": 27,
+    "turning_point_shot": 4,
+    "attention_change": 0.07390356808900833,
+    "win_probability": 0.10267014056444168
+  },
+  {
+    "rally_id": 28,
+    "turning_point_shot": 20,
+    "attention_change": 0.023300133645534515,
+    "win_probability": 0.5789861083030701
+  },
+  {
+    "rally_id": 29,
+    "turning_point_shot": 17,
+    "attention_change": 0.02254047431051731,
+    "win_probability": 0.21146705746650696
+  },
+  {
+    "rally_id": 30,
+    "turning_point_shot": 1,
+    "attention_change": 0.25433990359306335,
+    "win_probability": 0.859977662563324
+  },
+  {
+    "rally_id": 31,
+    "turning_point_shot": 11,
+    "attention_change": 0.036211512982845306,
+    "win_probability": 0.13876749575138092
+  },
+  {
+    "rally_id": 0,
+    "turning_point_shot": 9,
+    "attention_change": 0.04198899492621422,
+    "win_probability": 0.15846998989582062
+  },
+  {
+    "rally_id": 1,
+    "turning_point_shot": 13,
+    "attention_change": 0.030801866203546524,
+    "win_probability": 0.1344229131937027
+  },
+  {
+    "rally_id": 2,
+    "turning_point_shot": 3,
+    "attention_change": 0.10001040250062943,
+    "win_probability": 0.11142442375421524
+  },
+  {
+    "rally_id": 3,
+    "turning_point_shot": 4,
+    "attention_change": 0.14092609286308289,
+    "win_probability": 0.578417956829071
+  },
+  {
+    "rally_id": 4,
+    "turning_point_shot": 21,
+    "attention_change": 0.018822915852069855,
+    "win_probability": 0.1332860291004181
+  },
+  {
+    "rally_id": 5,
+    "turning_point_shot": 3,
+    "attention_change": 0.14479279518127441,
+    "win_probability": 0.5803894400596619
+  },
+  {
+    "rally_id": 6,
+    "turning_point_shot": 5,
+    "attention_change": 0.10385643690824509,
+    "win_probability": 0.5760262608528137
+  },
+  {
+    "rally_id": 7,
+    "turning_point_shot": 9,
+    "attention_change": 0.05162853002548218,
+    "win_probability": 0.6993544101715088
+  },
+  {
+    "rally_id": 8,
+    "turning_point_shot": 9,
+    "attention_change": 0.04512077569961548,
+    "win_probability": 0.8181862235069275
+  },
+  {
+    "rally_id": 9,
+    "turning_point_shot": 5,
+    "attention_change": 0.08407524973154068,
+    "win_probability": 0.8965107202529907
+  },
+  {
+    "rally_id": 10,
+    "turning_point_shot": 18,
+    "attention_change": 0.026423482224345207,
+    "win_probability": 0.8644861578941345
+  },
+  {
+    "rally_id": 11,
+    "turning_point_shot": 29,
+    "attention_change": 0.01975247450172901,
+    "win_probability": 0.5526281595230103
+  },
+  {
+    "rally_id": 12,
+    "turning_point_shot": 4,
+    "attention_change": 0.0983642190694809,
+    "win_probability": 0.8893672823905945
+  },
+  {
+    "rally_id": 13,
+    "turning_point_shot": 19,
+    "attention_change": 0.019058234989643097,
+    "win_probability": 0.166721910238266
+  },
+  {
+    "rally_id": 14,
+    "turning_point_shot": 10,
+    "attention_change": 0.04261307045817375,
+    "win_probability": 0.5776655077934265
+  },
+  {
+    "rally_id": 15,
+    "turning_point_shot": 5,
+    "attention_change": 0.08814529329538345,
+    "win_probability": 0.7685470581054688
+  },
+  {
+    "rally_id": 16,
+    "turning_point_shot": 2,
+    "attention_change": 0.15916188061237335,
+    "win_probability": 0.2666482627391815
+  },
+  {
+    "rally_id": 17,
+    "turning_point_shot": 18,
+    "attention_change": 0.039016243070364,
+    "win_probability": 0.5817524790763855
+  },
+  {
+    "rally_id": 18,
+    "turning_point_shot": 39,
+    "attention_change": 0.014465684071183205,
+    "win_probability": 0.7246381044387817
+  },
+  {
+    "rally_id": 19,
+    "turning_point_shot": 8,
+    "attention_change": 0.08025646209716797,
+    "win_probability": 0.8101575374603271
+  },
+  {
+    "rally_id": 20,
+    "turning_point_shot": 4,
+    "attention_change": 0.07332347333431244,
+    "win_probability": 0.11007300019264221
+  },
+  {
+    "rally_id": 21,
+    "turning_point_shot": 1,
+    "attention_change": 0.25433990359306335,
+    "win_probability": 0.859977662563324
+  },
+  {
+    "rally_id": 22,
+    "turning_point_shot": 11,
+    "attention_change": 0.049496639519929886,
+    "win_probability": 0.5651059746742249
+  },
+  {
+    "rally_id": 23,
+    "turning_point_shot": 4,
+    "attention_change": 0.14698059856891632,
+    "win_probability": 0.5782586336135864
+  },
+  {
+    "rally_id": 24,
+    "turning_point_shot": 5,
+    "attention_change": 0.1100466400384903,
+    "win_probability": 0.5816275477409363
+  },
+  {
+    "rally_id": 25,
+    "turning_point_shot": 5,
+    "attention_change": 0.0959525927901268,
+    "win_probability": 0.8128758668899536
+  },
+  {
+    "rally_id": 26,
+    "turning_point_shot": 16,
+    "attention_change": 0.03425123170018196,
+    "win_probability": 0.8296152353286743
+  },
+  {
+    "rally_id": 27,
+    "turning_point_shot": 6,
+    "attention_change": 0.05987570062279701,
+    "win_probability": 0.21505239605903625
+  },
+  {
+    "rally_id": 28,
+    "turning_point_shot": 3,
+    "attention_change": 0.14143866300582886,
+    "win_probability": 0.5823182463645935
+  },
+  {
+    "rally_id": 29,
+    "turning_point_shot": 8,
+    "attention_change": 0.08039671927690506,
+    "win_probability": 0.5784515142440796
+  },
+  {
+    "rally_id": 30,
+    "turning_point_shot": 8,
+    "attention_change": 0.06431577354669571,
+    "win_probability": 0.5840186476707458
+  },
+  {
+    "rally_id": 31,
+    "turning_point_shot": 1,
+    "attention_change": 0.2994212210178375,
+    "win_probability": 0.5747749209403992
+  },
+  {
+    "rally_id": 0,
+    "turning_point_shot": 5,
+    "attention_change": 0.08987706154584885,
+    "win_probability": 0.7809398770332336
+  },
+  {
+    "rally_id": 1,
+    "turning_point_shot": 4,
+    "attention_change": 0.08881830424070358,
+    "win_probability": 0.5654849410057068
+  },
+  {
+    "rally_id": 2,
+    "turning_point_shot": 2,
+    "attention_change": 0.04534240812063217,
+    "win_probability": 0.1870417445898056
+  },
+  {
+    "rally_id": 3,
+    "turning_point_shot": 3,
+    "attention_change": 0.13216818869113922,
+    "win_probability": 0.7781532406806946
+  },
+  {
+    "rally_id": 4,
+    "turning_point_shot": 33,
+    "attention_change": 0.018980979919433594,
+    "win_probability": 0.5847808718681335
+  },
+  {
+    "rally_id": 5,
+    "turning_point_shot": 6,
+    "attention_change": 0.07637372612953186,
+    "win_probability": 0.896851658821106
+  },
+  {
+    "rally_id": 6,
+    "turning_point_shot": 12,
+    "attention_change": 0.024823792278766632,
+    "win_probability": 0.11825358122587204
+  },
+  {
+    "rally_id": 7,
+    "turning_point_shot": 4,
+    "attention_change": 0.0982520654797554,
+    "win_probability": 0.1731155663728714
+  },
+  {
+    "rally_id": 8,
+    "turning_point_shot": 25,
+    "attention_change": 0.02309240773320198,
+    "win_probability": 0.5759388208389282
+  },
+  {
+    "rally_id": 9,
+    "turning_point_shot": 16,
+    "attention_change": 0.02359928749501705,
+    "win_probability": 0.20602107048034668
+  },
+  {
+    "rally_id": 10,
+    "turning_point_shot": 17,
+    "attention_change": 0.023029133677482605,
+    "win_probability": 0.1332506239414215
+  },
+  {
+    "rally_id": 11,
+    "turning_point_shot": 21,
+    "attention_change": 0.032595280557870865,
+    "win_probability": 0.5742502808570862
+  },
+  {
+    "rally_id": 12,
+    "turning_point_shot": 38,
+    "attention_change": 0.01414023619145155,
+    "win_probability": 0.8683481812477112
+  },
+  {
+    "rally_id": 13,
+    "turning_point_shot": 5,
+    "attention_change": 0.10782381147146225,
+    "win_probability": 0.589796245098114
+  },
+  {
+    "rally_id": 14,
+    "turning_point_shot": 8,
+    "attention_change": 0.07949139922857285,
+    "win_probability": 0.5836409330368042
+  },
+  {
+    "rally_id": 15,
+    "turning_point_shot": 46,
+    "attention_change": 0.009907254949212074,
+    "win_probability": 0.5765258073806763
+  },
+  {
+    "rally_id": 16,
+    "turning_point_shot": 16,
+    "attention_change": 0.03309636190533638,
+    "win_probability": 0.7266696691513062
+  },
+  {
+    "rally_id": 17,
+    "turning_point_shot": 4,
+    "attention_change": 0.11485902220010757,
+    "win_probability": 0.8151285648345947
+  },
+  {
+    "rally_id": 18,
+    "turning_point_shot": 5,
+    "attention_change": 0.11747197806835175,
+    "win_probability": 0.5722699761390686
+  },
+  {
+    "rally_id": 19,
+    "turning_point_shot": 12,
+    "attention_change": 0.052058909088373184,
+    "win_probability": 0.5939921736717224
+  },
+  {
+    "rally_id": 20,
+    "turning_point_shot": 8,
+    "attention_change": 0.07834404706954956,
+    "win_probability": 0.5740843415260315
+  },
+  {
+    "rally_id": 21,
+    "turning_point_shot": 1,
+    "attention_change": 0.25692009925842285,
+    "win_probability": 0.748949408531189
+  },
+  {
+    "rally_id": 22,
+    "turning_point_shot": 11,
+    "attention_change": 0.04148915410041809,
+    "win_probability": 0.8129929900169373
+  },
+  {
+    "rally_id": 23,
+    "turning_point_shot": 1,
+    "attention_change": 0.26941075921058655,
+    "win_probability": 0.5862661600112915
+  },
+  {
+    "rally_id": 24,
+    "turning_point_shot": 6,
+    "attention_change": 0.09703238308429718,
+    "win_probability": 0.5923700332641602
+  },
+  {
+    "rally_id": 25,
+    "turning_point_shot": 10,
+    "attention_change": 0.06715432554483414,
+    "win_probability": 0.5823031663894653
+  },
+  {
+    "rally_id": 26,
+    "turning_point_shot": 14,
+    "attention_change": 0.048039231449365616,
+    "win_probability": 0.5828076601028442
+  },
+  {
+    "rally_id": 27,
+    "turning_point_shot": 3,
+    "attention_change": 0.10988098382949829,
+    "win_probability": 0.14684835076332092
+  },
+  {
+    "rally_id": 28,
+    "turning_point_shot": 14,
+    "attention_change": 0.03192252665758133,
+    "win_probability": 0.28724774718284607
+  },
+  {
+    "rally_id": 29,
+    "turning_point_shot": 4,
+    "attention_change": 0.09001825004816055,
+    "win_probability": 0.16561642289161682
+  },
+  {
+    "rally_id": 30,
+    "turning_point_shot": 12,
+    "attention_change": 0.03326654061675072,
+    "win_probability": 0.22661809623241425
+  },
+  {
+    "rally_id": 31,
+    "turning_point_shot": 33,
+    "attention_change": 0.016078229993581772,
+    "win_probability": 0.7349158525466919
+  },
+  {
+    "rally_id": 0,
+    "turning_point_shot": 2,
+    "attention_change": 0.07389365136623383,
+    "win_probability": 0.14143015444278717
+  },
+  {
+    "rally_id": 1,
+    "turning_point_shot": 18,
+    "attention_change": 0.020863542333245277,
+    "win_probability": 0.1307768076658249
+  },
+  {
+    "rally_id": 2,
+    "turning_point_shot": 4,
+    "attention_change": 0.11753948777914047,
+    "win_probability": 0.8687896728515625
+  },
+  {
+    "rally_id": 3,
+    "turning_point_shot": 11,
+    "attention_change": 0.03322882950305939,
+    "win_probability": 0.1424688845872879
+  },
+  {
+    "rally_id": 4,
+    "turning_point_shot": 19,
+    "attention_change": 0.028809798881411552,
+    "win_probability": 0.5733428001403809
+  },
+  {
+    "rally_id": 5,
+    "turning_point_shot": 15,
+    "attention_change": 0.04268620163202286,
+    "win_probability": 0.5760599970817566
+  },
+  {
+    "rally_id": 6,
+    "turning_point_shot": 18,
+    "attention_change": 0.023036900907754898,
+    "win_probability": 0.14755968749523163
+  },
+  {
+    "rally_id": 7,
+    "turning_point_shot": 2,
+    "attention_change": 0.03655185177922249,
+    "win_probability": 0.14799422025680542
+  },
+  {
+    "rally_id": 8,
+    "turning_point_shot": 8,
+    "attention_change": 0.07437995821237564,
+    "win_probability": 0.5758703351020813
+  },
+  {
+    "rally_id": 9,
+    "turning_point_shot": 10,
+    "attention_change": 0.04941556602716446,
+    "win_probability": 0.7213736176490784
+  },
+  {
+    "rally_id": 10,
+    "turning_point_shot": 8,
+    "attention_change": 0.06473706662654877,
+    "win_probability": 0.7337686419487
+  },
+  {
+    "rally_id": 11,
+    "turning_point_shot": 11,
+    "attention_change": 0.05245460942387581,
+    "win_probability": 0.5783048868179321
+  },
+  {
+    "rally_id": 12,
+    "turning_point_shot": 5,
+    "attention_change": 0.07009635865688324,
+    "win_probability": 0.14090794324874878
+  },
+  {
+    "rally_id": 13,
+    "turning_point_shot": 21,
+    "attention_change": 0.027886133641004562,
+    "win_probability": 0.5748765468597412
+  },
+  {
+    "rally_id": 14,
+    "turning_point_shot": 12,
+    "attention_change": 0.04108275845646858,
+    "win_probability": 0.8435075879096985
+  },
+  {
+    "rally_id": 15,
+    "turning_point_shot": 14,
+    "attention_change": 0.028081007301807404,
+    "win_probability": 0.1514098197221756
+  },
+  {
+    "rally_id": 16,
+    "turning_point_shot": 19,
+    "attention_change": 0.02566085383296013,
+    "win_probability": 0.895930290222168
+  },
+  {
+    "rally_id": 17,
+    "turning_point_shot": 15,
+    "attention_change": 0.02474694699048996,
+    "win_probability": 0.13144195079803467
+  },
+  {
+    "rally_id": 18,
+    "turning_point_shot": 25,
+    "attention_change": 0.019804632291197777,
+    "win_probability": 0.7716121673583984
+  },
+  {
+    "rally_id": 19,
+    "turning_point_shot": 8,
+    "attention_change": 0.046252697706222534,
+    "win_probability": 0.17344701290130615
+  },
+  {
+    "rally_id": 20,
+    "turning_point_shot": 39,
+    "attention_change": 0.013965373858809471,
+    "win_probability": 0.7296186685562134
+  },
+  {
+    "rally_id": 21,
+    "turning_point_shot": 5,
+    "attention_change": 0.09562376886606216,
+    "win_probability": 0.5751822590827942
+  },
+  {
+    "rally_id": 22,
+    "turning_point_shot": 41,
+    "attention_change": 0.009490287862718105,
+    "win_probability": 0.21032896637916565
+  },
+  {
+    "rally_id": 23,
+    "turning_point_shot": 26,
+    "attention_change": 0.021894514560699463,
+    "win_probability": 0.582230806350708
+  },
+  {
+    "rally_id": 24,
+    "turning_point_shot": 2,
+    "attention_change": 0.19529515504837036,
+    "win_probability": 0.8618268370628357
+  },
+  {
+    "rally_id": 25,
+    "turning_point_shot": 3,
+    "attention_change": 0.098176509141922,
+    "win_probability": 0.2109297811985016
+  },
+  {
+    "rally_id": 26,
+    "turning_point_shot": 2,
+    "attention_change": 0.15643592178821564,
+    "win_probability": 0.5696504712104797
+  },
+  {
+    "rally_id": 27,
+    "turning_point_shot": 4,
+    "attention_change": 0.07566653192043304,
+    "win_probability": 0.10248082131147385
+  },
+  {
+    "rally_id": 28,
+    "turning_point_shot": 6,
+    "attention_change": 0.077999547123909,
+    "win_probability": 0.8697041869163513
+  },
+  {
+    "rally_id": 29,
+    "turning_point_shot": 13,
+    "attention_change": 0.03772198408842087,
+    "win_probability": 0.7263227701187134
+  },
+  {
+    "rally_id": 30,
+    "turning_point_shot": 9,
+    "attention_change": 0.06160363554954529,
+    "win_probability": 0.5763682126998901
+  },
+  {
+    "rally_id": 31,
+    "turning_point_shot": 2,
+    "attention_change": 0.13276740908622742,
+    "win_probability": 0.12456876039505005
+  },
+  {
+    "rally_id": 0,
+    "turning_point_shot": 1,
+    "attention_change": 0.2254761904478073,
+    "win_probability": 0.15548931062221527
+  },
+  {
+    "rally_id": 1,
+    "turning_point_shot": 38,
+    "attention_change": 0.00956549309194088,
+    "win_probability": 0.13033345341682434
+  },
+  {
+    "rally_id": 2,
+    "turning_point_shot": 18,
+    "attention_change": 0.02804841659963131,
+    "win_probability": 0.8974635601043701
+  },
+  {
+    "rally_id": 3,
+    "turning_point_shot": 20,
+    "attention_change": 0.030354376882314682,
+    "win_probability": 0.7828416228294373
+  },
+  {
+    "rally_id": 4,
+    "turning_point_shot": 7,
+    "attention_change": 0.06929199397563934,
+    "win_probability": 0.5775015950202942
+  },
+  {
+    "rally_id": 5,
+    "turning_point_shot": 12,
+    "attention_change": 0.0576261542737484,
+    "win_probability": 0.5864297747612
+  },
+  {
+    "rally_id": 6,
+    "turning_point_shot": 2,
+    "attention_change": 0.21668396890163422,
+    "win_probability": 0.8415400981903076
+  },
+  {
+    "rally_id": 7,
+    "turning_point_shot": 10,
+    "attention_change": 0.05205674469470978,
+    "win_probability": 0.8463131189346313
+  },
+  {
+    "rally_id": 8,
+    "turning_point_shot": 7,
+    "attention_change": 0.050100695341825485,
+    "win_probability": 0.11237366497516632
+  },
+  {
+    "rally_id": 9,
+    "turning_point_shot": 14,
+    "attention_change": 0.03436979278922081,
+    "win_probability": 0.8639146089553833
+  },
+  {
+    "rally_id": 10,
+    "turning_point_shot": 10,
+    "attention_change": 0.0608835443854332,
+    "win_probability": 0.755386471748352
+  },
+  {
+    "rally_id": 11,
+    "turning_point_shot": 2,
+    "attention_change": 0.15043994784355164,
+    "win_probability": 0.572849452495575
+  },
+  {
+    "rally_id": 12,
+    "turning_point_shot": 7,
+    "attention_change": 0.07303761690855026,
+    "win_probability": 0.5740251541137695
+  },
+  {
+    "rally_id": 13,
+    "turning_point_shot": 8,
+    "attention_change": 0.03066183626651764,
+    "win_probability": 0.11929713189601898
+  },
+  {
+    "rally_id": 14,
+    "turning_point_shot": 2,
+    "attention_change": 0.2211594432592392,
+    "win_probability": 0.5795632600784302
+  },
+  {
+    "rally_id": 15,
+    "turning_point_shot": 10,
+    "attention_change": 0.03381740674376488,
+    "win_probability": 0.12213951349258423
+  },
+  {
+    "rally_id": 16,
+    "turning_point_shot": 8,
+    "attention_change": 0.0746496170759201,
+    "win_probability": 0.5767679810523987
+  },
+  {
+    "rally_id": 17,
+    "turning_point_shot": 29,
+    "attention_change": 0.01806694269180298,
+    "win_probability": 0.8425602316856384
+  },
+  {
+    "rally_id": 18,
+    "turning_point_shot": 16,
+    "attention_change": 0.03961001709103584,
+    "win_probability": 0.5843853950500488
+  },
+  {
+    "rally_id": 19,
+    "turning_point_shot": 18,
+    "attention_change": 0.02524460293352604,
+    "win_probability": 0.5756722092628479
+  },
+  {
+    "rally_id": 20,
+    "turning_point_shot": 12,
+    "attention_change": 0.023012159392237663,
+    "win_probability": 0.11456409096717834
+  },
+  {
+    "rally_id": 21,
+    "turning_point_shot": 25,
+    "attention_change": 0.020769070833921432,
+    "win_probability": 0.8691743016242981
+  },
+  {
+    "rally_id": 22,
+    "turning_point_shot": 6,
+    "attention_change": 0.05517454817891121,
+    "win_probability": 0.11644688248634338
+  },
+  {
+    "rally_id": 23,
+    "turning_point_shot": 9,
+    "attention_change": 0.049565453082323074,
+    "win_probability": 0.2716238498687744
+  },
+  {
+    "rally_id": 24,
+    "turning_point_shot": 7,
+    "attention_change": 0.0650506392121315,
+    "win_probability": 0.7830726504325867
+  },
+  {
+    "rally_id": 25,
+    "turning_point_shot": 3,
+    "attention_change": 0.14385433495044708,
+    "win_probability": 0.7337034344673157
+  },
+  {
+    "rally_id": 26,
+    "turning_point_shot": 4,
+    "attention_change": 0.09360875934362411,
+    "win_probability": 0.34775081276893616
+  },
+  {
+    "rally_id": 27,
+    "turning_point_shot": 1,
+    "attention_change": 0.20524364709854126,
+    "win_probability": 0.17270910739898682
+  },
+  {
+    "rally_id": 28,
+    "turning_point_shot": 20,
+    "attention_change": 0.024279959499835968,
+    "win_probability": 0.8957201242446899
+  },
+  {
+    "rally_id": 29,
+    "turning_point_shot": 33,
+    "attention_change": 0.012428086251020432,
+    "win_probability": 0.1601077914237976
+  },
+  {
+    "rally_id": 30,
+    "turning_point_shot": 36,
+    "attention_change": 0.015885695815086365,
+    "win_probability": 0.8676755428314209
+  },
+  {
+    "rally_id": 31,
+    "turning_point_shot": 15,
+    "attention_change": 0.031189726665616035,
+    "win_probability": 0.8961091041564941
+  },
+  {
+    "rally_id": 0,
+    "turning_point_shot": 2,
+    "attention_change": 0.2061356157064438,
+    "win_probability": 0.8516666293144226
+  },
+  {
+    "rally_id": 1,
+    "turning_point_shot": 14,
+    "attention_change": 0.0404377207159996,
+    "win_probability": 0.7211092710494995
+  },
+  {
+    "rally_id": 2,
+    "turning_point_shot": 14,
+    "attention_change": 0.0474325567483902,
+    "win_probability": 0.5829750299453735
+  },
+  {
+    "rally_id": 3,
+    "turning_point_shot": 9,
+    "attention_change": 0.05511999502778053,
+    "win_probability": 0.7536636590957642
+  },
+  {
+    "rally_id": 4,
+    "turning_point_shot": 22,
+    "attention_change": 0.01941733993589878,
+    "win_probability": 0.21701861917972565
+  },
+  {
+    "rally_id": 5,
+    "turning_point_shot": 11,
+    "attention_change": 0.04418633505702019,
+    "win_probability": 0.8622103333473206
+  },
+  {
+    "rally_id": 6,
+    "turning_point_shot": 3,
+    "attention_change": 0.12936732172966003,
+    "win_probability": 0.8958810567855835
+  },
+  {
+    "rally_id": 7,
+    "turning_point_shot": 2,
+    "attention_change": 0.1576613038778305,
+    "win_probability": 0.16515690088272095
+  },
+  {
+    "rally_id": 8,
+    "turning_point_shot": 2,
+    "attention_change": 0.16083356738090515,
+    "win_probability": 0.26746296882629395
+  },
+  {
+    "rally_id": 9,
+    "turning_point_shot": 17,
+    "attention_change": 0.030287981033325195,
+    "win_probability": 0.7171918749809265
+  },
+  {
+    "rally_id": 10,
+    "turning_point_shot": 2,
+    "attention_change": 0.1649612933397293,
+    "win_probability": 0.8850244879722595
+  },
+  {
+    "rally_id": 11,
+    "turning_point_shot": 10,
+    "attention_change": 0.0681099146604538,
+    "win_probability": 0.5871341228485107
+  },
+  {
+    "rally_id": 12,
+    "turning_point_shot": 12,
+    "attention_change": 0.038925301283597946,
+    "win_probability": 0.5815980434417725
+  },
+  {
+    "rally_id": 13,
+    "turning_point_shot": 19,
+    "attention_change": 0.025656510144472122,
+    "win_probability": 0.8543907403945923
+  },
+  {
+    "rally_id": 14,
+    "turning_point_shot": 2,
+    "attention_change": 0.14385972917079926,
+    "win_probability": 0.14400312304496765
+  },
+  {
+    "rally_id": 15,
+    "turning_point_shot": 18,
+    "attention_change": 0.03167874738574028,
+    "win_probability": 0.7428807616233826
+  },
+  {
+    "rally_id": 16,
+    "turning_point_shot": 16,
+    "attention_change": 0.030108092352747917,
+    "win_probability": 0.8667864203453064
+  },
+  {
+    "rally_id": 17,
+    "turning_point_shot": 5,
+    "attention_change": 0.07561402767896652,
+    "win_probability": 0.19010517001152039
+  },
+  {
+    "rally_id": 18,
+    "turning_point_shot": 3,
+    "attention_change": 0.09384698420763016,
+    "win_probability": 0.13275256752967834
+  },
+  {
+    "rally_id": 19,
+    "turning_point_shot": 7,
+    "attention_change": 0.06449311226606369,
+    "win_probability": 0.8961420059204102
+  },
+  {
+    "rally_id": 20,
+    "turning_point_shot": 5,
+    "attention_change": 0.11192309111356735,
+    "win_probability": 0.5741965174674988
+  },
+  {
+    "rally_id": 21,
+    "turning_point_shot": 18,
+    "attention_change": 0.024853413924574852,
+    "win_probability": 0.5810965299606323
+  },
+  {
+    "rally_id": 22,
+    "turning_point_shot": 4,
+    "attention_change": 0.13746018707752228,
+    "win_probability": 0.5778821706771851
+  },
+  {
+    "rally_id": 23,
+    "turning_point_shot": 6,
+    "attention_change": 0.10316435247659683,
+    "win_probability": 0.5833821892738342
+  },
+  {
+    "rally_id": 24,
+    "turning_point_shot": 3,
+    "attention_change": 0.14535795152187347,
+    "win_probability": 0.5825228691101074
+  },
+  {
+    "rally_id": 25,
+    "turning_point_shot": 9,
+    "attention_change": 0.04078896343708038,
+    "win_probability": 0.19943873584270477
+  },
+  {
+    "rally_id": 26,
+    "turning_point_shot": 8,
+    "attention_change": 0.07268582284450531,
+    "win_probability": 0.5811623930931091
+  },
+  {
+    "rally_id": 27,
+    "turning_point_shot": 25,
+    "attention_change": 0.023302249610424042,
+    "win_probability": 0.5757409930229187
+  },
+  {
+    "rally_id": 28,
+    "turning_point_shot": 10,
+    "attention_change": 0.052216384559869766,
+    "win_probability": 0.5824995040893555
+  },
+  {
+    "rally_id": 29,
+    "turning_point_shot": 5,
+    "attention_change": 0.10025560855865479,
+    "win_probability": 0.5768729448318481
+  },
+  {
+    "rally_id": 30,
+    "turning_point_shot": 7,
+    "attention_change": 0.07540355622768402,
+    "win_probability": 0.5789945721626282
+  },
+  {
+    "rally_id": 31,
+    "turning_point_shot": 3,
+    "attention_change": 0.1293637603521347,
+    "win_probability": 0.8963987827301025
+  },
+  {
+    "rally_id": 0,
+    "turning_point_shot": 14,
+    "attention_change": 0.03008534573018551,
+    "win_probability": 0.5734714269638062
+  },
+  {
+    "rally_id": 1,
+    "turning_point_shot": 4,
+    "attention_change": 0.07736968994140625,
+    "win_probability": 0.10041357576847076
+  },
+  {
+    "rally_id": 2,
+    "turning_point_shot": 12,
+    "attention_change": 0.036489252001047134,
+    "win_probability": 0.16120582818984985
+  },
+  {
+    "rally_id": 3,
+    "turning_point_shot": 9,
+    "attention_change": 0.04154602438211441,
+    "win_probability": 0.16002191603183746
+  },
+  {
+    "rally_id": 4,
+    "turning_point_shot": 11,
+    "attention_change": 0.03513970226049423,
+    "win_probability": 0.156870037317276
+  },
+  {
+    "rally_id": 5,
+    "turning_point_shot": 10,
+    "attention_change": 0.04000331461429596,
+    "win_probability": 0.20130135118961334
+  },
+  {
+    "rally_id": 6,
+    "turning_point_shot": 9,
+    "attention_change": 0.05606088414788246,
+    "win_probability": 0.5823763012886047
+  },
+  {
+    "rally_id": 7,
+    "turning_point_shot": 14,
+    "attention_change": 0.03894628584384918,
+    "win_probability": 0.8695211410522461
+  },
+  {
+    "rally_id": 8,
+    "turning_point_shot": 4,
+    "attention_change": 0.10145440697669983,
+    "win_probability": 0.8977330327033997
+  },
+  {
+    "rally_id": 9,
+    "turning_point_shot": 31,
+    "attention_change": 0.020637517794966698,
+    "win_probability": 0.5877599120140076
+  },
+  {
+    "rally_id": 10,
+    "turning_point_shot": 5,
+    "attention_change": 0.0678105354309082,
+    "win_probability": 0.14876852929592133
+  },
+  {
+    "rally_id": 11,
+    "turning_point_shot": 2,
+    "attention_change": 0.1576613038778305,
+    "win_probability": 0.16515690088272095
+  },
+  {
+    "rally_id": 12,
+    "turning_point_shot": 16,
+    "attention_change": 0.026589956134557724,
+    "win_probability": 0.21936926245689392
+  },
+  {
+    "rally_id": 13,
+    "turning_point_shot": 3,
+    "attention_change": 0.14452512562274933,
+    "win_probability": 0.5779218673706055
+  },
+  {
+    "rally_id": 14,
+    "turning_point_shot": 3,
+    "attention_change": 0.14917948842048645,
+    "win_probability": 0.5749757289886475
+  },
+  {
+    "rally_id": 15,
+    "turning_point_shot": 5,
+    "attention_change": 0.09262483566999435,
+    "win_probability": 0.5328212380409241
+  },
+  {
+    "rally_id": 16,
+    "turning_point_shot": 4,
+    "attention_change": 0.09815254807472229,
+    "win_probability": 0.767539918422699
+  },
+  {
+    "rally_id": 17,
+    "turning_point_shot": 4,
+    "attention_change": 0.021717550233006477,
+    "win_probability": 0.09969936311244965
+  },
+  {
+    "rally_id": 18,
+    "turning_point_shot": 18,
+    "attention_change": 0.02640765905380249,
+    "win_probability": 0.8592991232872009
+  },
+  {
+    "rally_id": 19,
+    "turning_point_shot": 16,
+    "attention_change": 0.03747151046991348,
+    "win_probability": 0.8502926230430603
+  },
+  {
+    "rally_id": 20,
+    "turning_point_shot": 8,
+    "attention_change": 0.052904147654771805,
+    "win_probability": 0.5807223320007324
+  },
+  {
+    "rally_id": 21,
+    "turning_point_shot": 16,
+    "attention_change": 0.04029591381549835,
+    "win_probability": 0.8163281083106995
+  },
+  {
+    "rally_id": 22,
+    "turning_point_shot": 5,
+    "attention_change": 0.09285258501768112,
+    "win_probability": 0.8425896167755127
+  },
+  {
+    "rally_id": 23,
+    "turning_point_shot": 2,
+    "attention_change": 0.2211594432592392,
+    "win_probability": 0.5795632600784302
+  },
+  {
+    "rally_id": 24,
+    "turning_point_shot": 5,
+    "attention_change": 0.08677804470062256,
+    "win_probability": 0.8937715291976929
+  },
+  {
+    "rally_id": 25,
+    "turning_point_shot": 31,
+    "attention_change": 0.012039358727633953,
+    "win_probability": 0.15278910100460052
+  },
+  {
+    "rally_id": 26,
+    "turning_point_shot": 9,
+    "attention_change": 0.07304118573665619,
+    "win_probability": 0.5773664712905884
+  },
+  {
+    "rally_id": 27,
+    "turning_point_shot": 3,
+    "attention_change": 0.13538509607315063,
+    "win_probability": 0.583612859249115
+  },
+  {
+    "rally_id": 28,
+    "turning_point_shot": 4,
+    "attention_change": 0.13242952525615692,
+    "win_probability": 0.755646824836731
+  },
+  {
+    "rally_id": 29,
+    "turning_point_shot": 15,
+    "attention_change": 0.03915077820420265,
+    "win_probability": 0.5980984568595886
+  },
+  {
+    "rally_id": 30,
+    "turning_point_shot": 12,
+    "attention_change": 0.05687563121318817,
+    "win_probability": 0.6494482159614563
+  },
+  {
+    "rally_id": 31,
+    "turning_point_shot": 2,
+    "attention_change": 0.16499023139476776,
+    "win_probability": 0.7939126491546631
+  },
+  {
+    "rally_id": 0,
+    "turning_point_shot": 2,
+    "attention_change": 0.16438186168670654,
+    "win_probability": 0.7748773694038391
+  },
+  {
+    "rally_id": 1,
+    "turning_point_shot": 15,
+    "attention_change": 0.03159908577799797,
+    "win_probability": 0.8393571972846985
+  },
+  {
+    "rally_id": 2,
+    "turning_point_shot": 1,
+    "attention_change": 0.27088794112205505,
+    "win_probability": 0.8148006200790405
+  },
+  {
+    "rally_id": 3,
+    "turning_point_shot": 8,
+    "attention_change": 0.04860316962003708,
+    "win_probability": 0.5537205934524536
+  },
+  {
+    "rally_id": 4,
+    "turning_point_shot": 17,
+    "attention_change": 0.03628456965088844,
+    "win_probability": 0.5794103741645813
+  },
+  {
+    "rally_id": 5,
+    "turning_point_shot": 7,
+    "attention_change": 0.06782249361276627,
+    "win_probability": 0.8297813534736633
+  },
+  {
+    "rally_id": 6,
+    "turning_point_shot": 3,
+    "attention_change": 0.12913978099822998,
+    "win_probability": 0.8349377512931824
+  },
+  {
+    "rally_id": 7,
+    "turning_point_shot": 30,
+    "attention_change": 0.018020007759332657,
+    "win_probability": 0.7258749008178711
+  },
+  {
+    "rally_id": 8,
+    "turning_point_shot": 3,
+    "attention_change": 0.1303611695766449,
+    "win_probability": 0.825188934803009
+  },
+  {
+    "rally_id": 9,
+    "turning_point_shot": 15,
+    "attention_change": 0.041931167244911194,
+    "win_probability": 0.574219822883606
+  },
+  {
+    "rally_id": 10,
+    "turning_point_shot": 16,
+    "attention_change": 0.045058880001306534,
+    "win_probability": 0.5833015441894531
+  },
+  {
+    "rally_id": 11,
+    "turning_point_shot": 11,
+    "attention_change": 0.04351121932268143,
+    "win_probability": 0.8480406999588013
+  },
+  {
+    "rally_id": 12,
+    "turning_point_shot": 22,
+    "attention_change": 0.019696930423378944,
+    "win_probability": 0.20342449843883514
+  },
+  {
+    "rally_id": 13,
+    "turning_point_shot": 8,
+    "attention_change": 0.034090444445610046,
+    "win_probability": 0.10853810608386993
+  },
+  {
+    "rally_id": 14,
+    "turning_point_shot": 30,
+    "attention_change": 0.02069639414548874,
+    "win_probability": 0.8505864143371582
+  },
+  {
+    "rally_id": 15,
+    "turning_point_shot": 11,
+    "attention_change": 0.04740852117538452,
+    "win_probability": 0.8610930442810059
+  },
+  {
+    "rally_id": 16,
+    "turning_point_shot": 6,
+    "attention_change": 0.07723630964756012,
+    "win_probability": 0.864719033241272
+  },
+  {
+    "rally_id": 17,
+    "turning_point_shot": 2,
+    "attention_change": 0.2080950140953064,
+    "win_probability": 0.5733926892280579
+  },
+  {
+    "rally_id": 18,
+    "turning_point_shot": 1,
+    "attention_change": 0.26941075921058655,
+    "win_probability": 0.5862661600112915
+  },
+  {
+    "rally_id": 19,
+    "turning_point_shot": 4,
+    "attention_change": 0.0792795717716217,
+    "win_probability": 0.13656669855117798
+  },
+  {
+    "rally_id": 20,
+    "turning_point_shot": 8,
+    "attention_change": 0.06823009252548218,
+    "win_probability": 0.8677717447280884
+  },
+  {
+    "rally_id": 21,
+    "turning_point_shot": 4,
+    "attention_change": 0.07898733764886856,
+    "win_probability": 0.18933875858783722
+  },
+  {
+    "rally_id": 22,
+    "turning_point_shot": 11,
+    "attention_change": 0.04770766198635101,
+    "win_probability": 0.7888530492782593
+  },
+  {
+    "rally_id": 23,
+    "turning_point_shot": 7,
+    "attention_change": 0.049153346568346024,
+    "win_probability": 0.1672484129667282
+  },
+  {
+    "rally_id": 24,
+    "turning_point_shot": 8,
+    "attention_change": 0.07802987843751907,
+    "win_probability": 0.5813522338867188
+  },
+  {
+    "rally_id": 25,
+    "turning_point_shot": 3,
+    "attention_change": 0.14456583559513092,
+    "win_probability": 0.5840163826942444
+  },
+  {
+    "rally_id": 26,
+    "turning_point_shot": 10,
+    "attention_change": 0.06473293155431747,
+    "win_probability": 0.8169552087783813
+  },
+  {
+    "rally_id": 27,
+    "turning_point_shot": 3,
+    "attention_change": 0.125235453248024,
+    "win_probability": 0.6804490089416504
+  },
+  {
+    "rally_id": 28,
+    "turning_point_shot": 20,
+    "attention_change": 0.023894241079688072,
+    "win_probability": 0.8441222310066223
+  },
+  {
+    "rally_id": 29,
+    "turning_point_shot": 8,
+    "attention_change": 0.053823839873075485,
+    "win_probability": 0.8968443870544434
+  },
+  {
+    "rally_id": 30,
+    "turning_point_shot": 23,
+    "attention_change": 0.022551890462636948,
+    "win_probability": 0.7159483432769775
+  },
+  {
+    "rally_id": 31,
+    "turning_point_shot": 8,
+    "attention_change": 0.04177040979266167,
+    "win_probability": 0.1262945681810379
+  },
+  {
+    "rally_id": 0,
+    "turning_point_shot": 23,
+    "attention_change": 0.021987060084939003,
+    "win_probability": 0.8469837307929993
+  },
+  {
+    "rally_id": 1,
+    "turning_point_shot": 15,
+    "attention_change": 0.03219567984342575,
+    "win_probability": 0.8564112186431885
+  },
+  {
+    "rally_id": 2,
+    "turning_point_shot": 14,
+    "attention_change": 0.04887213185429573,
+    "win_probability": 0.646429181098938
+  },
+  {
+    "rally_id": 3,
+    "turning_point_shot": 5,
+    "attention_change": 0.10212457925081253,
+    "win_probability": 0.5750460028648376
+  },
+  {
+    "rally_id": 4,
+    "turning_point_shot": 6,
+    "attention_change": 0.08211521804332733,
+    "win_probability": 0.8684452772140503
+  },
+  {
+    "rally_id": 5,
+    "turning_point_shot": 1,
+    "attention_change": 0.21325866878032684,
+    "win_probability": 0.13933800160884857
+  },
+  {
+    "rally_id": 6,
+    "turning_point_shot": 5,
+    "attention_change": 0.10715695470571518,
+    "win_probability": 0.5785484910011292
+  },
+  {
+    "rally_id": 7,
+    "turning_point_shot": 4,
+    "attention_change": 0.10206396877765656,
+    "win_probability": 0.734436571598053
+  },
+  {
+    "rally_id": 8,
+    "turning_point_shot": 5,
+    "attention_change": 0.0840335413813591,
+    "win_probability": 0.8873265981674194
+  },
+  {
+    "rally_id": 9,
+    "turning_point_shot": 14,
+    "attention_change": 0.012264630757272243,
+    "win_probability": 0.15794682502746582
+  },
+  {
+    "rally_id": 10,
+    "turning_point_shot": 15,
+    "attention_change": 0.03455466032028198,
+    "win_probability": 0.5815808176994324
+  },
+  {
+    "rally_id": 11,
+    "turning_point_shot": 19,
+    "attention_change": 0.029447287321090698,
+    "win_probability": 0.5815505981445312
+  },
+  {
+    "rally_id": 12,
+    "turning_point_shot": 10,
+    "attention_change": 0.05512561276555061,
+    "win_probability": 0.8524647951126099
+  },
+  {
+    "rally_id": 13,
+    "turning_point_shot": 5,
+    "attention_change": 0.06849092990159988,
+    "win_probability": 0.1284373700618744
+  },
+  {
+    "rally_id": 14,
+    "turning_point_shot": 4,
+    "attention_change": 0.13074366748332977,
+    "win_probability": 0.8201735615730286
+  },
+  {
+    "rally_id": 15,
+    "turning_point_shot": 4,
+    "attention_change": 0.07956770807504654,
+    "win_probability": 0.16125980019569397
+  },
+  {
+    "rally_id": 16,
+    "turning_point_shot": 3,
+    "attention_change": 0.10218256711959839,
+    "win_probability": 0.1986573338508606
+  },
+  {
+    "rally_id": 17,
+    "turning_point_shot": 14,
+    "attention_change": 0.024732325226068497,
+    "win_probability": 0.11562315374612808
+  },
+  {
+    "rally_id": 18,
+    "turning_point_shot": 11,
+    "attention_change": 0.050578076392412186,
+    "win_probability": 0.5733682513237
+  },
+  {
+    "rally_id": 19,
+    "turning_point_shot": 9,
+    "attention_change": 0.04169691726565361,
+    "win_probability": 0.1347399652004242
+  },
+  {
+    "rally_id": 20,
+    "turning_point_shot": 3,
+    "attention_change": 0.13619421422481537,
+    "win_probability": 0.39298805594444275
+  },
+  {
+    "rally_id": 21,
+    "turning_point_shot": 16,
+    "attention_change": 0.030525900423526764,
+    "win_probability": 0.897352397441864
+  },
+  {
+    "rally_id": 22,
+    "turning_point_shot": 35,
+    "attention_change": 0.014869924634695053,
+    "win_probability": 0.5786139965057373
+  },
+  {
+    "rally_id": 23,
+    "turning_point_shot": 3,
+    "attention_change": 0.14370280504226685,
+    "win_probability": 0.5760161280632019
+  },
+  {
+    "rally_id": 24,
+    "turning_point_shot": 13,
+    "attention_change": 0.030348369851708412,
+    "win_probability": 0.12981225550174713
+  },
+  {
+    "rally_id": 25,
+    "turning_point_shot": 6,
+    "attention_change": 0.06724005192518234,
+    "win_probability": 0.5759303569793701
+  },
+  {
+    "rally_id": 26,
+    "turning_point_shot": 1,
+    "attention_change": 0.2646741271018982,
+    "win_probability": 0.8301297426223755
+  },
+  {
+    "rally_id": 27,
+    "turning_point_shot": 2,
+    "attention_change": 0.21428360044956207,
+    "win_probability": 0.5874024629592896
+  },
+  {
+    "rally_id": 28,
+    "turning_point_shot": 1,
+    "attention_change": 0.21585942804813385,
+    "win_probability": 0.179805725812912
+  },
+  {
+    "rally_id": 29,
+    "turning_point_shot": 17,
+    "attention_change": 0.03172418102622032,
+    "win_probability": 0.5720075964927673
+  },
+  {
+    "rally_id": 30,
+    "turning_point_shot": 14,
+    "attention_change": 0.037937846034765244,
+    "win_probability": 0.8710209727287292
+  },
+  {
+    "rally_id": 31,
+    "turning_point_shot": 5,
+    "attention_change": 0.08016858994960785,
+    "win_probability": 0.6890090703964233
+  },
+  {
+    "rally_id": 0,
+    "turning_point_shot": 4,
+    "attention_change": 0.09332464635372162,
+    "win_probability": 0.5809762477874756
+  },
+  {
+    "rally_id": 1,
+    "turning_point_shot": 7,
+    "attention_change": 0.05737658217549324,
+    "win_probability": 0.18465808033943176
+  },
+  {
+    "rally_id": 2,
+    "turning_point_shot": 10,
+    "attention_change": 0.05002860352396965,
+    "win_probability": 0.582230269908905
+  },
+  {
+    "rally_id": 3,
+    "turning_point_shot": 19,
+    "attention_change": 0.028075046837329865,
+    "win_probability": 0.5832034349441528
+  },
+  {
+    "rally_id": 4,
+    "turning_point_shot": 38,
+    "attention_change": 0.012956381775438786,
+    "win_probability": 0.5816015601158142
+  },
+  {
+    "rally_id": 5,
+    "turning_point_shot": 3,
+    "attention_change": 0.15208514034748077,
+    "win_probability": 0.6399403214454651
+  },
+  {
+    "rally_id": 6,
+    "turning_point_shot": 33,
+    "attention_change": 0.01233974564820528,
+    "win_probability": 0.1470574289560318
+  },
+  {
+    "rally_id": 7,
+    "turning_point_shot": 8,
+    "attention_change": 0.08401410281658173,
+    "win_probability": 0.5909664630889893
+  },
+  {
+    "rally_id": 8,
+    "turning_point_shot": 3,
+    "attention_change": 0.14394137263298035,
+    "win_probability": 0.5774305462837219
+  },
+  {
+    "rally_id": 9,
+    "turning_point_shot": 10,
+    "attention_change": 0.03511835262179375,
+    "win_probability": 0.14378899335861206
+  },
+  {
+    "rally_id": 10,
+    "turning_point_shot": 1,
+    "attention_change": 0.27088794112205505,
+    "win_probability": 0.8148006200790405
+  },
+  {
+    "rally_id": 11,
+    "turning_point_shot": 9,
+    "attention_change": 0.05703992024064064,
+    "win_probability": 0.721572756767273
+  },
+  {
+    "rally_id": 12,
+    "turning_point_shot": 21,
+    "attention_change": 0.0251658596098423,
+    "win_probability": 0.5851704478263855
+  },
+  {
+    "rally_id": 13,
+    "turning_point_shot": 8,
+    "attention_change": 0.05517281964421272,
+    "win_probability": 0.5823697447776794
+  },
+  {
+    "rally_id": 14,
+    "turning_point_shot": 4,
+    "attention_change": 0.09514854103326797,
+    "win_probability": 0.5769805312156677
+  },
+  {
+    "rally_id": 15,
+    "turning_point_shot": 7,
+    "attention_change": 0.07907222956418991,
+    "win_probability": 0.5769044160842896
+  },
+  {
+    "rally_id": 16,
+    "turning_point_shot": 7,
+    "attention_change": 0.07584013044834137,
+    "win_probability": 0.5846846699714661
+  },
+  {
+    "rally_id": 17,
+    "turning_point_shot": 22,
+    "attention_change": 0.022737810388207436,
+    "win_probability": 0.5842113494873047
+  },
+  {
+    "rally_id": 18,
+    "turning_point_shot": 22,
+    "attention_change": 0.016320083290338516,
+    "win_probability": 0.09914319217205048
+  },
+  {
+    "rally_id": 19,
+    "turning_point_shot": 8,
+    "attention_change": 0.0781722292304039,
+    "win_probability": 0.5808623433113098
+  },
+  {
+    "rally_id": 20,
+    "turning_point_shot": 9,
+    "attention_change": 0.05209996551275253,
+    "win_probability": 0.8505346179008484
+  },
+  {
+    "rally_id": 21,
+    "turning_point_shot": 11,
+    "attention_change": 0.051567766815423965,
+    "win_probability": 0.5777314305305481
+  },
+  {
+    "rally_id": 22,
+    "turning_point_shot": 24,
+    "attention_change": 0.021945316344499588,
+    "win_probability": 0.8793091177940369
+  },
+  {
+    "rally_id": 23,
+    "turning_point_shot": 7,
+    "attention_change": 0.058293417096138,
+    "win_probability": 0.8239801526069641
+  },
+  {
+    "rally_id": 24,
+    "turning_point_shot": 5,
+    "attention_change": 0.07182818651199341,
+    "win_probability": 0.20439758896827698
+  },
+  {
+    "rally_id": 25,
+    "turning_point_shot": 4,
+    "attention_change": 0.08170708268880844,
+    "win_probability": 0.13028350472450256
+  },
+  {
+    "rally_id": 26,
+    "turning_point_shot": 1,
+    "attention_change": 0.25387606024742126,
+    "win_probability": 0.43767091631889343
+  },
+  {
+    "rally_id": 27,
+    "turning_point_shot": 4,
+    "attention_change": 0.11232055723667145,
+    "win_probability": 0.8684854507446289
+  },
+  {
+    "rally_id": 28,
+    "turning_point_shot": 4,
+    "attention_change": 0.07563575357198715,
+    "win_probability": 0.11427946388721466
+  },
+  {
+    "rally_id": 29,
+    "turning_point_shot": 9,
+    "attention_change": 0.05630243942141533,
+    "win_probability": 0.5765895247459412
+  },
+  {
+    "rally_id": 30,
+    "turning_point_shot": 11,
+    "attention_change": 0.042588453739881516,
+    "win_probability": 0.8042101263999939
+  },
+  {
+    "rally_id": 31,
+    "turning_point_shot": 5,
+    "attention_change": 0.09791889786720276,
+    "win_probability": 0.5755396485328674
+  },
+  {
+    "rally_id": 0,
+    "turning_point_shot": 1,
+    "attention_change": 0.25433990359306335,
+    "win_probability": 0.859977662563324
+  },
+  {
+    "rally_id": 1,
+    "turning_point_shot": 1,
+    "attention_change": 0.25780338048934937,
+    "win_probability": 0.25640547275543213
+  },
+  {
+    "rally_id": 2,
+    "turning_point_shot": 25,
+    "attention_change": 0.01922251656651497,
+    "win_probability": 0.3117428421974182
+  },
+  {
+    "rally_id": 3,
+    "turning_point_shot": 11,
+    "attention_change": 0.033522915095090866,
+    "win_probability": 0.10857272148132324
+  },
+  {
+    "rally_id": 4,
+    "turning_point_shot": 5,
+    "attention_change": 0.06641668826341629,
+    "win_probability": 0.1643436849117279
+  },
+  {
+    "rally_id": 5,
+    "turning_point_shot": 5,
+    "attention_change": 0.06109116971492767,
+    "win_probability": 0.13694216310977936
+  },
+  {
+    "rally_id": 6,
+    "turning_point_shot": 14,
+    "attention_change": 0.03304700553417206,
+    "win_probability": 0.8453875184059143
+  },
+  {
+    "rally_id": 7,
+    "turning_point_shot": 10,
+    "attention_change": 0.06778564304113388,
+    "win_probability": 0.5764220952987671
+  },
+  {
+    "rally_id": 8,
+    "turning_point_shot": 7,
+    "attention_change": 0.0639311745762825,
+    "win_probability": 0.8961760997772217
+  },
+  {
+    "rally_id": 9,
+    "turning_point_shot": 15,
+    "attention_change": 0.036140333861112595,
+    "win_probability": 0.5792525410652161
+  },
+  {
+    "rally_id": 10,
+    "turning_point_shot": 8,
+    "attention_change": 0.04713534936308861,
+    "win_probability": 0.16609197854995728
+  },
+  {
+    "rally_id": 11,
+    "turning_point_shot": 2,
+    "attention_change": 0.1994083821773529,
+    "win_probability": 0.8570435047149658
+  },
+  {
+    "rally_id": 12,
+    "turning_point_shot": 3,
+    "attention_change": 0.10803818702697754,
+    "win_probability": 0.26875266432762146
+  },
+  {
+    "rally_id": 13,
+    "turning_point_shot": 5,
+    "attention_change": 0.09383110702037811,
+    "win_probability": 0.5816141963005066
+  },
+  {
+    "rally_id": 14,
+    "turning_point_shot": 9,
+    "attention_change": 0.050702039152383804,
+    "win_probability": 0.7545669674873352
+  },
+  {
+    "rally_id": 15,
+    "turning_point_shot": 1,
+    "attention_change": 0.28572553396224976,
+    "win_probability": 0.575429379940033
+  },
+  {
+    "rally_id": 16,
+    "turning_point_shot": 8,
+    "attention_change": 0.07025573402643204,
+    "win_probability": 0.7408739328384399
+  },
+  {
+    "rally_id": 17,
+    "turning_point_shot": 25,
+    "attention_change": 0.022877655923366547,
+    "win_probability": 0.5776998996734619
+  },
+  {
+    "rally_id": 18,
+    "turning_point_shot": 15,
+    "attention_change": 0.03201288357377052,
+    "win_probability": 0.6823757886886597
+  },
+  {
+    "rally_id": 19,
+    "turning_point_shot": 11,
+    "attention_change": 0.04233941063284874,
+    "win_probability": 0.8448336720466614
+  },
+  {
+    "rally_id": 20,
+    "turning_point_shot": 8,
+    "attention_change": 0.05026281997561455,
+    "win_probability": 0.28480005264282227
+  },
+  {
+    "rally_id": 21,
+    "turning_point_shot": 16,
+    "attention_change": 0.019677521660923958,
+    "win_probability": 0.12490091472864151
+  },
+  {
+    "rally_id": 22,
+    "turning_point_shot": 1,
+    "attention_change": 0.26058462262153625,
+    "win_probability": 0.8604151606559753
+  },
+  {
+    "rally_id": 23,
+    "turning_point_shot": 22,
+    "attention_change": 0.019145198166370392,
+    "win_probability": 0.18720173835754395
+  },
+  {
+    "rally_id": 24,
+    "turning_point_shot": 1,
+    "attention_change": 0.2254761904478073,
+    "win_probability": 0.15548931062221527
+  },
+  {
+    "rally_id": 25,
+    "turning_point_shot": 4,
+    "attention_change": 0.07221657782793045,
+    "win_probability": 0.10167919844388962
+  },
+  {
+    "rally_id": 26,
+    "turning_point_shot": 27,
+    "attention_change": 0.022836586460471153,
+    "win_probability": 0.5753462314605713
+  },
+  {
+    "rally_id": 27,
+    "turning_point_shot": 4,
+    "attention_change": 0.11356737464666367,
+    "win_probability": 0.5827180743217468
+  },
+  {
+    "rally_id": 28,
+    "turning_point_shot": 8,
+    "attention_change": 0.04918062314391136,
+    "win_probability": 0.5652757287025452
+  },
+  {
+    "rally_id": 29,
+    "turning_point_shot": 16,
+    "attention_change": 0.027866894379258156,
+    "win_probability": 0.5766139626502991
+  },
+  {
+    "rally_id": 30,
+    "turning_point_shot": 13,
+    "attention_change": 0.04541260749101639,
+    "win_probability": 0.5758256912231445
+  },
+  {
+    "rally_id": 31,
+    "turning_point_shot": 6,
+    "attention_change": 0.05777575448155403,
+    "win_probability": 0.17400653660297394
+  },
+  {
+    "rally_id": 0,
+    "turning_point_shot": 10,
+    "attention_change": 0.03806211054325104,
+    "win_probability": 0.16834549605846405
+  },
+  {
+    "rally_id": 1,
+    "turning_point_shot": 12,
+    "attention_change": 0.03386390954256058,
+    "win_probability": 0.5635084509849548
+  },
+  {
+    "rally_id": 2,
+    "turning_point_shot": 6,
+    "attention_change": 0.07059630751609802,
+    "win_probability": 0.5818796157836914
+  },
+  {
+    "rally_id": 3,
+    "turning_point_shot": 8,
+    "attention_change": 0.08343653380870819,
+    "win_probability": 0.5784282088279724
+  },
+  {
+    "rally_id": 4,
+    "turning_point_shot": 4,
+    "attention_change": 0.13127171993255615,
+    "win_probability": 0.8490229845046997
+  },
+  {
+    "rally_id": 5,
+    "turning_point_shot": 3,
+    "attention_change": 0.15645673871040344,
+    "win_probability": 0.5745773315429688
+  },
+  {
+    "rally_id": 6,
+    "turning_point_shot": 6,
+    "attention_change": 0.08193165063858032,
+    "win_probability": 0.5823311805725098
+  },
+  {
+    "rally_id": 7,
+    "turning_point_shot": 17,
+    "attention_change": 0.028802374377846718,
+    "win_probability": 0.7820547819137573
+  },
+  {
+    "rally_id": 8,
+    "turning_point_shot": 3,
+    "attention_change": 0.1391891986131668,
+    "win_probability": 0.7277001142501831
+  },
+  {
+    "rally_id": 9,
+    "turning_point_shot": 2,
+    "attention_change": 0.15486837923526764,
+    "win_probability": 0.8217551708221436
+  },
+  {
+    "rally_id": 10,
+    "turning_point_shot": 7,
+    "attention_change": 0.06535784900188446,
+    "win_probability": 0.8951202034950256
+  },
+  {
+    "rally_id": 11,
+    "turning_point_shot": 16,
+    "attention_change": 0.02322620525956154,
+    "win_probability": 0.17180638015270233
+  },
+  {
+    "rally_id": 12,
+    "turning_point_shot": 5,
+    "attention_change": 0.08893639594316483,
+    "win_probability": 0.8949493169784546
+  },
+  {
+    "rally_id": 13,
+    "turning_point_shot": 5,
+    "attention_change": 0.08990644663572311,
+    "win_probability": 0.7863173484802246
+  },
+  {
+    "rally_id": 14,
+    "turning_point_shot": 21,
+    "attention_change": 0.02732856385409832,
+    "win_probability": 0.578929603099823
+  },
+  {
+    "rally_id": 15,
+    "turning_point_shot": 1,
+    "attention_change": 0.2994212210178375,
+    "win_probability": 0.5747749209403992
+  },
+  {
+    "rally_id": 16,
+    "turning_point_shot": 1,
+    "attention_change": 0.2994212210178375,
+    "win_probability": 0.5747749209403992
+  },
+  {
+    "rally_id": 17,
+    "turning_point_shot": 4,
+    "attention_change": 0.11539826542139053,
+    "win_probability": 0.7847312092781067
+  },
+  {
+    "rally_id": 18,
+    "turning_point_shot": 13,
+    "attention_change": 0.029000194743275642,
+    "win_probability": 0.16584451496601105
+  },
+  {
+    "rally_id": 19,
+    "turning_point_shot": 7,
+    "attention_change": 0.0741642639040947,
+    "win_probability": 0.8066361546516418
+  },
+  {
+    "rally_id": 20,
+    "turning_point_shot": 1,
+    "attention_change": 0.27833813428878784,
+    "win_probability": 0.5400521755218506
+  },
+  {
+    "rally_id": 21,
+    "turning_point_shot": 12,
+    "attention_change": 0.047118619084358215,
+    "win_probability": 0.8367685675621033
+  },
+  {
+    "rally_id": 22,
+    "turning_point_shot": 24,
+    "attention_change": 0.029225416481494904,
+    "win_probability": 0.5831575989723206
+  },
+  {
+    "rally_id": 23,
+    "turning_point_shot": 10,
+    "attention_change": 0.041863713413476944,
+    "win_probability": 0.5742839574813843
+  },
+  {
+    "rally_id": 24,
+    "turning_point_shot": 9,
+    "attention_change": 0.04064679890871048,
+    "win_probability": 0.15190289914608002
+  },
+  {
+    "rally_id": 25,
+    "turning_point_shot": 13,
+    "attention_change": 0.03639794513583183,
+    "win_probability": 0.8957680463790894
+  },
+  {
+    "rally_id": 26,
+    "turning_point_shot": 18,
+    "attention_change": 0.03652806952595711,
+    "win_probability": 0.5754892826080322
+  },
+  {
+    "rally_id": 27,
+    "turning_point_shot": 3,
+    "attention_change": 0.14557132124900818,
+    "win_probability": 0.7272094488143921
+  },
+  {
+    "rally_id": 28,
+    "turning_point_shot": 21,
+    "attention_change": 0.02317267283797264,
+    "win_probability": 0.539692223072052
+  },
+  {
+    "rally_id": 29,
+    "turning_point_shot": 13,
+    "attention_change": 0.04223211854696274,
+    "win_probability": 0.5750910639762878
+  },
+  {
+    "rally_id": 30,
+    "turning_point_shot": 10,
+    "attention_change": 0.06648213416337967,
+    "win_probability": 0.5778261423110962
+  },
+  {
+    "rally_id": 31,
+    "turning_point_shot": 13,
+    "attention_change": 0.031745824962854385,
+    "win_probability": 0.20505087077617645
+  },
+  {
+    "rally_id": 0,
+    "turning_point_shot": 8,
+    "attention_change": 0.07532735913991928,
+    "win_probability": 0.5780235528945923
+  },
+  {
+    "rally_id": 1,
+    "turning_point_shot": 5,
+    "attention_change": 0.08535391092300415,
+    "win_probability": 0.8389577865600586
+  },
+  {
+    "rally_id": 2,
+    "turning_point_shot": 4,
+    "attention_change": 0.11262500286102295,
+    "win_probability": 0.8043020963668823
+  },
+  {
+    "rally_id": 3,
+    "turning_point_shot": 3,
+    "attention_change": 0.13008661568164825,
+    "win_probability": 0.895993173122406
+  },
+  {
+    "rally_id": 4,
+    "turning_point_shot": 12,
+    "attention_change": 0.054492488503456116,
+    "win_probability": 0.5764606595039368
+  },
+  {
+    "rally_id": 5,
+    "turning_point_shot": 2,
+    "attention_change": 0.1398763358592987,
+    "win_probability": 0.526062548160553
+  },
+  {
+    "rally_id": 6,
+    "turning_point_shot": 2,
+    "attention_change": 0.1662999838590622,
+    "win_probability": 0.8864867687225342
+  },
+  {
+    "rally_id": 7,
+    "turning_point_shot": 4,
+    "attention_change": 0.08488085865974426,
+    "win_probability": 0.13799843192100525
+  },
+  {
+    "rally_id": 8,
+    "turning_point_shot": 26,
+    "attention_change": 0.015588619746267796,
+    "win_probability": 0.17365022003650665
+  },
+  {
+    "rally_id": 9,
+    "turning_point_shot": 10,
+    "attention_change": 0.042712606489658356,
+    "win_probability": 0.16695119440555573
+  },
+  {
+    "rally_id": 10,
+    "turning_point_shot": 3,
+    "attention_change": 0.10301487147808075,
+    "win_probability": 0.16469097137451172
+  },
+  {
+    "rally_id": 11,
+    "turning_point_shot": 2,
+    "attention_change": 0.1499675065279007,
+    "win_probability": 0.166017547249794
+  },
+  {
+    "rally_id": 12,
+    "turning_point_shot": 6,
+    "attention_change": 0.05802994221448898,
+    "win_probability": 0.15493929386138916
+  },
+  {
+    "rally_id": 13,
+    "turning_point_shot": 29,
+    "attention_change": 0.018028145655989647,
+    "win_probability": 0.7363046407699585
+  },
+  {
+    "rally_id": 14,
+    "turning_point_shot": 6,
+    "attention_change": 0.0599045529961586,
+    "win_probability": 0.25780704617500305
+  },
+  {
+    "rally_id": 15,
+    "turning_point_shot": 3,
+    "attention_change": 0.12913978099822998,
+    "win_probability": 0.8349377512931824
+  },
+  {
+    "rally_id": 16,
+    "turning_point_shot": 6,
+    "attention_change": 0.0547870472073555,
+    "win_probability": 0.10071335732936859
+  },
+  {
+    "rally_id": 17,
+    "turning_point_shot": 2,
+    "attention_change": 0.16111132502555847,
+    "win_probability": 0.5753934979438782
+  },
+  {
+    "rally_id": 18,
+    "turning_point_shot": 9,
+    "attention_change": 0.0462099052965641,
+    "win_probability": 0.18678386509418488
+  },
+  {
+    "rally_id": 19,
+    "turning_point_shot": 4,
+    "attention_change": 0.12401744723320007,
+    "win_probability": 0.8523817658424377
+  },
+  {
+    "rally_id": 20,
+    "turning_point_shot": 6,
+    "attention_change": 0.07982657849788666,
+    "win_probability": 0.8624579310417175
+  },
+  {
+    "rally_id": 21,
+    "turning_point_shot": 8,
+    "attention_change": 0.04763228818774223,
+    "win_probability": 0.5705959796905518
+  },
+  {
+    "rally_id": 22,
+    "turning_point_shot": 6,
+    "attention_change": 0.006060905288904905,
+    "win_probability": 0.7135048508644104
+  },
+  {
+    "rally_id": 23,
+    "turning_point_shot": 6,
+    "attention_change": 0.06686458736658096,
+    "win_probability": 0.5792642831802368
+  },
+  {
+    "rally_id": 24,
+    "turning_point_shot": 9,
+    "attention_change": 0.05327630788087845,
+    "win_probability": 0.7364869117736816
+  },
+  {
+    "rally_id": 25,
+    "turning_point_shot": 8,
+    "attention_change": 0.07276048511266708,
+    "win_probability": 0.7082051634788513
+  },
+  {
+    "rally_id": 26,
+    "turning_point_shot": 17,
+    "attention_change": 0.03044901415705681,
+    "win_probability": 0.8323290944099426
+  },
+  {
+    "rally_id": 27,
+    "turning_point_shot": 2,
+    "attention_change": 0.14046838879585266,
+    "win_probability": 0.20680220425128937
+  },
+  {
+    "rally_id": 28,
+    "turning_point_shot": 13,
+    "attention_change": 0.035533007234334946,
+    "win_probability": 0.8894516825675964
+  },
+  {
+    "rally_id": 29,
+    "turning_point_shot": 4,
+    "attention_change": 0.13578858971595764,
+    "win_probability": 0.5808921456336975
+  },
+  {
+    "rally_id": 30,
+    "turning_point_shot": 21,
+    "attention_change": 0.027896584942936897,
+    "win_probability": 0.5739434361457825
+  },
+  {
+    "rally_id": 31,
+    "turning_point_shot": 4,
+    "attention_change": 0.11031420528888702,
+    "win_probability": 0.8462414741516113
+  },
+  {
+    "rally_id": 0,
+    "turning_point_shot": 12,
+    "attention_change": 0.03326825425028801,
+    "win_probability": 0.540581464767456
+  },
+  {
+    "rally_id": 1,
+    "turning_point_shot": 1,
+    "attention_change": 0.26432403922080994,
+    "win_probability": 0.5922836661338806
+  },
+  {
+    "rally_id": 2,
+    "turning_point_shot": 9,
+    "attention_change": 0.05059348791837692,
+    "win_probability": 0.792941689491272
+  },
+  {
+    "rally_id": 3,
+    "turning_point_shot": 9,
+    "attention_change": 0.04236738383769989,
+    "win_probability": 0.183966264128685
+  },
+  {
+    "rally_id": 4,
+    "turning_point_shot": 22,
+    "attention_change": 0.024133166298270226,
+    "win_probability": 0.7361103892326355
+  },
+  {
+    "rally_id": 5,
+    "turning_point_shot": 7,
+    "attention_change": 0.07214514911174774,
+    "win_probability": 0.6941701173782349
+  },
+  {
+    "rally_id": 6,
+    "turning_point_shot": 18,
+    "attention_change": 0.025767480954527855,
+    "win_probability": 0.8967646360397339
+  },
+  {
+    "rally_id": 7,
+    "turning_point_shot": 2,
+    "attention_change": 0.15043994784355164,
+    "win_probability": 0.572849452495575
+  },
+  {
+    "rally_id": 8,
+    "turning_point_shot": 4,
+    "attention_change": 0.08106985688209534,
+    "win_probability": 0.12756042182445526
+  },
+  {
+    "rally_id": 9,
+    "turning_point_shot": 15,
+    "attention_change": 0.044063106179237366,
+    "win_probability": 0.574219822883606
+  },
+  {
+    "rally_id": 10,
+    "turning_point_shot": 13,
+    "attention_change": 0.03394666686654091,
+    "win_probability": 0.30566322803497314
+  },
+  {
+    "rally_id": 11,
+    "turning_point_shot": 17,
+    "attention_change": 0.03042217344045639,
+    "win_probability": 0.5837246179580688
+  },
+  {
+    "rally_id": 12,
+    "turning_point_shot": 1,
+    "attention_change": 0.26432403922080994,
+    "win_probability": 0.5922836661338806
+  },
+  {
+    "rally_id": 13,
+    "turning_point_shot": 2,
+    "attention_change": 0.2228018194437027,
+    "win_probability": 0.6991927027702332
+  },
+  {
+    "rally_id": 14,
+    "turning_point_shot": 2,
+    "attention_change": 0.15558108687400818,
+    "win_probability": 0.2256888747215271
+  },
+  {
+    "rally_id": 15,
+    "turning_point_shot": 8,
+    "attention_change": 0.06802155822515488,
+    "win_probability": 0.7137472033500671
+  },
+  {
+    "rally_id": 16,
+    "turning_point_shot": 5,
+    "attention_change": 0.07168976217508316,
+    "win_probability": 0.1302536129951477
+  },
+  {
+    "rally_id": 17,
+    "turning_point_shot": 2,
+    "attention_change": 0.15930789709091187,
+    "win_probability": 0.5797294974327087
+  },
+  {
+    "rally_id": 18,
+    "turning_point_shot": 1,
+    "attention_change": 0.21585942804813385,
+    "win_probability": 0.179805725812912
+  },
+  {
+    "rally_id": 19,
+    "turning_point_shot": 3,
+    "attention_change": 0.10530414432287216,
+    "win_probability": 0.1845148801803589
+  },
+  {
+    "rally_id": 20,
+    "turning_point_shot": 17,
+    "attention_change": 0.02294381894171238,
+    "win_probability": 0.2030288279056549
+  },
+  {
+    "rally_id": 21,
+    "turning_point_shot": 10,
+    "attention_change": 0.0650443509221077,
+    "win_probability": 0.5740296244621277
+  },
+  {
+    "rally_id": 22,
+    "turning_point_shot": 19,
+    "attention_change": 0.02094944752752781,
+    "win_probability": 0.2821977138519287
+  },
+  {
+    "rally_id": 23,
+    "turning_point_shot": 15,
+    "attention_change": 0.03829878196120262,
+    "win_probability": 0.5733386874198914
+  },
+  {
+    "rally_id": 24,
+    "turning_point_shot": 4,
+    "attention_change": 0.08962605148553848,
+    "win_probability": 0.5476406812667847
+  },
+  {
+    "rally_id": 25,
+    "turning_point_shot": 3,
+    "attention_change": 0.13511791825294495,
+    "win_probability": 0.6781848669052124
+  },
+  {
+    "rally_id": 26,
+    "turning_point_shot": 12,
+    "attention_change": 0.032437764108181,
+    "win_probability": 0.5625933408737183
+  },
+  {
+    "rally_id": 27,
+    "turning_point_shot": 9,
+    "attention_change": 0.057320304214954376,
+    "win_probability": 0.7356661558151245
+  },
+  {
+    "rally_id": 28,
+    "turning_point_shot": 3,
+    "attention_change": 0.10762544721364975,
+    "win_probability": 0.2050728052854538
+  },
+  {
+    "rally_id": 29,
+    "turning_point_shot": 1,
+    "attention_change": 0.20524364709854126,
+    "win_probability": 0.17270910739898682
+  },
+  {
+    "rally_id": 30,
+    "turning_point_shot": 6,
+    "attention_change": 0.07014678418636322,
+    "win_probability": 0.8976150751113892
+  },
+  {
+    "rally_id": 31,
+    "turning_point_shot": 21,
+    "attention_change": 0.023573385551571846,
+    "win_probability": 0.8491920828819275
+  },
+  {
+    "rally_id": 0,
+    "turning_point_shot": 5,
+    "attention_change": 0.09918449074029922,
+    "win_probability": 0.6361465454101562
+  },
+  {
+    "rally_id": 1,
+    "turning_point_shot": 12,
+    "attention_change": 0.02918248064815998,
+    "win_probability": 0.14985588192939758
+  },
+  {
+    "rally_id": 2,
+    "turning_point_shot": 18,
+    "attention_change": 0.029679279774427414,
+    "win_probability": 0.8320838809013367
+  },
+  {
+    "rally_id": 3,
+    "turning_point_shot": 7,
+    "attention_change": 0.06445882469415665,
+    "win_probability": 0.8953536748886108
+  },
+  {
+    "rally_id": 4,
+    "turning_point_shot": 15,
+    "attention_change": 0.028869271278381348,
+    "win_probability": 0.2828920781612396
+  },
+  {
+    "rally_id": 5,
+    "turning_point_shot": 1,
+    "attention_change": 0.25780338048934937,
+    "win_probability": 0.25640547275543213
+  },
+  {
+    "rally_id": 6,
+    "turning_point_shot": 10,
+    "attention_change": 0.04063858091831207,
+    "win_probability": 0.5650654435157776
+  },
+  {
+    "rally_id": 7,
+    "turning_point_shot": 17,
+    "attention_change": 0.03418934717774391,
+    "win_probability": 0.5761862993240356
+  },
+  {
+    "rally_id": 8,
+    "turning_point_shot": 10,
+    "attention_change": 0.05105431005358696,
+    "win_probability": 0.5786542296409607
+  },
+  {
+    "rally_id": 9,
+    "turning_point_shot": 8,
+    "attention_change": 0.041628800332546234,
+    "win_probability": 0.11523321270942688
+  },
+  {
+    "rally_id": 10,
+    "turning_point_shot": 5,
+    "attention_change": 0.08127952367067337,
+    "win_probability": 0.8052140474319458
+  },
+  {
+    "rally_id": 11,
+    "turning_point_shot": 6,
+    "attention_change": 0.059510763734579086,
+    "win_probability": 0.16408182680606842
+  },
+  {
+    "rally_id": 12,
+    "turning_point_shot": 21,
+    "attention_change": 0.0323575958609581,
+    "win_probability": 0.5745241641998291
+  },
+  {
+    "rally_id": 13,
+    "turning_point_shot": 3,
+    "attention_change": 0.13108234107494354,
+    "win_probability": 0.830535352230072
+  },
+  {
+    "rally_id": 14,
+    "turning_point_shot": 29,
+    "attention_change": 0.01387842372059822,
+    "win_probability": 0.30849143862724304
+  },
+  {
+    "rally_id": 15,
+    "turning_point_shot": 21,
+    "attention_change": 0.018484437838196754,
+    "win_probability": 0.13115194439888
+  },
+  {
+    "rally_id": 16,
+    "turning_point_shot": 14,
+    "attention_change": 0.03407999873161316,
+    "win_probability": 0.897778332233429
+  },
+  {
+    "rally_id": 17,
+    "turning_point_shot": 5,
+    "attention_change": 0.09761019051074982,
+    "win_probability": 0.577094554901123
+  },
+  {
+    "rally_id": 18,
+    "turning_point_shot": 3,
+    "attention_change": 0.14402428269386292,
+    "win_probability": 0.5760359168052673
+  },
+  {
+    "rally_id": 19,
+    "turning_point_shot": 3,
+    "attention_change": 0.132376566529274,
+    "win_probability": 0.5914974808692932
+  },
+  {
+    "rally_id": 20,
+    "turning_point_shot": 10,
+    "attention_change": 0.03292498737573624,
+    "win_probability": 0.14318034052848816
+  },
+  {
+    "rally_id": 21,
+    "turning_point_shot": 5,
+    "attention_change": 0.09720274060964584,
+    "win_probability": 0.5760608911514282
+  },
+  {
+    "rally_id": 22,
+    "turning_point_shot": 8,
+    "attention_change": 0.04776224493980408,
+    "win_probability": 0.14794416725635529
+  },
+  {
+    "rally_id": 23,
+    "turning_point_shot": 8,
+    "attention_change": 0.04150736331939697,
+    "win_probability": 0.10061344504356384
+  },
+  {
+    "rally_id": 24,
+    "turning_point_shot": 2,
+    "attention_change": 0.15930789709091187,
+    "win_probability": 0.5797294974327087
+  },
+  {
+    "rally_id": 25,
+    "turning_point_shot": 20,
+    "attention_change": 0.023031318560242653,
+    "win_probability": 0.5782473087310791
+  },
+  {
+    "rally_id": 26,
+    "turning_point_shot": 11,
+    "attention_change": 0.0517154298722744,
+    "win_probability": 0.5774539113044739
+  },
+  {
+    "rally_id": 27,
+    "turning_point_shot": 4,
+    "attention_change": 0.14251206815242767,
+    "win_probability": 0.5921620726585388
+  },
+  {
+    "rally_id": 28,
+    "turning_point_shot": 7,
+    "attention_change": 0.06785886734724045,
+    "win_probability": 0.5803639888763428
+  },
+  {
+    "rally_id": 29,
+    "turning_point_shot": 14,
+    "attention_change": 0.03209052234888077,
+    "win_probability": 0.5786147713661194
+  },
+  {
+    "rally_id": 30,
+    "turning_point_shot": 3,
+    "attention_change": 0.15009263157844543,
+    "win_probability": 0.5757869482040405
+  },
+  {
+    "rally_id": 31,
+    "turning_point_shot": 8,
+    "attention_change": 0.04415426030755043,
+    "win_probability": 0.1546722799539566
+  },
+  {
+    "rally_id": 0,
+    "turning_point_shot": 17,
+    "attention_change": 0.03038136474788189,
+    "win_probability": 0.7574740052223206
+  },
+  {
+    "rally_id": 1,
+    "turning_point_shot": 12,
+    "attention_change": 0.035763874650001526,
+    "win_probability": 0.3203284740447998
+  },
+  {
+    "rally_id": 2,
+    "turning_point_shot": 19,
+    "attention_change": 0.02654365263879299,
+    "win_probability": 0.823509931564331
+  },
+  {
+    "rally_id": 3,
+    "turning_point_shot": 17,
+    "attention_change": 0.03427756950259209,
+    "win_probability": 0.5757437348365784
+  },
+  {
+    "rally_id": 4,
+    "turning_point_shot": 22,
+    "attention_change": 0.03288520127534866,
+    "win_probability": 0.5776463150978088
+  },
+  {
+    "rally_id": 5,
+    "turning_point_shot": 13,
+    "attention_change": 0.03066536970436573,
+    "win_probability": 0.1588263362646103
+  },
+  {
+    "rally_id": 6,
+    "turning_point_shot": 2,
+    "attention_change": 0.2061356157064438,
+    "win_probability": 0.8516666293144226
+  },
+  {
+    "rally_id": 7,
+    "turning_point_shot": 3,
+    "attention_change": 0.13442207872867584,
+    "win_probability": 0.5833099484443665
+  },
+  {
+    "rally_id": 8,
+    "turning_point_shot": 25,
+    "attention_change": 0.022559193894267082,
+    "win_probability": 0.8101066946983337
+  },
+  {
+    "rally_id": 9,
+    "turning_point_shot": 18,
+    "attention_change": 0.03326806426048279,
+    "win_probability": 0.8519532680511475
+  },
+  {
+    "rally_id": 10,
+    "turning_point_shot": 12,
+    "attention_change": 0.030848529189825058,
+    "win_probability": 0.13354898989200592
+  },
+  {
+    "rally_id": 11,
+    "turning_point_shot": 9,
+    "attention_change": 0.05545206740498543,
+    "win_probability": 0.5776849985122681
+  },
+  {
+    "rally_id": 12,
+    "turning_point_shot": 15,
+    "attention_change": 0.037773121148347855,
+    "win_probability": 0.5764555931091309
+  },
+  {
+    "rally_id": 13,
+    "turning_point_shot": 4,
+    "attention_change": 0.10214788466691971,
+    "win_probability": 0.5812027454376221
+  },
+  {
+    "rally_id": 14,
+    "turning_point_shot": 13,
+    "attention_change": 0.028053686022758484,
+    "win_probability": 0.11051281541585922
+  },
+  {
+    "rally_id": 15,
+    "turning_point_shot": 6,
+    "attention_change": 0.10793135315179825,
+    "win_probability": 0.7889741063117981
+  },
+  {
+    "rally_id": 16,
+    "turning_point_shot": 3,
+    "attention_change": 0.10858165472745895,
+    "win_probability": 0.24988454580307007
+  },
+  {
+    "rally_id": 17,
+    "turning_point_shot": 6,
+    "attention_change": 0.06492023915052414,
+    "win_probability": 0.578314483165741
+  },
+  {
+    "rally_id": 18,
+    "turning_point_shot": 7,
+    "attention_change": 0.05282427370548248,
+    "win_probability": 0.13012877106666565
+  },
+  {
+    "rally_id": 19,
+    "turning_point_shot": 15,
+    "attention_change": 0.03282103314995766,
+    "win_probability": 0.5809915065765381
+  },
+  {
+    "rally_id": 20,
+    "turning_point_shot": 12,
+    "attention_change": 0.052193719893693924,
+    "win_probability": 0.5755099058151245
+  },
+  {
+    "rally_id": 21,
+    "turning_point_shot": 6,
+    "attention_change": 0.10144083946943283,
+    "win_probability": 0.5882794260978699
+  },
+  {
+    "rally_id": 22,
+    "turning_point_shot": 5,
+    "attention_change": 0.06508734077215195,
+    "win_probability": 0.1272072196006775
+  },
+  {
+    "rally_id": 23,
+    "turning_point_shot": 1,
+    "attention_change": 0.26966261863708496,
+    "win_probability": 0.5662208795547485
+  },
+  {
+    "rally_id": 24,
+    "turning_point_shot": 2,
+    "attention_change": 0.1293664127588272,
+    "win_probability": 0.11736360937356949
+  },
+  {
+    "rally_id": 25,
+    "turning_point_shot": 5,
+    "attention_change": 0.0978163406252861,
+    "win_probability": 0.5759687423706055
+  },
+  {
+    "rally_id": 26,
+    "turning_point_shot": 10,
+    "attention_change": 0.045955196022987366,
+    "win_probability": 0.7982589602470398
+  },
+  {
+    "rally_id": 27,
+    "turning_point_shot": 16,
+    "attention_change": 0.03151242062449455,
+    "win_probability": 0.8611757755279541
+  },
+  {
+    "rally_id": 28,
+    "turning_point_shot": 4,
+    "attention_change": 0.14287245273590088,
+    "win_probability": 0.5792323350906372
+  },
+  {
+    "rally_id": 29,
+    "turning_point_shot": 5,
+    "attention_change": 0.0894537940621376,
+    "win_probability": 0.7610887885093689
+  },
+  {
+    "rally_id": 30,
+    "turning_point_shot": 1,
+    "attention_change": 0.3152772784233093,
+    "win_probability": 0.5782619714736938
+  },
+  {
+    "rally_id": 31,
+    "turning_point_shot": 4,
+    "attention_change": 0.10008315742015839,
+    "win_probability": 0.8972874283790588
+  },
+  {
+    "rally_id": 0,
+    "turning_point_shot": 8,
+    "attention_change": 0.05092005804181099,
+    "win_probability": 0.5741937756538391
+  },
+  {
+    "rally_id": 1,
+    "turning_point_shot": 2,
+    "attention_change": 0.2061356157064438,
+    "win_probability": 0.8516666293144226
+  },
+  {
+    "rally_id": 2,
+    "turning_point_shot": 4,
+    "attention_change": 0.13674920797348022,
+    "win_probability": 0.5832558870315552
+  },
+  {
+    "rally_id": 3,
+    "turning_point_shot": 3,
+    "attention_change": 0.13865649700164795,
+    "win_probability": 0.5831909775733948
+  },
+  {
+    "rally_id": 4,
+    "turning_point_shot": 1,
+    "attention_change": 0.3152772784233093,
+    "win_probability": 0.5782619714736938
+  },
+  {
+    "rally_id": 5,
+    "turning_point_shot": 6,
+    "attention_change": 0.10284367203712463,
+    "win_probability": 0.5824596881866455
+  },
+  {
+    "rally_id": 6,
+    "turning_point_shot": 5,
+    "attention_change": 0.10896093398332596,
+    "win_probability": 0.5752708911895752
+  },
+  {
+    "rally_id": 7,
+    "turning_point_shot": 10,
+    "attention_change": 0.03463241085410118,
+    "win_probability": 0.10908239334821701
+  },
+  {
+    "rally_id": 8,
+    "turning_point_shot": 5,
+    "attention_change": 0.07329941540956497,
+    "win_probability": 0.16967584192752838
+  },
+  {
+    "rally_id": 9,
+    "turning_point_shot": 32,
+    "attention_change": 0.011701175011694431,
+    "win_probability": 0.17481239140033722
+  },
+  {
+    "rally_id": 10,
+    "turning_point_shot": 5,
+    "attention_change": 0.06513940542936325,
+    "win_probability": 0.10973579436540604
+  },
+  {
+    "rally_id": 11,
+    "turning_point_shot": 8,
+    "attention_change": 0.05812849476933479,
+    "win_probability": 0.5828040242195129
+  },
+  {
+    "rally_id": 12,
+    "turning_point_shot": 3,
+    "attention_change": 0.1516425907611847,
+    "win_probability": 0.5775241255760193
+  },
+  {
+    "rally_id": 13,
+    "turning_point_shot": 4,
+    "attention_change": 0.09478650242090225,
+    "win_probability": 0.581129789352417
+  },
+  {
+    "rally_id": 14,
+    "turning_point_shot": 13,
+    "attention_change": 0.039035458117723465,
+    "win_probability": 0.8402925133705139
+  },
+  {
+    "rally_id": 15,
+    "turning_point_shot": 7,
+    "attention_change": 0.08804850280284882,
+    "win_probability": 0.5824682116508484
+  },
+  {
+    "rally_id": 16,
+    "turning_point_shot": 3,
+    "attention_change": 0.15009263157844543,
+    "win_probability": 0.5757869482040405
+  },
+  {
+    "rally_id": 17,
+    "turning_point_shot": 8,
+    "attention_change": 0.05928846076130867,
+    "win_probability": 0.8765894770622253
+  },
+  {
+    "rally_id": 18,
+    "turning_point_shot": 8,
+    "attention_change": 0.04856772720813751,
+    "win_probability": 0.573449432849884
+  },
+  {
+    "rally_id": 19,
+    "turning_point_shot": 8,
+    "attention_change": 0.04765230417251587,
+    "win_probability": 0.2571823000907898
+  },
+  {
+    "rally_id": 20,
+    "turning_point_shot": 6,
+    "attention_change": 0.0641990676522255,
+    "win_probability": 0.1684962511062622
+  },
+  {
+    "rally_id": 21,
+    "turning_point_shot": 1,
+    "attention_change": 0.269580602645874,
+    "win_probability": 0.7264872789382935
+  },
+  {
+    "rally_id": 22,
+    "turning_point_shot": 7,
+    "attention_change": 0.06604582816362381,
+    "win_probability": 0.7607897520065308
+  },
+  {
+    "rally_id": 23,
+    "turning_point_shot": 10,
+    "attention_change": 0.04179587587714195,
+    "win_probability": 0.574123740196228
+  },
+  {
+    "rally_id": 24,
+    "turning_point_shot": 9,
+    "attention_change": 0.041265979409217834,
+    "win_probability": 0.10722316801548004
+  },
+  {
+    "rally_id": 25,
+    "turning_point_shot": 8,
+    "attention_change": 0.06967029720544815,
+    "win_probability": 0.8528382182121277
+  },
+  {
+    "rally_id": 26,
+    "turning_point_shot": 8,
+    "attention_change": 0.06302929669618607,
+    "win_probability": 0.5842252969741821
+  },
+  {
+    "rally_id": 27,
+    "turning_point_shot": 12,
+    "attention_change": 0.045630358159542084,
+    "win_probability": 0.8594374656677246
+  },
+  {
+    "rally_id": 28,
+    "turning_point_shot": 11,
+    "attention_change": 0.04756544902920723,
+    "win_probability": 0.5586607456207275
+  },
+  {
+    "rally_id": 29,
+    "turning_point_shot": 2,
+    "attention_change": 0.189193457365036,
+    "win_probability": 0.866174578666687
+  },
+  {
+    "rally_id": 30,
+    "turning_point_shot": 11,
+    "attention_change": 0.03391936048865318,
+    "win_probability": 0.12149286270141602
+  },
+  {
+    "rally_id": 31,
+    "turning_point_shot": 10,
+    "attention_change": 0.06481703370809555,
+    "win_probability": 0.5768317580223083
+  },
+  {
+    "rally_id": 0,
+    "turning_point_shot": 24,
+    "attention_change": 0.024034077301621437,
+    "win_probability": 0.8614575862884521
+  },
+  {
+    "rally_id": 1,
+    "turning_point_shot": 11,
+    "attention_change": 0.05190267041325569,
+    "win_probability": 0.5798571109771729
+  },
+  {
+    "rally_id": 2,
+    "turning_point_shot": 7,
+    "attention_change": 0.057730600237846375,
+    "win_probability": 0.27886873483657837
+  },
+  {
+    "rally_id": 3,
+    "turning_point_shot": 7,
+    "attention_change": 0.08116810023784637,
+    "win_probability": 0.5754873752593994
+  },
+  {
+    "rally_id": 4,
+    "turning_point_shot": 11,
+    "attention_change": 0.04607712849974632,
+    "win_probability": 0.784490704536438
+  },
+  {
+    "rally_id": 5,
+    "turning_point_shot": 30,
+    "attention_change": 0.01707560010254383,
+    "win_probability": 0.5840620398521423
+  },
+  {
+    "rally_id": 6,
+    "turning_point_shot": 1,
+    "attention_change": 0.26058462262153625,
+    "win_probability": 0.8604151606559753
+  },
+  {
+    "rally_id": 7,
+    "turning_point_shot": 6,
+    "attention_change": 0.06493892520666122,
+    "win_probability": 0.1519543081521988
+  },
+  {
+    "rally_id": 8,
+    "turning_point_shot": 18,
+    "attention_change": 0.029876763001084328,
+    "win_probability": 0.868379533290863
+  },
+  {
+    "rally_id": 9,
+    "turning_point_shot": 8,
+    "attention_change": 0.04896756634116173,
+    "win_probability": 0.25092169642448425
+  },
+  {
+    "rally_id": 10,
+    "turning_point_shot": 4,
+    "attention_change": 0.10285525768995285,
+    "win_probability": 0.8971831798553467
+  },
+  {
+    "rally_id": 11,
+    "turning_point_shot": 21,
+    "attention_change": 0.0190396960824728,
+    "win_probability": 0.14650015532970428
+  },
+  {
+    "rally_id": 12,
+    "turning_point_shot": 4,
+    "attention_change": 0.14036977291107178,
+    "win_probability": 0.5780150294303894
+  },
+  {
+    "rally_id": 13,
+    "turning_point_shot": 6,
+    "attention_change": 0.08864226192235947,
+    "win_probability": 0.7980231046676636
+  },
+  {
+    "rally_id": 14,
+    "turning_point_shot": 10,
+    "attention_change": 0.04353335127234459,
+    "win_probability": 0.5284932851791382
+  },
+  {
+    "rally_id": 15,
+    "turning_point_shot": 4,
+    "attention_change": 0.13773731887340546,
+    "win_probability": 0.7985773086547852
+  },
+  {
+    "rally_id": 16,
+    "turning_point_shot": 11,
+    "attention_change": 0.047969985753297806,
+    "win_probability": 0.7245662212371826
+  },
+  {
+    "rally_id": 17,
+    "turning_point_shot": 5,
+    "attention_change": 0.08705887198448181,
+    "win_probability": 0.772685170173645
+  },
+  {
+    "rally_id": 18,
+    "turning_point_shot": 15,
+    "attention_change": 0.032491352409124374,
+    "win_probability": 0.895194411277771
+  },
+  {
+    "rally_id": 19,
+    "turning_point_shot": 8,
+    "attention_change": 0.08018297702074051,
+    "win_probability": 0.5827656984329224
+  },
+  {
+    "rally_id": 20,
+    "turning_point_shot": 20,
+    "attention_change": 0.02593913860619068,
+    "win_probability": 0.5787757039070129
+  },
+  {
+    "rally_id": 21,
+    "turning_point_shot": 8,
+    "attention_change": 0.06705882400274277,
+    "win_probability": 0.7674753069877625
+  },
+  {
+    "rally_id": 22,
+    "turning_point_shot": 7,
+    "attention_change": 0.07515580207109451,
+    "win_probability": 0.5706844925880432
+  },
+  {
+    "rally_id": 23,
+    "turning_point_shot": 13,
+    "attention_change": 0.03947252780199051,
+    "win_probability": 0.5724627375602722
+  },
+  {
+    "rally_id": 24,
+    "turning_point_shot": 2,
+    "attention_change": 0.15930789709091187,
+    "win_probability": 0.5797294974327087
+  },
+  {
+    "rally_id": 25,
+    "turning_point_shot": 4,
+    "attention_change": 0.07138699293136597,
+    "win_probability": 0.10097847133874893
+  },
+  {
+    "rally_id": 26,
+    "turning_point_shot": 9,
+    "attention_change": 0.0608951561152935,
+    "win_probability": 0.577153742313385
+  },
+  {
+    "rally_id": 27,
+    "turning_point_shot": 27,
+    "attention_change": 0.014187326654791832,
+    "win_probability": 0.11532599478960037
+  },
+  {
+    "rally_id": 28,
+    "turning_point_shot": 1,
+    "attention_change": 0.20524364709854126,
+    "win_probability": 0.17270910739898682
+  },
+  {
+    "rally_id": 29,
+    "turning_point_shot": 2,
+    "attention_change": 0.2136162668466568,
+    "win_probability": 0.8153490424156189
+  },
+  {
+    "rally_id": 30,
+    "turning_point_shot": 7,
+    "attention_change": 0.06897301226854324,
+    "win_probability": 0.7968791127204895
+  },
+  {
+    "rally_id": 31,
+    "turning_point_shot": 7,
+    "attention_change": 0.05130675435066223,
+    "win_probability": 0.11270405352115631
+  },
+  {
+    "rally_id": 0,
+    "turning_point_shot": 3,
+    "attention_change": 0.14090104401111603,
+    "win_probability": 0.7237758040428162
+  },
+  {
+    "rally_id": 1,
+    "turning_point_shot": 9,
+    "attention_change": 0.058162350207567215,
+    "win_probability": 0.5807315707206726
+  },
+  {
+    "rally_id": 2,
+    "turning_point_shot": 5,
+    "attention_change": 0.09659577161073685,
+    "win_probability": 0.8114033937454224
+  },
+  {
+    "rally_id": 3,
+    "turning_point_shot": 6,
+    "attention_change": 0.07036556303501129,
+    "win_probability": 0.578908383846283
+  },
+  {
+    "rally_id": 4,
+    "turning_point_shot": 12,
+    "attention_change": 0.032049186527729034,
+    "win_probability": 0.17190614342689514
+  },
+  {
+    "rally_id": 5,
+    "turning_point_shot": 6,
+    "attention_change": 0.07665231823921204,
+    "win_probability": 0.8980482816696167
+  },
+  {
+    "rally_id": 6,
+    "turning_point_shot": 7,
+    "attention_change": 0.07847359776496887,
+    "win_probability": 0.5777531862258911
+  },
+  {
+    "rally_id": 7,
+    "turning_point_shot": 11,
+    "attention_change": 0.034895461052656174,
+    "win_probability": 0.24958810210227966
+  },
+  {
+    "rally_id": 8,
+    "turning_point_shot": 7,
+    "attention_change": 0.04986593499779701,
+    "win_probability": 0.11504272371530533
+  },
+  {
+    "rally_id": 9,
+    "turning_point_shot": 4,
+    "attention_change": 0.0761532336473465,
+    "win_probability": 0.11764605343341827
+  },
+  {
+    "rally_id": 10,
+    "turning_point_shot": 15,
+    "attention_change": 0.024990350008010864,
+    "win_probability": 0.1296469271183014
+  },
+  {
+    "rally_id": 11,
+    "turning_point_shot": 3,
+    "attention_change": 0.099456787109375,
+    "win_probability": 0.1096988171339035
+  },
+  {
+    "rally_id": 12,
+    "turning_point_shot": 2,
+    "attention_change": 0.14178888499736786,
+    "win_probability": 0.13738417625427246
+  },
+  {
+    "rally_id": 13,
+    "turning_point_shot": 2,
+    "attention_change": 0.12311612069606781,
+    "win_probability": 0.12847842276096344
+  },
+  {
+    "rally_id": 14,
+    "turning_point_shot": 10,
+    "attention_change": 0.044629357755184174,
+    "win_probability": 0.892729640007019
+  },
+  {
+    "rally_id": 15,
+    "turning_point_shot": 9,
+    "attention_change": 0.03990029916167259,
+    "win_probability": 0.14122745394706726
+  },
+  {
+    "rally_id": 16,
+    "turning_point_shot": 8,
+    "attention_change": 0.056656528264284134,
+    "win_probability": 0.5791320204734802
+  },
+  {
+    "rally_id": 17,
+    "turning_point_shot": 1,
+    "attention_change": 0.26941075921058655,
+    "win_probability": 0.5862661600112915
+  },
+  {
+    "rally_id": 18,
+    "turning_point_shot": 8,
+    "attention_change": 0.0860074982047081,
+    "win_probability": 0.5931908488273621
+  },
+  {
+    "rally_id": 19,
+    "turning_point_shot": 2,
+    "attention_change": 0.19529515504837036,
+    "win_probability": 0.8618268370628357
+  },
+  {
+    "rally_id": 20,
+    "turning_point_shot": 4,
+    "attention_change": 0.12997427582740784,
+    "win_probability": 0.6887128353118896
+  },
+  {
+    "rally_id": 21,
+    "turning_point_shot": 10,
+    "attention_change": 0.05844998359680176,
+    "win_probability": 0.7904490232467651
+  },
+  {
+    "rally_id": 22,
+    "turning_point_shot": 12,
+    "attention_change": 0.05039749667048454,
+    "win_probability": 0.7625454068183899
+  },
+  {
+    "rally_id": 23,
+    "turning_point_shot": 7,
+    "attention_change": 0.061738647520542145,
+    "win_probability": 0.7916162610054016
+  },
+  {
+    "rally_id": 24,
+    "turning_point_shot": 7,
+    "attention_change": 0.07461550086736679,
+    "win_probability": 0.5803995728492737
+  },
+  {
+    "rally_id": 25,
+    "turning_point_shot": 37,
+    "attention_change": 0.015950264409184456,
+    "win_probability": 0.8136824369430542
+  },
+  {
+    "rally_id": 26,
+    "turning_point_shot": 6,
+    "attention_change": 0.06755327433347702,
+    "win_probability": 0.5607838034629822
+  },
+  {
+    "rally_id": 27,
+    "turning_point_shot": 9,
+    "attention_change": 0.05262566730380058,
+    "win_probability": 0.8961786031723022
+  },
+  {
+    "rally_id": 28,
+    "turning_point_shot": 19,
+    "attention_change": 0.028755074366927147,
+    "win_probability": 0.5769819617271423
+  },
+  {
+    "rally_id": 29,
+    "turning_point_shot": 6,
+    "attention_change": 0.07626602053642273,
+    "win_probability": 0.897571325302124
+  },
+  {
+    "rally_id": 30,
+    "turning_point_shot": 9,
+    "attention_change": 0.05897195264697075,
+    "win_probability": 0.5760142803192139
+  },
+  {
+    "rally_id": 31,
+    "turning_point_shot": 5,
+    "attention_change": 0.09160207211971283,
+    "win_probability": 0.5922290086746216
+  },
+  {
+    "rally_id": 0,
+    "turning_point_shot": 34,
+    "attention_change": 0.017402056604623795,
+    "win_probability": 0.7254390716552734
+  },
+  {
+    "rally_id": 1,
+    "turning_point_shot": 7,
+    "attention_change": 0.048973437398672104,
+    "win_probability": 0.13319110870361328
+  },
+  {
+    "rally_id": 2,
+    "turning_point_shot": 7,
+    "attention_change": 0.061627354472875595,
+    "win_probability": 0.8957242369651794
+  },
+  {
+    "rally_id": 3,
+    "turning_point_shot": 18,
+    "attention_change": 0.02246088534593582,
+    "win_probability": 0.21511918306350708
+  },
+  {
+    "rally_id": 4,
+    "turning_point_shot": 26,
+    "attention_change": 0.016562873497605324,
+    "win_probability": 0.3238910436630249
+  },
+  {
+    "rally_id": 5,
+    "turning_point_shot": 10,
+    "attention_change": 0.03811483457684517,
+    "win_probability": 0.1480315625667572
+  },
+  {
+    "rally_id": 6,
+    "turning_point_shot": 1,
+    "attention_change": 0.26432403922080994,
+    "win_probability": 0.5922836661338806
+  },
+  {
+    "rally_id": 7,
+    "turning_point_shot": 10,
+    "attention_change": 0.05826916545629501,
+    "win_probability": 0.8023420572280884
+  },
+  {
+    "rally_id": 8,
+    "turning_point_shot": 12,
+    "attention_change": 0.029428984969854355,
+    "win_probability": 0.13391458988189697
+  },
+  {
+    "rally_id": 9,
+    "turning_point_shot": 16,
+    "attention_change": 0.04160436987876892,
+    "win_probability": 0.8229730725288391
+  },
+  {
+    "rally_id": 10,
+    "turning_point_shot": 1,
+    "attention_change": 0.26432403922080994,
+    "win_probability": 0.5922836661338806
+  },
+  {
+    "rally_id": 11,
+    "turning_point_shot": 3,
+    "attention_change": 0.1465127319097519,
+    "win_probability": 0.5799708366394043
+  },
+  {
+    "rally_id": 12,
+    "turning_point_shot": 12,
+    "attention_change": 0.05539039149880409,
+    "win_probability": 0.8031583428382874
+  },
+  {
+    "rally_id": 13,
+    "turning_point_shot": 8,
+    "attention_change": 0.044542647898197174,
+    "win_probability": 0.1548149287700653
+  },
+  {
+    "rally_id": 14,
+    "turning_point_shot": 12,
+    "attention_change": 0.05336688458919525,
+    "win_probability": 0.5758573412895203
+  },
+  {
+    "rally_id": 15,
+    "turning_point_shot": 5,
+    "attention_change": 0.09292007982730865,
+    "win_probability": 0.5772735476493835
+  },
+  {
+    "rally_id": 16,
+    "turning_point_shot": 17,
+    "attention_change": 0.031084997579455376,
+    "win_probability": 0.5832007527351379
+  },
+  {
+    "rally_id": 17,
+    "turning_point_shot": 1,
+    "attention_change": 0.27833813428878784,
+    "win_probability": 0.5400521755218506
+  },
+  {
+    "rally_id": 18,
+    "turning_point_shot": 2,
+    "attention_change": 0.09889601916074753,
+    "win_probability": 0.12812195718288422
+  },
+  {
+    "rally_id": 19,
+    "turning_point_shot": 7,
+    "attention_change": 0.0671045258641243,
+    "win_probability": 0.5772854089736938
+  },
+  {
+    "rally_id": 20,
+    "turning_point_shot": 13,
+    "attention_change": 0.03503596410155296,
+    "win_probability": 0.849241316318512
+  },
+  {
+    "rally_id": 21,
+    "turning_point_shot": 64,
+    "attention_change": 0.00802612118422985,
+    "win_probability": 0.862587034702301
+  },
+  {
+    "rally_id": 22,
+    "turning_point_shot": 12,
+    "attention_change": 0.0480927899479866,
+    "win_probability": 0.7219498157501221
+  },
+  {
+    "rally_id": 23,
+    "turning_point_shot": 3,
+    "attention_change": 0.1338377147912979,
+    "win_probability": 0.7743953466415405
+  },
+  {
+    "rally_id": 24,
+    "turning_point_shot": 2,
+    "attention_change": 0.21789805591106415,
+    "win_probability": 0.5780546069145203
+  },
+  {
+    "rally_id": 25,
+    "turning_point_shot": 18,
+    "attention_change": 0.030028268694877625,
+    "win_probability": 0.5824225544929504
+  },
+  {
+    "rally_id": 26,
+    "turning_point_shot": 19,
+    "attention_change": 0.0191468745470047,
+    "win_probability": 0.16164079308509827
+  },
+  {
+    "rally_id": 27,
+    "turning_point_shot": 9,
+    "attention_change": 0.0644083097577095,
+    "win_probability": 0.5957785248756409
+  },
+  {
+    "rally_id": 28,
+    "turning_point_shot": 15,
+    "attention_change": 0.02760387398302555,
+    "win_probability": 0.18055219948291779
+  },
+  {
+    "rally_id": 29,
+    "turning_point_shot": 2,
+    "attention_change": 0.2169651985168457,
+    "win_probability": 0.6892759203910828
+  },
+  {
+    "rally_id": 30,
+    "turning_point_shot": 2,
+    "attention_change": 0.15043994784355164,
+    "win_probability": 0.572849452495575
+  },
+  {
+    "rally_id": 31,
+    "turning_point_shot": 3,
+    "attention_change": 0.13550975918769836,
+    "win_probability": 0.8531030416488647
+  },
+  {
+    "rally_id": 0,
+    "turning_point_shot": 3,
+    "attention_change": 0.14460961520671844,
+    "win_probability": 0.5770301818847656
+  },
+  {
+    "rally_id": 1,
+    "turning_point_shot": 6,
+    "attention_change": 0.09820346534252167,
+    "win_probability": 0.5837020874023438
+  },
+  {
+    "rally_id": 2,
+    "turning_point_shot": 4,
+    "attention_change": 0.1260274350643158,
+    "win_probability": 0.8531062006950378
+  },
+  {
+    "rally_id": 3,
+    "turning_point_shot": 6,
+    "attention_change": 0.06260810792446136,
+    "win_probability": 0.5734308958053589
+  },
+  {
+    "rally_id": 4,
+    "turning_point_shot": 16,
+    "attention_change": 0.02947080321609974,
+    "win_probability": 0.5814400911331177
+  },
+  {
+    "rally_id": 5,
+    "turning_point_shot": 5,
+    "attention_change": 0.06538451462984085,
+    "win_probability": 0.139808788895607
+  },
+  {
+    "rally_id": 6,
+    "turning_point_shot": 3,
+    "attention_change": 0.10372898727655411,
+    "win_probability": 0.1510600745677948
+  },
+  {
+    "rally_id": 7,
+    "turning_point_shot": 2,
+    "attention_change": 0.2061356157064438,
+    "win_probability": 0.8516666293144226
+  },
+  {
+    "rally_id": 8,
+    "turning_point_shot": 12,
+    "attention_change": 0.03255623206496239,
+    "win_probability": 0.14724867045879364
+  },
+  {
+    "rally_id": 9,
+    "turning_point_shot": 17,
+    "attention_change": 0.032396119087934494,
+    "win_probability": 0.5768552422523499
+  },
+  {
+    "rally_id": 10,
+    "turning_point_shot": 7,
+    "attention_change": 0.06251412630081177,
+    "win_probability": 0.896345853805542
+  },
+  {
+    "rally_id": 11,
+    "turning_point_shot": 7,
+    "attention_change": 0.048996321856975555,
+    "win_probability": 0.16875584423542023
+  },
+  {
+    "rally_id": 12,
+    "turning_point_shot": 4,
+    "attention_change": 0.03966410458087921,
+    "win_probability": 0.10953743010759354
+  },
+  {
+    "rally_id": 13,
+    "turning_point_shot": 2,
+    "attention_change": 0.14995843172073364,
+    "win_probability": 0.14346729218959808
+  },
+  {
+    "rally_id": 14,
+    "turning_point_shot": 8,
+    "attention_change": 0.05260751396417618,
+    "win_probability": 0.5811697840690613
+  },
+  {
+    "rally_id": 15,
+    "turning_point_shot": 7,
+    "attention_change": 0.06999064981937408,
+    "win_probability": 0.5833277106285095
+  },
+  {
+    "rally_id": 16,
+    "turning_point_shot": 2,
+    "attention_change": 0.020716289058327675,
+    "win_probability": 0.11657533049583435
+  },
+  {
+    "rally_id": 17,
+    "turning_point_shot": 25,
+    "attention_change": 0.02037784643471241,
+    "win_probability": 0.7725228667259216
+  },
+  {
+    "rally_id": 18,
+    "turning_point_shot": 24,
+    "attention_change": 0.0226645115762949,
+    "win_probability": 0.7290764451026917
+  },
+  {
+    "rally_id": 19,
+    "turning_point_shot": 11,
+    "attention_change": 0.0501091293990612,
+    "win_probability": 0.5767269134521484
+  },
+  {
+    "rally_id": 20,
+    "turning_point_shot": 5,
+    "attention_change": 0.09448923915624619,
+    "win_probability": 0.7652530670166016
+  },
+  {
+    "rally_id": 21,
+    "turning_point_shot": 1,
+    "attention_change": 0.21325866878032684,
+    "win_probability": 0.13933800160884857
+  },
+  {
+    "rally_id": 22,
+    "turning_point_shot": 9,
+    "attention_change": 0.062150344252586365,
+    "win_probability": 0.5816314220428467
+  },
+  {
+    "rally_id": 23,
+    "turning_point_shot": 3,
+    "attention_change": 0.1439146101474762,
+    "win_probability": 0.5474640130996704
+  },
+  {
+    "rally_id": 24,
+    "turning_point_shot": 10,
+    "attention_change": 0.06439018994569778,
+    "win_probability": 0.8164182901382446
+  },
+  {
+    "rally_id": 25,
+    "turning_point_shot": 2,
+    "attention_change": 0.196222722530365,
+    "win_probability": 0.8307695984840393
+  },
+  {
+    "rally_id": 26,
+    "turning_point_shot": 7,
+    "attention_change": 0.07240387052297592,
+    "win_probability": 0.7790651917457581
+  },
+  {
+    "rally_id": 27,
+    "turning_point_shot": 5,
+    "attention_change": 0.10155341774225235,
+    "win_probability": 0.5711579322814941
+  },
+  {
+    "rally_id": 28,
+    "turning_point_shot": 4,
+    "attention_change": 0.09725848585367203,
+    "win_probability": 0.5832367539405823
+  },
+  {
+    "rally_id": 29,
+    "turning_point_shot": 9,
+    "attention_change": 0.04640871658921242,
+    "win_probability": 0.16882257163524628
+  },
+  {
+    "rally_id": 30,
+    "turning_point_shot": 18,
+    "attention_change": 0.029233573004603386,
+    "win_probability": 0.7993311285972595
+  },
+  {
+    "rally_id": 31,
+    "turning_point_shot": 3,
+    "attention_change": 0.14456583559513092,
+    "win_probability": 0.5840163826942444
+  },
+  {
+    "rally_id": 0,
+    "turning_point_shot": 5,
+    "attention_change": 0.10710165649652481,
+    "win_probability": 0.5868528485298157
+  },
+  {
+    "rally_id": 1,
+    "turning_point_shot": 22,
+    "attention_change": 0.03035609796643257,
+    "win_probability": 0.5838944315910339
+  },
+  {
+    "rally_id": 2,
+    "turning_point_shot": 6,
+    "attention_change": 0.06261367350816727,
+    "win_probability": 0.20089305937290192
+  },
+  {
+    "rally_id": 3,
+    "turning_point_shot": 12,
+    "attention_change": 0.04237446188926697,
+    "win_probability": 0.7938805818557739
+  },
+  {
+    "rally_id": 4,
+    "turning_point_shot": 1,
+    "attention_change": 0.2646741271018982,
+    "win_probability": 0.8301297426223755
+  },
+  {
+    "rally_id": 5,
+    "turning_point_shot": 14,
+    "attention_change": 0.04675964266061783,
+    "win_probability": 0.5803930163383484
+  },
+  {
+    "rally_id": 6,
+    "turning_point_shot": 2,
+    "attention_change": 0.15271703898906708,
+    "win_probability": 0.5689289569854736
+  },
+  {
+    "rally_id": 7,
+    "turning_point_shot": 5,
+    "attention_change": 0.08986066281795502,
+    "win_probability": 0.5849167704582214
+  },
+  {
+    "rally_id": 8,
+    "turning_point_shot": 8,
+    "attention_change": 0.06312719732522964,
+    "win_probability": 0.5767720341682434
+  },
+  {
+    "rally_id": 9,
+    "turning_point_shot": 5,
+    "attention_change": 0.09534956514835358,
+    "win_probability": 0.5747300982475281
+  },
+  {
+    "rally_id": 10,
+    "turning_point_shot": 12,
+    "attention_change": 0.05472688004374504,
+    "win_probability": 0.5807939767837524
+  },
+  {
+    "rally_id": 11,
+    "turning_point_shot": 30,
+    "attention_change": 0.024319415912032127,
+    "win_probability": 0.5773181915283203
+  },
+  {
+    "rally_id": 12,
+    "turning_point_shot": 8,
+    "attention_change": 0.05048903450369835,
+    "win_probability": 0.27602529525756836
+  },
+  {
+    "rally_id": 13,
+    "turning_point_shot": 3,
+    "attention_change": 0.13581301271915436,
+    "win_probability": 0.8599613308906555
+  },
+  {
+    "rally_id": 14,
+    "turning_point_shot": 25,
+    "attention_change": 0.017706722021102905,
+    "win_probability": 0.30796384811401367
+  },
+  {
+    "rally_id": 15,
+    "turning_point_shot": 3,
+    "attention_change": 0.10986367613077164,
+    "win_probability": 0.18882198631763458
+  },
+  {
+    "rally_id": 16,
+    "turning_point_shot": 1,
+    "attention_change": 0.26432403922080994,
+    "win_probability": 0.5922836661338806
+  },
+  {
+    "rally_id": 17,
+    "turning_point_shot": 3,
+    "attention_change": 0.13045886158943176,
+    "win_probability": 0.5825649499893188
+  },
+  {
+    "rally_id": 18,
+    "turning_point_shot": 10,
+    "attention_change": 0.03751096501946449,
+    "win_probability": 0.16834549605846405
+  },
+  {
+    "rally_id": 19,
+    "turning_point_shot": 2,
+    "attention_change": 0.14151696860790253,
+    "win_probability": 0.1664571315050125
+  },
+  {
+    "rally_id": 20,
+    "turning_point_shot": 6,
+    "attention_change": 0.07793808728456497,
+    "win_probability": 0.5832305550575256
+  },
+  {
+    "rally_id": 21,
+    "turning_point_shot": 13,
+    "attention_change": 0.03630558028817177,
+    "win_probability": 0.8965370655059814
+  },
+  {
+    "rally_id": 22,
+    "turning_point_shot": 4,
+    "attention_change": 0.08324424922466278,
+    "win_probability": 0.17656907439231873
+  },
+  {
+    "rally_id": 23,
+    "turning_point_shot": 2,
+    "attention_change": 0.05555947870016098,
+    "win_probability": 0.1020776778459549
+  },
+  {
+    "rally_id": 24,
+    "turning_point_shot": 10,
+    "attention_change": 0.06478064507246017,
+    "win_probability": 0.5979963541030884
+  },
+  {
+    "rally_id": 25,
+    "turning_point_shot": 13,
+    "attention_change": 0.02815774828195572,
+    "win_probability": 0.13838809728622437
+  },
+  {
+    "rally_id": 26,
+    "turning_point_shot": 2,
+    "attention_change": 0.054912179708480835,
+    "win_probability": 0.21345549821853638
+  },
+  {
+    "rally_id": 27,
+    "turning_point_shot": 2,
+    "attention_change": 0.1483423113822937,
+    "win_probability": 0.14321184158325195
+  },
+  {
+    "rally_id": 28,
+    "turning_point_shot": 5,
+    "attention_change": 0.0992533415555954,
+    "win_probability": 0.5775022506713867
+  },
+  {
+    "rally_id": 29,
+    "turning_point_shot": 9,
+    "attention_change": 0.03988632932305336,
+    "win_probability": 0.14034143090248108
+  },
+  {
+    "rally_id": 30,
+    "turning_point_shot": 5,
+    "attention_change": 0.09547995775938034,
+    "win_probability": 0.5752504467964172
+  },
+  {
+    "rally_id": 31,
+    "turning_point_shot": 3,
+    "attention_change": 0.14333753287792206,
+    "win_probability": 0.8472599983215332
+  },
+  {
+    "rally_id": 0,
+    "turning_point_shot": 2,
+    "attention_change": 0.22745752334594727,
+    "win_probability": 0.5877928733825684
+  },
+  {
+    "rally_id": 1,
+    "turning_point_shot": 2,
+    "attention_change": 0.15777400135993958,
+    "win_probability": 0.16378112137317657
+  },
+  {
+    "rally_id": 2,
+    "turning_point_shot": 12,
+    "attention_change": 0.04019951447844505,
+    "win_probability": 0.5856271982192993
+  },
+  {
+    "rally_id": 3,
+    "turning_point_shot": 34,
+    "attention_change": 0.011466169729828835,
+    "win_probability": 0.18957243859767914
+  },
+  {
+    "rally_id": 4,
+    "turning_point_shot": 13,
+    "attention_change": 0.03644812852144241,
+    "win_probability": 0.8960403800010681
+  },
+  {
+    "rally_id": 5,
+    "turning_point_shot": 11,
+    "attention_change": 0.04969814419746399,
+    "win_probability": 0.5748050808906555
+  },
+  {
+    "rally_id": 6,
+    "turning_point_shot": 10,
+    "attention_change": 0.047206439077854156,
+    "win_probability": 0.7596468329429626
+  },
+  {
+    "rally_id": 7,
+    "turning_point_shot": 11,
+    "attention_change": 0.034158702939748764,
+    "win_probability": 0.13816522061824799
+  },
+  {
+    "rally_id": 8,
+    "turning_point_shot": 17,
+    "attention_change": 0.033507876098155975,
+    "win_probability": 0.5739908814430237
+  },
+  {
+    "rally_id": 9,
+    "turning_point_shot": 1,
+    "attention_change": 0.2960585355758667,
+    "win_probability": 0.5749261975288391
+  },
+  {
+    "rally_id": 10,
+    "turning_point_shot": 1,
+    "attention_change": 0.2994212210178375,
+    "win_probability": 0.5747749209403992
+  },
+  {
+    "rally_id": 11,
+    "turning_point_shot": 5,
+    "attention_change": 0.09398765861988068,
+    "win_probability": 0.7245095372200012
+  },
+  {
+    "rally_id": 12,
+    "turning_point_shot": 5,
+    "attention_change": 0.06751833856105804,
+    "win_probability": 0.1404324620962143
+  },
+  {
+    "rally_id": 13,
+    "turning_point_shot": 1,
+    "attention_change": 0.2960585355758667,
+    "win_probability": 0.5749261975288391
+  },
+  {
+    "rally_id": 14,
+    "turning_point_shot": 2,
+    "attention_change": 0.2211594432592392,
+    "win_probability": 0.5795632600784302
+  },
+  {
+    "rally_id": 15,
+    "turning_point_shot": 7,
+    "attention_change": 0.06997651606798172,
+    "win_probability": 0.5833585262298584
+  },
+  {
+    "rally_id": 16,
+    "turning_point_shot": 1,
+    "attention_change": 0.26966261863708496,
+    "win_probability": 0.5662208795547485
+  },
+  {
+    "rally_id": 17,
+    "turning_point_shot": 3,
+    "attention_change": 0.14394137263298035,
+    "win_probability": 0.5774305462837219
+  },
+  {
+    "rally_id": 18,
+    "turning_point_shot": 6,
+    "attention_change": 0.0524524450302124,
+    "win_probability": 0.1104649230837822
+  },
+  {
+    "rally_id": 19,
+    "turning_point_shot": 13,
+    "attention_change": 0.03438353165984154,
+    "win_probability": 0.31792348623275757
+  },
+  {
+    "rally_id": 20,
+    "turning_point_shot": 1,
+    "attention_change": 0.25572896003723145,
+    "win_probability": 0.7511800527572632
+  }
+]

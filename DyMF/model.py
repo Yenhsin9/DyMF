@@ -162,6 +162,8 @@ class ParallelCoAttentionNetwork(nn.Module):
         self.co_attention_dim = co_attention_dim
         self.src_length_masking = src_length_masking
 
+        self.W_a = torch.nn.Parameter(torch.Tensor(self.hidden_dim, self.hidden_dim))
+        nn.init.xavier_uniform_(self.W_a, gain=nn.init.calculate_gain('relu'))
         self.W_b = torch.nn.Parameter(torch.Tensor(self.hidden_dim, self.hidden_dim))
         nn.init.xavier_uniform_(self.W_b, gain=nn.init.calculate_gain('relu'))
         self.W_v = torch.nn.Parameter(torch.Tensor(self.co_attention_dim, self.hidden_dim))
@@ -172,7 +174,8 @@ class ParallelCoAttentionNetwork(nn.Module):
         nn.init.xavier_uniform_(self.w_hv, gain=nn.init.calculate_gain('relu'))
         self.w_hq = torch.nn.Parameter(torch.Tensor(self.co_attention_dim, 1))
         nn.init.xavier_uniform_(self.w_hq, gain=nn.init.calculate_gain('relu'))
-
+        self.wh_a = nn.Parameter(torch.randn(self.hidden_dim))
+        self.wh_b = nn.Parameter(torch.randn(self.hidden_dim))
         # self.dropout = nn.Dropout(0.1)
         # self.W_b = nn.Parameter(torch.randn(self.hidden_dim, self.hidden_dim))
         # self.W_v = nn.Parameter(torch.randn(self.co_attention_dim, self.hidden_dim))
@@ -180,41 +183,32 @@ class ParallelCoAttentionNetwork(nn.Module):
         # self.w_hv = nn.Parameter(torch.randn(self.co_attention_dim, 1))
         # self.w_hq = nn.Parameter(torch.randn(self.co_attention_dim, 1))
  
-    def forward(self, V, Q, Q_lengths):
-        """
-        :param V: batch_size * hidden_dim * region_num, eg B x 512 x 196
-        :param Q: batch_size * seq_len * hidden_dim, eg B x L x 512
-        :param Q_lengths: batch_size
-        :return:batch_size * 1 * region_num, batch_size * 1 * seq_len,
-        batch_size * hidden_dim, batch_size * hidden_dim
-        """
-        # (batch_size, seq_len, region_num)
-        C = torch.matmul(Q, torch.matmul(self.W_b, V))
-        # (batch_size, co_attention_dim, region_num)
-        H_v = nn.Tanh()(torch.matmul(self.W_v, V) + torch.matmul(torch.matmul(self.W_q, Q.permute(0, 2, 1)), C))
-        # (batch_size, co_attention_dim, seq_len)
-        H_q = nn.Tanh()(
-            torch.matmul(self.W_q, Q.permute(0, 2, 1)) + torch.matmul(torch.matmul(self.W_v, V), C.permute(0, 2, 1)))
+    def forward(self, V, Q, mask):
+        # 線性變換（你也可直接用 nn.Linear）
+        Da_lin = torch.matmul(Q, self.W_a)     # (B, T, D)
+        Db_lin = torch.matmul(V, self.W_b)     # (B, T, D)
 
-        # (batch_size, 1, region_num)
-        a_v = F.softmax(torch.matmul(torch.t(self.w_hv), H_v), dim=2)
-        # (batch_size, 1, seq_len)
-        a_q = F.softmax(torch.matmul(torch.t(self.w_hq), H_q), dim=2) #torch.Size([32, 1, 60])
-        # # (batch_size, 1, seq_len)
+        # G: (B, T, T)
+        G = torch.tanh(torch.bmm(Da_lin, Db_lin.transpose(1, 2)))
 
-        # a_v = self.dropout(a_v)
-        # a_q = self.dropout(a_q)
+        # (B, T, D)
+        Ha = torch.tanh(Da_lin + torch.bmm(G, Db_lin))                   # G * (W_b V)
+        Hb = torch.tanh(Db_lin + torch.bmm(G.transpose(1, 2), Da_lin))    # G^T * (W_a Q)
 
-        masked_a_q = masked_softmax(
-            a_q.squeeze(1), Q_lengths, self.src_length_masking
-        ).unsqueeze(1)
+        # scores: (B, T)
+        score_a = torch.matmul(Ha, self.wh_a)        # (B, T, D) · (D,) -> (B, T)
+        att_a   = torch.softmax(score_a, dim=1)      # (B, T)
+        att_a = att_a*mask
+        hat_a = torch.sum(att_a.unsqueeze(-1) * Q, dim=1) #整段序列濃縮後的「整體風格向量」
+
+        # 同理 B
+        score_b = torch.matmul(Hb, self.wh_b)        # (B, T)
+        att_b   = torch.softmax(score_b, dim=1)
+        att_b = att_b*mask
+        hat_b   = torch.sum(att_b.unsqueeze(-1) * V, dim=1)
+
  
-        # (batch_size, hidden_dim)
-        v = torch.squeeze(torch.matmul(a_v, V.permute(0, 2, 1)))
-        # (batch_size, hidden_dim)
-        q = torch.squeeze(torch.matmul(masked_a_q, Q))
- 
-        return a_v, masked_a_q, v, q
+        return G, hat_a, hat_b
 
 class GCNDynamicLayer(nn.Module):
     def __init__(self, in_dim, out_dim, dropout, args, device):
@@ -400,13 +394,13 @@ class Encoder(nn.Module):
         self.linear_for_dynmaic_gcn = nn.Linear(1+ args['hidden_size'], args['hidden_size'])
         self.win_head = nn.Linear(args['hidden_size']*2, 1) 
 
-        # 添加注意力層用於節點重要性
+        # 節點注意力層
         self.node_attention = nn.Linear(hidden_size, 1)
         nn.init.xavier_uniform_(self.node_attention.weight)
         nn.init.constant_(self.node_attention.bias, 0)
         self.softmax = nn.Softmax(dim=1)
 
-        # 添加邊注意力層
+        # 邊注意力層
         self.edge_attention = nn.Linear(hidden_size * 2, 1)
         nn.init.xavier_uniform_(self.edge_attention.weight)
         nn.init.constant_(self.edge_attention.bias, 0)
@@ -431,14 +425,6 @@ class Encoder(nn.Module):
     ):
         
         batch_size = player.size(0)
-       
-        # player_A_coordination = torch.cat((player_A_x.unsqueeze(2), player_A_y.unsqueeze(2)), dim=2).float()
-        # player_B_coordination = torch.cat((player_B_x.unsqueeze(2), player_B_y.unsqueeze(2)), dim=2).float()
-
-        # # interleave the player and opponent location
-        # coordination_sequence = torch.stack((player_A_coordination, player_B_coordination), dim=2).view(player.size(0), -1, 2)
-        # coordination_transform = self.coordination_transform(coordination_sequence)
-        # coordination_transform = F.relu(coordination_transform) 
 
         AB = player_A_loc.new_zeros((batch_size, encode_length*2))  
         AB[:, 0::2] = player_A_loc   
@@ -498,12 +484,17 @@ class Encoder(nn.Module):
         model_input = self.model_input_linear(rally_information)
 
         node_mask = mask.repeat_interleave(2, dim=1)    #[32,120]
-        node_mask = node_mask.unsqueeze(-1)
+        node_mask = node_mask.unsqueeze(-1) #[32,120,1]
         model_input = model_input * node_mask
         
         # fixed node embedding in decoder
         full_graph_node_embedding = self.rGCN(model_input, adjacency_matrix)
         full_graph_node_embedding = full_graph_node_embedding*node_mask
+
+        # 計算節點注意力權重
+        node_attention_scores = self.node_attention(full_graph_node_embedding).squeeze(-1)  # [batch_size, seq_len]
+        node_attention_scores = node_attention_scores.masked_fill(node_mask.squeeze(-1) == 0, -float('inf'))
+        node_attention_weights = self.softmax(node_attention_scores)  # [batch_size, seq_len]
 
         player_A_embedding = model_input[:, 0::2, :].clone()
         player_B_embedding = model_input[:, 1::2, :].clone()
@@ -524,10 +515,14 @@ class Encoder(nn.Module):
         player_A_node_embedding = player_A_node_embedding * mask.unsqueeze(-1)
         player_B_node_embedding = player_B_node_embedding * mask.unsqueeze(-1)
       
-        _, _, A_weight, B_weight = self.co_attention(player_A_node_embedding.permute(0, 2, 1), player_B_node_embedding, (thisRallyL//2).long().squeeze(-1))
+        G, A_weight, B_weight = self.co_attention(player_B_node_embedding, player_A_node_embedding, mask)
+        print(f"G shape: {G.shape}, sample: {G[0]}")
+        print('A_weight:', A_weight.shape, 'B_weight:', B_weight.shape)
+        print(A_weight[0])
         A_weight = self.sigmoid(self.co_attention_linear_A(A_weight))
         B_weight = self.sigmoid(self.co_attention_linear_B(B_weight))     
-        
+        print("A_weight:", A_weight.shape, "B_weight:", B_weight.shape)
+        print(A_weight[0])
         player_A_node_embedding = player_A_node_embedding + B_weight.unsqueeze(1) * player_B_node_embedding
         player_B_node_embedding = player_B_node_embedding + A_weight.unsqueeze(1) * player_A_node_embedding
 
@@ -554,25 +549,6 @@ class Encoder(nn.Module):
         node_embedding[:, 0::2, :] = full_graph_node_embedding[:, 0::2, :] * w_rgcn_A.unsqueeze(1) + player_A_node_embedding * w_gcn_A.unsqueeze(1)
         node_embedding[:, 1::2, :] = full_graph_node_embedding[:, 1::2, :] * w_rgcn_B.unsqueeze(1) + player_B_node_embedding * w_gcn_B.unsqueeze(1)
 
-        # # 計算節點注意力權重
-        # node_attention_scores = self.node_attention(node_embedding).squeeze(-1)  # [batch_size, seq_len]
-        # node_attention_scores = node_attention_scores.masked_fill(node_mask.squeeze(-1) == 0, -float('inf'))
-        # node_attention_weights = self.softmax(node_attention_scores)  # [batch_size, seq_len]
-
-        # # 計算邊注意力權重
-        # edge_attention_weights = []
-        # for i in range(batch_size):
-        #     adj = adjacency_matrix[i, 1:, :, :]  # 跳過填充邊類型
-        #     src, dst = torch.nonzero(adj.sum(dim=0), as_tuple=True)
-        #     if len(src) > 0:
-        #         edge_features = torch.cat((node_embedding[i, src, :], node_embedding[i, dst, :]), dim=-1)
-        #         edge_scores = self.edge_attention(edge_features).squeeze(-1)
-        #         edge_weights = self.softmax(edge_scores)
-        #         edge_attention_weights.append(edge_weights)
-        #     else:
-        #         edge_attention_weights.append(torch.zeros(0, device=node_embedding.device))
-        # edge_attention_weights = torch.stack(edge_attention_weights) if edge_attention_weights else torch.zeros((batch_size, 0), device=node_embedding.device)
-
         idx = (thisRallyL).squeeze(-1).long()   # shape [32]
         batch_idx = torch.arange(node_embedding.size(0), device=node_embedding.device)  # [32]
         lastNode1 = node_embedding[batch_idx, idx-1, :] #[32,16]
@@ -586,5 +562,5 @@ class Encoder(nn.Module):
         logits = self.win_head(combineLast).squeeze(-1)  
         #win_logit = torch.sigmoid(logits)             
         
-        # return logits, node_attention_weights, edge_attention_weights
-        return logits
+        return logits, node_attention_weights
+        #return logits

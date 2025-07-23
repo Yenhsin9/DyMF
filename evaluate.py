@@ -5,7 +5,7 @@ import torch.nn as nn
 import random
 import numpy as np
 import pandas as pd
-from prepare_dataset import prepare_test_datasets
+from prepare_dataset import prepare_kfold_datasets
 from utils import load_args_file
 
 import os
@@ -98,9 +98,9 @@ def main():
     print(f"Using device: {device}")
 
     if args['model_folder'] == None:
-        args['model_folder'] = './model/DyMF_2025-07-21-01:20/fold_1' 
+        args['model_folder'] = './model/DyMF_2025-07-21-02:07/fold_3' 
 
-    test_dataloader = prepare_test_datasets(args)
+    test_dataloader, data_dir, used_column = prepare_kfold_datasets(args)
 
 
     if args['model_type'] == 'DNRI':
@@ -186,8 +186,8 @@ def main():
 
     encoder.to(device)
 
-    avg_loss, auc, brier = evaluate(test_dataloader, encoder, args, device=device)
-    
+    loss, auc, brier, acc = evaluate(test_dataloader, encoder, args, device=device)
+    print(f"Test Loss: {loss:.4f}, Test Acc: {acc:.4f}, Test AUC: {auc:.4f}, Test Brier: {brier:.4f}")
 
 if __name__ == "__main__":
     main()
