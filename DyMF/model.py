@@ -516,13 +516,10 @@ class Encoder(nn.Module):
         player_B_node_embedding = player_B_node_embedding * mask.unsqueeze(-1)
       
         G, A_weight, B_weight = self.co_attention(player_B_node_embedding, player_A_node_embedding, mask)
-        print(f"G shape: {G.shape}, sample: {G[0]}")
-        print('A_weight:', A_weight.shape, 'B_weight:', B_weight.shape)
-        print(A_weight[0])
+        
         A_weight = self.sigmoid(self.co_attention_linear_A(A_weight))
         B_weight = self.sigmoid(self.co_attention_linear_B(B_weight))     
-        print("A_weight:", A_weight.shape, "B_weight:", B_weight.shape)
-        print(A_weight[0])
+    
         player_A_node_embedding = player_A_node_embedding + B_weight.unsqueeze(1) * player_B_node_embedding
         player_B_node_embedding = player_B_node_embedding + A_weight.unsqueeze(1) * player_A_node_embedding
 
