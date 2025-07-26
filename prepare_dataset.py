@@ -75,3 +75,28 @@ def get_fold_dataloader(fold_idx, data_dir, used_column, args):
     gc.collect()
 
     return train_dataloader, valid_dataloader
+
+
+def prepare_testCase_datasets(args):
+    matches = DataCleaner(args)
+    
+    used_column = [
+        'rally', 'player', 'type',
+        'player_location_area', 'opponent_location_area',
+        'ball_round',
+        'getpoint_player',
+    ]
+
+    matches = matches[used_column]
+
+    type_codes, type_uniques = pd.factorize(matches['type'])
+    matches['type'] = type_codes + 1
+    args['type_num'] = len(type_uniques) + 1
+
+    data_dir = './data/'
+
+    test_rally_data = pd.read_csv('./data/test.csv')
+    test_dataset = BadmintonDataset(test_rally_data, used_column, args)
+    test_dataloader = DataLoader(test_dataset, batch_size=args['test_batch_size'], shuffle=False, num_workers=8)
+    
+    return test_dataloader, data_dir, used_column

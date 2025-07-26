@@ -10,6 +10,7 @@ from torch.nn import BCELoss
 from DyMF.draw_plot import draw_plot
 import pandas as pd
 import pickle
+import json
 from prepare_dataset import get_fold_dataloader
 import gc
 try:
@@ -77,7 +78,7 @@ def train_kfold(data_dir, used_column, k_folds, test_dataloader, encoder, locati
                 target = target.to(device).float()
                 encoder_optimizer.zero_grad()
                 #player, shot_type,adj,player_A_loc,player_B_loc,mask
-                win_logit = encoder(
+                win_logit,_ = encoder(
                     rally_batch[0].to(device), rally_batch[1].to(device), rally_batch[2].to(device),
                     rally_batch[3].to(device), rally_batch[4].to(device), rally_batch[5].to(device),
                     max_length
@@ -205,6 +206,7 @@ def train_kfold(data_dir, used_column, k_folds, test_dataloader, encoder, locati
 def evaluate(test_dataloader, encoder, args, device="cpu"):
     max_length = test_dataloader.dataset.encode_length
     bce_loss = BCEWithLogitsLoss()
+    rally_analysis = []
     encoder.eval()
     with torch.no_grad():
         test_loss = 0.0
@@ -213,7 +215,7 @@ def evaluate(test_dataloader, encoder, args, device="cpu"):
         for rally_batch, target in test_dataloader:
             target = target.to(device).float()
             #player, shot_type,adj,player_A_loc,player_B_loc,mask
-            win_logit = encoder(
+            win_logit, node_attention_weights = encoder(
                 rally_batch[0].to(device), rally_batch[1].to(device), rally_batch[2].to(device),
                 rally_batch[3].to(device), rally_batch[4].to(device), rally_batch[5].to(device),
                 max_length
@@ -223,6 +225,23 @@ def evaluate(test_dataloader, encoder, args, device="cpu"):
             l = bce_loss(win_logit, target)
             test_loss += l.item() * rally_batch[0].size(0)
             n_test += rally_batch[0].size(0)
+
+            # 保存每個拉力的分析數據
+            for i in range(rally_batch[0].size(0)):
+                rally_data = {
+                    'rally_id': i,
+                    'node_attention': node_attention_weights[i].detach().cpu().numpy().tolist(),
+                    # 'edge_attention': edge_attention_weights[i].detach().cpu().numpy().tolist(),
+                    # 'edge_types': edge_types[i].detach().cpu().numpy().tolist(),
+                    # 'edge_indices': edge_indices[i].detach().cpu().numpy().tolist(),
+                    'shot_type': rally_batch[1][i].detach().cpu().numpy().tolist(),
+                    'player_A_loc': rally_batch[10][i].detach().cpu().numpy().tolist(),
+                    'player_B_loc': rally_batch[11][i].detach().cpu().numpy().tolist(),
+                    'hit_area': rally_batch[13][i].detach().cpu().numpy().tolist(),
+                    'win_prob': torch.sigmoid(win_logit[i]).detach().cpu().numpy().item(),
+                }
+                rally_analysis.append(rally_data)
+
             del win_logit, l
             torch.cuda.empty_cache() if device == "cuda" else None
             gc.collect()
@@ -234,8 +253,73 @@ def evaluate(test_dataloader, encoder, args, device="cpu"):
     except ValueError:
         auc = float('nan')
     brier = brier_score_loss(y_true, y_prob)
+
+    # 保存分析結果
+    output_folder_name = '/content/drive/MyDrive/DyMF_2025-07-22-02:32/'
+
+    with open(os.path.join(output_folder_name, 'rally_analysis.json'), 'w') as f:
+        json.dump(rally_analysis, f, indent=2)
+
+    # # 可視化選手互動和擊球重要度
+    # visualize_player_influence(rally_analysis, output_folder_name)
+    visualize_shot_importance(rally_analysis, output_folder_name)
     
     return avg_test_loss, auc, brier, acc
+
+def visualize_shot_importance(rally_analysis, output_folder):
+    shot_types = {1: 'short service', 2: 'clear', 3: 'push & rush', 4: 'smash', 5: 'defensive return', 
+                  6: 'drive', 7: 'net shot', 8: 'lob', 9: 'drop', 10: 'long service'}
+    area_types = {
+        1: "Front-Right", 2: "Front-Center", 3: "Back-Left", 4: "Middle-Left",
+        5: "Back-Center", 6: "Middle-Center", 7: "Net Zone Center", 8: "Middle-Right",
+        9: "Back-Right", 10: "Out"
+    }
+   
+    # 只處理 rally_0
+    rally = rally_analysis[0]  # 假設 rally_0 是第一個元素
+    rally_id = rally['rally_id']
+    node_attention = np.array(rally['node_attention'])
+    shot_type = np.array(rally['shot_type'])
+    player_A_loc = np.array(rally['player_A_loc'])
+    player_B_loc = np.array(rally['player_B_loc'])
+    hit_area = np.array(rally['hit_area'])
+
+    # 過濾注意力權重 > 0 的擊球
+    valid_indices = np.where((node_attention[0::2] > 0) | (node_attention[1::2] > 0))[0]
+    if len(valid_indices) == 0:
+        print(f"No shots with attention > 0 in rally {rally_id}, skipping visualization.")
+        return
+
+    shots = valid_indices
+    attention_A = node_attention[0::2][valid_indices]
+    attention_B = node_attention[1::2][valid_indices]
+    shot_type_valid = shot_type[valid_indices]
+    player_A_loc_valid = player_A_loc[valid_indices]
+    player_B_loc_valid = player_B_loc[valid_indices]
+    hit_area_valid = hit_area[valid_indices]
+
+    # 繪製擊球重要度柱狀圖
+    plt.figure(figsize=(10, 6))
+    plt.bar(shots - 0.2, attention_A, width=0.4, label='Player A', color='lightblue')
+    plt.bar(shots + 0.2, attention_B, width=0.4, label='Player B', color='lightgreen')
+    plt.xlabel('Shot Number')
+    plt.ylabel('Attention Weight')
+    plt.title(f'Rally {rally_id} Shot Importance (Attention > 0)')
+    plt.legend()
+
+    # 添加擊球類型和位置標記
+    for i, shot_idx in enumerate(shots):
+        shot_name = shot_types.get(shot_type_valid[i], 'Unknown')
+        loc_A = area_types.get(player_A_loc_valid[i], 'Unknown')
+        loc_B = area_types.get(player_B_loc_valid[i], 'Unknown')
+        hit = area_types.get(hit_area_valid[i], 'Unknown')
+        plt.text(shot_idx - 0.2, attention_A[i] + 0.01, f"{shot_name}\nA:{loc_A}", ha='center', fontsize=8)
+        plt.text(shot_idx + 0.2, attention_B[i] + 0.01, f"B:{loc_B}\nHit:{hit}", ha='center', fontsize=8)
+
+    plt.savefig(os.path.join(output_folder, f'shot_importance_rally_{rally_id}.png'))
+    plt.close()
+
+    print(f"Visualized rally {rally_id} with {len(shots)} shots.")
 
 def save(encoder, decoder, args):
     output_folder_name = args['model_folder']

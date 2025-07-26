@@ -480,6 +480,11 @@ class Encoder(nn.Module):
         full_graph_node_embedding = self.rGCN(model_input, adjacency_matrix)
         full_graph_node_embedding = full_graph_node_embedding*node_mask
 
+        # 計算節點注意力權重
+        node_attention_scores = self.node_attention(full_graph_node_embedding).squeeze(-1)  # [batch_size, seq_len]
+        node_attention_scores = node_attention_scores.masked_fill(node_mask.squeeze(-1) == 0, -float('inf'))
+        node_attention_weights = self.softmax(node_attention_scores)  # [batch_size, seq_len]
+
         player_A_embedding = model_input[:, 0::2, :].clone()
         player_B_embedding = model_input[:, 1::2, :].clone()
         
@@ -538,4 +543,4 @@ class Encoder(nn.Module):
         logits = self.win_head(combineLast).squeeze(-1)       
         
         # return logits, node_attention_weights, edge_attention_weights
-        return logits
+        return logits, node_attention_weights
