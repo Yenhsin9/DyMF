@@ -25,21 +25,21 @@ def main():
 
     # training
     args.add_argument("--seed", type=int, default=22)
-    args.add_argument("--train_batch_size", type=int, default=128)
+    args.add_argument("--train_batch_size", type=int, default=64)
     args.add_argument("--valid_batch_size", type=int, default=32) 
     args.add_argument("--test_batch_size", type=int, default=32)
-    args.add_argument("--hidden_size", type=int, default=32)
-    args.add_argument("--model_type", type=str, required=True)
-    args.add_argument("--lr", type=float, default=0.00068)
+    args.add_argument("--hidden_size", type=int, default=64)
+    args.add_argument("--model_type", type=str, default='DyMF')
+    args.add_argument("--lr", type=float, default=0.0019)
     args.add_argument("--player_dim", type=int, default=16)
     args.add_argument("--type_dim", type=int, default=16)
     args.add_argument("--location_dim", type=int, default=16)
     args.add_argument("--num_layer", type=int, default=2)
-    args.add_argument("--weight_decay", type=float, default=3.461176674138536e-06)
+    args.add_argument("--weight_decay", type=float, default=0.000147)
 
     args.add_argument("--epochs", type=int, default=50)
     #args.add_argument("--encode_length", type=int, required=True)
-    args.add_argument("--dropout", type=float, default=0.3551)
+    args.add_argument("--dropout", type=float, default=0.69723)
 
     args.add_argument("--num_basis", type=int, default=3)
 

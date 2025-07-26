@@ -77,7 +77,7 @@ def train_kfold(data_dir, used_column, k_folds, test_dataloader, encoder, locati
                 rally_batch = [b.to(device) for b in rally_batch]
                 target = target.to(device).float()
                 encoder_optimizer.zero_grad()
-                win_logit,_ = encoder(
+                win_logit,_,_,_ = encoder(
                     rally_batch[0], rally_batch[1], rally_batch[2], rally_batch[3],
                     rally_batch[4], rally_batch[5], rally_batch[7], rally_batch[8],
                     rally_batch[9], rally_batch[10], rally_batch[11], rally_batch[12],
@@ -215,7 +215,7 @@ def evaluate(test_dataloader, encoder, args, device="cpu"):
         y_true, y_prob = [], []
         for rally_batch, target in test_dataloader:
             target = target.to(device).float()
-            win_logit, node_attention_weights = encoder(
+            win_logit, node_attention_weights, b2a_contrib, a2b_contrib = encoder(
                 rally_batch[0].to(device), rally_batch[1].to(device), rally_batch[2].to(device),
                 rally_batch[3].to(device), rally_batch[4].to(device), rally_batch[5].to(device),
                 rally_batch[7].to(device), rally_batch[8].to(device), rally_batch[9].to(device),
@@ -242,8 +242,8 @@ def evaluate(test_dataloader, encoder, args, device="cpu"):
                     'player_B_loc': rally_batch[11][i].detach().cpu().numpy().tolist(),
                     'hit_area': rally_batch[13][i].detach().cpu().numpy().tolist(),
                     'win_prob': torch.sigmoid(win_logit[i]).detach().cpu().numpy().item(),
-                    # 'A_weight': A_weight[i].detach().cpu().numpy().tolist(),  # 添加 A_weight
-                    # 'B_weight': B_weight[i].detach().cpu().numpy().tolist()   # 添加 B_weight
+                    'A_weight': b2a_contrib[i].detach().cpu().numpy().tolist(),  # 添加 A_weight
+                    'B_weight': a2b_contrib[i].detach().cpu().numpy().tolist()   # 添加 B_weight
                 }
                 rally_analysis.append(rally_data)
 
@@ -257,15 +257,15 @@ def evaluate(test_dataloader, encoder, args, device="cpu"):
     brier = brier_score_loss(y_true, y_prob)
     #print(f"Test Loss: {avg_test_loss:.4f}, Test Acc: {acc:.4f}, Test AUC: {auc:.4f}, Test Brier: {brier:.4f}")
  
-    # # 保存分析結果
-    # output_folder_name = './rally_analysis'
+    # 保存分析結果
+    output_folder_name = './rally_analysis'
 
-    # with open(os.path.join(output_folder_name, 'rally_analysis.json'), 'w') as f:
-    #     json.dump(rally_analysis, f, indent=2)
+    with open(os.path.join(output_folder_name, 'rally_analysis.json'), 'w') as f:
+        json.dump(rally_analysis, f, indent=2)
 
     # # 可視化選手互動和擊球重要度
     # visualize_player_influence(rally_analysis, output_folder_name)
-    # visualize_shot_importance(rally_analysis, output_folder_name)
+    visualize_shot_importance(rally_analysis, output_folder_name)
 
     # # 檢測轉折點
     # turning_points = detect_turning_points(rally_analysis)

@@ -184,12 +184,17 @@ class ParallelCoAttentionNetwork(nn.Module):
         # self.w_hq = nn.Parameter(torch.randn(self.co_attention_dim, 1))
  
     def forward(self, V, Q, mask):
+        B, T, D = Q.shape
         # 線性變換（你也可直接用 nn.Linear）
         Da_lin = torch.matmul(Q, self.W_a)     # (B, T, D)
         Db_lin = torch.matmul(V, self.W_b)     # (B, T, D)
 
         # G: (B, T, T)
         G = torch.tanh(torch.bmm(Da_lin, Db_lin.transpose(1, 2)))
+
+        b2a_contrib = torch.bmm(G, Db_lin)    
+                                             
+        a2b_contrib = torch.bmm(G.transpose(1, 2), Da_lin)
 
         # (B, T, D)
         Ha = torch.tanh(Da_lin + torch.bmm(G, Db_lin))                   # G * (W_b V)
@@ -208,7 +213,7 @@ class ParallelCoAttentionNetwork(nn.Module):
         hat_b   = torch.sum(att_b.unsqueeze(-1) * V, dim=1)
 
  
-        return G, hat_a, hat_b
+        return hat_a, hat_b,b2a_contrib,a2b_contrib
 
 class GCNDynamicLayer(nn.Module):
     def __init__(self, in_dim, out_dim, dropout, args, device):
@@ -394,16 +399,11 @@ class Encoder(nn.Module):
         self.linear_for_dynmaic_gcn = nn.Linear(1+ args['hidden_size'], args['hidden_size'])
         self.win_head = nn.Linear(args['hidden_size']*2, 1) 
 
-        # 節點注意力層
+        # 添加注意力層用於節點重要性
         self.node_attention = nn.Linear(hidden_size, 1)
         nn.init.xavier_uniform_(self.node_attention.weight)
         nn.init.constant_(self.node_attention.bias, 0)
         self.softmax = nn.Softmax(dim=1)
-
-        # 邊注意力層
-        self.edge_attention = nn.Linear(hidden_size * 2, 1)
-        nn.init.xavier_uniform_(self.edge_attention.weight)
-        nn.init.constant_(self.edge_attention.bias, 0)
 
     def forward(self,
                 player,     
@@ -425,6 +425,14 @@ class Encoder(nn.Module):
     ):
         
         batch_size = player.size(0)
+       
+        # player_A_coordination = torch.cat((player_A_x.unsqueeze(2), player_A_y.unsqueeze(2)), dim=2).float()
+        # player_B_coordination = torch.cat((player_B_x.unsqueeze(2), player_B_y.unsqueeze(2)), dim=2).float()
+
+        # # interleave the player and opponent location
+        # coordination_sequence = torch.stack((player_A_coordination, player_B_coordination), dim=2).view(player.size(0), -1, 2)
+        # coordination_transform = self.coordination_transform(coordination_sequence)
+        # coordination_transform = F.relu(coordination_transform) 
 
         AB = player_A_loc.new_zeros((batch_size, encode_length*2))  
         AB[:, 0::2] = player_A_loc   
@@ -484,7 +492,7 @@ class Encoder(nn.Module):
         model_input = self.model_input_linear(rally_information)
 
         node_mask = mask.repeat_interleave(2, dim=1)    #[32,120]
-        node_mask = node_mask.unsqueeze(-1) #[32,120,1]
+        node_mask = node_mask.unsqueeze(-1)
         model_input = model_input * node_mask
         
         # fixed node embedding in decoder
@@ -515,11 +523,10 @@ class Encoder(nn.Module):
         player_A_node_embedding = player_A_node_embedding * mask.unsqueeze(-1)
         player_B_node_embedding = player_B_node_embedding * mask.unsqueeze(-1)
       
-        G, A_weight, B_weight = self.co_attention(player_B_node_embedding, player_A_node_embedding, mask)
-        
+        A_weight, B_weight,b2a_contrib,a2b_contrib = self.co_attention(player_B_node_embedding, player_A_node_embedding, mask)
         A_weight = self.sigmoid(self.co_attention_linear_A(A_weight))
         B_weight = self.sigmoid(self.co_attention_linear_B(B_weight))     
-    
+        
         player_A_node_embedding = player_A_node_embedding + B_weight.unsqueeze(1) * player_B_node_embedding
         player_B_node_embedding = player_B_node_embedding + A_weight.unsqueeze(1) * player_A_node_embedding
 
@@ -559,5 +566,27 @@ class Encoder(nn.Module):
         logits = self.win_head(combineLast).squeeze(-1)  
         #win_logit = torch.sigmoid(logits)             
         
-        return logits, node_attention_weights
-        #return logits
+        # return logits, node_attention_weights, edge_attention_weights
+        return logits, node_attention_weights,b2a_contrib, a2b_contrib
+
+
+# # 線性變換（你也可直接用 nn.Linear）
+        # Da_lin = torch.matmul(Q, self.W_a)     # (B, T, D)
+        # Db_lin = torch.matmul(V, self.W_b)     # (B, T, D)
+
+        # G = torch.tanh(torch.bmm(Da_lin, Db_lin.transpose(1, 2)))
+
+        # b2a_mask = mask.unsqueeze(1).expand(B, T, T)      
+        # b2a_mask = b2a_mask.bool()
+        # b2a_w = torch.where(b2a_mask, G, torch.tensor(float('-inf')))
+        # b2a_w = torch.softmax(b2a_w, dim=-1)
+
+        # # --- A -> B：用 G^T，對最後一維 (A 的時間軸) softmax
+        # a2b_mask_T = mask.unsqueeze(1).expand(B, T, T)   
+        # a2b_mask_T = a2b_mask_T.bool()
+        # a2b_w = torch.where(a2b_mask_T, G.transpose(1, 2), torch.tensor(float('-inf')))
+        # a2b_w = torch.softmax(a2b_w,dim=-1)
+
+        # # 4) 用權重聚合對手的序列 → 貢獻向量
+        # b2a_contrib = torch.bmm(b2a_w, Db_lin)            
+        # a2b_contrib = torch.bmm(a2b_w, Da_lin)   

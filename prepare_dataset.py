@@ -6,12 +6,13 @@ import os
 import gc
 from data_cleaner import DataCleaner
 from dataset import BadmintonDataset
+from dataset_test import BadmintonDatasetFORTEST
 from torch.utils.data import DataLoader
 from torch.utils.data import default_collate
 from sklearn.model_selection import KFold
 from sklearn.model_selection import StratifiedKFold
 from sklearn.model_selection import train_test_split
-    
+
 def prepare_kfold_datasets(args):
     matches = DataCleaner(args)
     
@@ -84,3 +85,25 @@ def get_fold_dataloader(fold_idx, data_dir, used_column, args):
     gc.collect()
 
     return train_dataloader, valid_dataloader
+
+
+def prepareTestCase(args):
+    matches = DataCleaner(args)
+    
+    used_column = [
+        'rally', 'player', 'type',
+        'player_location_area', 'opponent_location_area',
+        'getpoint_player',
+    ]
+
+    matches = matches[used_column]
+
+    type_codes, type_uniques = pd.factorize(matches['type'])
+    matches['type'] = type_codes + 1
+    args['type_num'] = len(type_uniques) + 1
+
+    test_rally_data = pd.read_csv('./case_study.csv')
+    test_dataset = BadmintonDatasetFORTEST(test_rally_data, used_column, args)
+    test_dataloader = DataLoader(test_dataset, batch_size=args['test_batch_size'], shuffle=False, num_workers=8)
+
+    return test_dataloader, used_column

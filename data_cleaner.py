@@ -47,8 +47,10 @@ def preprocess_data(matches):
     # Deal with ball type. Convert ball types to general version (10 types)
     # Convert 小平球 to 平球 because of old version
     matches['type'] = matches['type'].replace('小平球', '平球')
-    combined_types = {'切球': '切球', '過度切球': '切球', '點扣': '殺球', '殺球': '殺球', '平球': '平球', '後場抽平球': '平球', '擋小球': '接殺防守',
-                '防守回挑': '接殺防守', '防守回抽': '接殺防守', '放小球': '網前球', '勾球': '網前球', '推球': '推撲球', '撲球': '推撲球'}
+    combined_types = {'切球': '切球', '過度切球': '切球', '點扣': '殺球', '殺球': '殺球',
+                       '平球': '平球', '後場抽平球': '平球', '擋小球': '接殺防守',
+                '防守回挑': '接殺防守', '防守回抽': '接殺防守', '放小球': '網前球', 
+                '勾球': '網前球', '推球': '推撲球', '撲球': '推撲球'}
     matches['type'] = matches['type'].replace(combined_types)
 
     # Fill zero value in backhand
