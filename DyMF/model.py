@@ -413,32 +413,15 @@ class Encoder(nn.Module):
 
     def forward(self,
                 player,     
-                shot_type,    
-                player_A_x,   
-                player_A_y,    
-                player_B_x,   
-                player_B_y,   
+                shot_type,     
                 adjacency_matrix,
-                score_diff,
-                conpoint,
                 player_A_loc,
                 player_B_loc,
                 mask,
-                hit_area,
-                backhand,
-                aroundhead,
                 encode_length, 
-    ):
+    ):#player, shot_type,adj,player_A_loc,player_B_loc,mask
         
         batch_size = player.size(0)
-       
-        # player_A_coordination = torch.cat((player_A_x.unsqueeze(2), player_A_y.unsqueeze(2)), dim=2).float()
-        # player_B_coordination = torch.cat((player_B_x.unsqueeze(2), player_B_y.unsqueeze(2)), dim=2).float()
-
-        # # interleave the player and opponent location
-        # coordination_sequence = torch.stack((player_A_coordination, player_B_coordination), dim=2).view(player.size(0), -1, 2)
-        # coordination_transform = self.coordination_transform(coordination_sequence)
-        # coordination_transform = F.relu(coordination_transform) 
 
         AB = player_A_loc.new_zeros((batch_size, encode_length*2))  
         AB[:, 0::2] = player_A_loc   
@@ -450,9 +433,6 @@ class Encoder(nn.Module):
         shot_emb = self.shot_emb(shot_type)  # [32,120,16]
         shot_mu = self.shot_mu(shot_emb)
         shot_theta = self.shot_theta(shot_emb)
-
-        # hit_area = hit_area.repeat_interleave(2, dim=1)
-        # hit_area_emb = self.area_embedding(hit_area)
      
         out = player.new_zeros((batch_size, 2*encode_length))
         time_out = player.new_zeros((batch_size, 2*encode_length), dtype=torch.float)
@@ -488,11 +468,6 @@ class Encoder(nn.Module):
         # δn = sigmoid(θn + μn * τn)
         shotEnhanced = self.sigmoid(shotEnhanced)
         enhanced_shot_features = torch.mul(shot_emb , shotEnhanced)
-
-        # aroundhead = aroundhead.repeat_interleave(2, dim=1)
-        # aroundhead = aroundhead.unsqueeze(-1)  # [32,120,1]
-        # backhand = backhand.repeat_interleave(2, dim=1)
-        # backhand = backhand.unsqueeze(-1)  # [32,120,1]
        
         rally_information = torch.cat((embedded_player_area, player,enhanced_shot_features), dim=-1)
         model_input = self.model_input_linear(rally_information)
@@ -558,14 +533,9 @@ class Encoder(nn.Module):
         batch_idx = torch.arange(node_embedding.size(0), device=node_embedding.device)  # [32]
         lastNode1 = node_embedding[batch_idx, idx-1, :] #[32,16]
         lastNode2 = node_embedding[batch_idx, idx-2, :] #[32 16]
-        # score_diff = score_diff[:, 0].float().unsqueeze(1)  # shape: [64] → [64, 1]
-        # conpoint = conpoint[:, 0].float().unsqueeze(1)  # shape: [64] → [64, 1]
-        # score_diff = self.score_diff_fc(score_diff)
-        # conpoint = self.consec_score_fc(conpoint)
 
         combineLast = torch.cat([lastNode1,lastNode2], dim=-1) #[32,32]
-        logits = self.win_head(combineLast).squeeze(-1)  
-        #win_logit = torch.sigmoid(logits)             
+        logits = self.win_head(combineLast).squeeze(-1)       
         
         # return logits, node_attention_weights, edge_attention_weights
         return logits

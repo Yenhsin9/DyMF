@@ -98,9 +98,9 @@ def main():
     print(f"Using device: {device}")
 
     if args['model_folder'] == None:
-        args['model_folder'] = './model/DyMF_2025-07-21-01:20/fold_1' 
+        args['model_folder'] = './model/DyMF_2025-07-21-16:44/fold_1' 
 
-    test_dataloader = prepare_test_datasets(args)
+    test_dataloader, data_dir, used_column = prepare_test_datasets(args)
 
 
     if args['model_type'] == 'DNRI':

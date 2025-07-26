@@ -14,40 +14,8 @@ def prepare_test_datasets(args):
     used_column = [
         'rally_id', 'player', 'type',
         'player_location_area', 'opponent_location_area',
-        'hit_area','backhand', 'aroundhead',
-        'player_location_x', 'player_location_y',
-        'opponent_location_x', 'opponent_location_y',
         'ball_round', 'set', 'match_id',
-        'getpoint_player', 'roundscore_A', 'roundscore_B',
-        'consecutive_points','score_diff'
-    ]
-
-    matches = matches[used_column]
-
-    type_codes, type_uniques = pd.factorize(matches['type'])
-    matches['type'] = type_codes + 1
-    args['type_num'] = len(type_uniques) + 1
-
-    data_dir = './data/'
-
-    test_rally_data = pd.read_csv('./data/test.csv')
-    test_dataset = BadmintonDataset(test_rally_data, used_column, args)
-    test_dataloader = DataLoader(test_dataset, batch_size=args['test_batch_size'], shuffle=False, num_workers=4)
-
-    return test_dataloader
-
-def prepare_kfold_datasets(args):
-    matches = DataCleaner(args)
-    
-    used_column = [
-        'rally_id', 'player', 'type',
-        'player_location_area', 'opponent_location_area',
-        'hit_area','backhand', 'aroundhead',
-        'player_location_x', 'player_location_y',
-        'opponent_location_x', 'opponent_location_y',
-        'ball_round', 'set', 'match_id',
-        'getpoint_player', 'roundscore_A', 'roundscore_B',
-        'consecutive_points','score_diff'
+        'getpoint_player',
     ]
 
     matches = matches[used_column]
