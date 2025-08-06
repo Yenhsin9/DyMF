@@ -1,4 +1,4 @@
-rally,ball_round,player,type,aroundhead,backhand,hit_height,hit_area,landing_area,lose_reason,win_reason,getpoint_player,player_location_area,opponent_location_area
+rally_id,ball_round,player,type,aroundhead,backhand,hit_height,hit_area,landing_area,lose_reason,win_reason,getpoint_player,player_location_area,opponent_location_area
 13,1,A,1,,1,2,,7,,,,8,8
 13,2,B,7,,1,2,7,2,,,,7,8
 13,3,A,8,,,2,2,5,,,,2,8

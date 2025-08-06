@@ -81,7 +81,7 @@ def prepare_testCase_datasets(args):
     matches = DataCleaner(args)
     
     used_column = [
-        'rally', 'player', 'type',
+        'rally_id', 'player', 'type',
         'player_location_area', 'opponent_location_area',
         'ball_round',
         'getpoint_player',
