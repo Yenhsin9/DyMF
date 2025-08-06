@@ -93,10 +93,9 @@ def prepare_testCase_datasets(args):
     matches['type'] = type_codes + 1
     args['type_num'] = len(type_uniques) + 1
 
-    data_dir = './data/'
 
-    test_rally_data = pd.read_csv('./data/test.csv')
+    test_rally_data = pd.read_csv('./case_study.csv')
     test_dataset = BadmintonDataset(test_rally_data, used_column, args)
     test_dataloader = DataLoader(test_dataset, batch_size=args['test_batch_size'], shuffle=False, num_workers=8)
     
-    return test_dataloader, data_dir, used_column
+    return test_dataloader, used_column
