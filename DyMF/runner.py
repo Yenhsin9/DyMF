@@ -234,10 +234,10 @@ def evaluate(test_dataloader, encoder, args, device="cpu"):
                     # 'edge_attention': edge_attention_weights[i].detach().cpu().numpy().tolist(),
                     # 'edge_types': edge_types[i].detach().cpu().numpy().tolist(),
                     # 'edge_indices': edge_indices[i].detach().cpu().numpy().tolist(),
+                    'playerID': rally_batch[0][i].detach().cpu().numpy().tolist(),
                     'shot_type': rally_batch[1][i].detach().cpu().numpy().tolist(),
                     'player_A_loc': rally_batch[10][i].detach().cpu().numpy().tolist(),
                     'player_B_loc': rally_batch[11][i].detach().cpu().numpy().tolist(),
-                    'hit_area': rally_batch[13][i].detach().cpu().numpy().tolist(),
                     'win_prob': torch.sigmoid(win_logit[i]).detach().cpu().numpy().item(),
                 }
                 rally_analysis.append(rally_data)
@@ -280,9 +280,7 @@ def visualize_shot_importance(rally_analysis, output_folder):
     rally_id = rally['rally_id']
     node_attention = np.array(rally['node_attention'])
     shot_type = np.array(rally['shot_type'])
-    player_A_loc = np.array(rally['player_A_loc'])
-    player_B_loc = np.array(rally['player_B_loc'])
-    hit_area = np.array(rally['hit_area'])
+    playerID = np.array(rally['playerID'])
 
     # 過濾注意力權重 > 0 的擊球
     valid_indices = np.where((node_attention[0::2] > 0) | (node_attention[1::2] > 0))[0]
@@ -291,35 +289,72 @@ def visualize_shot_importance(rally_analysis, output_folder):
         return
 
     shots = valid_indices
-    attention_A = node_attention[0::2][valid_indices]
-    attention_B = node_attention[1::2][valid_indices]
+    attention_firstHitter = node_attention[0::2][valid_indices]  # 先攻者的注意力
+    attention_secondHitter = node_attention[1::2][valid_indices]  # 後攻者的注意力
     shot_type_valid = shot_type[valid_indices]
-    player_A_loc_valid = player_A_loc[valid_indices]
-    player_B_loc_valid = player_B_loc[valid_indices]
-    hit_area_valid = hit_area[valid_indices]
+    playerID_valid = playerID[valid_indices]
+
+    # 判斷先攻者是 Player A (1) 還是 Player B (2)
+    first_hitter = playerID_valid[0]  # 第一個 playerID 決定先攻者
+    if first_hitter == 1:
+        label_first = 'Player A'
+        label_second = 'Player B'
+        color_first = 'lightblue'
+        color_second = 'lightgreen'
+        attention_A = attention_firstHitter
+        attention_B = attention_secondHitter
+    else:  # first_hitter == 2
+        label_first = 'Player B'
+        label_second = 'Player A'
+        color_first = 'lightgreen'
+        color_second = 'lightblue'
+        attention_A = attention_secondHitter
+        attention_B = attention_firstHitter
 
     # 繪製擊球重要度柱狀圖
     plt.figure(figsize=(10, 6))
-    plt.bar(shots - 0.2, attention_A, width=0.4, label='Player A', color='lightblue')
-    plt.bar(shots + 0.2, attention_B, width=0.4, label='Player B', color='lightgreen')
+    plt.bar(shots - 0.2, attention_firstHitter, width=0.4, label=label_first, color=color_first)
+    plt.bar(shots + 0.2, attention_secondHitter, width=0.4, label=label_second, color=color_second)
     plt.xlabel('Shot Number')
     plt.ylabel('Attention Weight')
-    plt.title(f'Rally {rally_id} Shot Importance (Attention > 0)')
+    plt.title(f'Shot Importance Visualization')
     plt.legend()
 
-    # 添加擊球類型和位置標記
+    # 添加擊球類型標記，僅為實際擊球的玩家添加
     for i, shot_idx in enumerate(shots):
         shot_name = shot_types.get(shot_type_valid[i], 'Unknown')
-        loc_A = area_types.get(player_A_loc_valid[i], 'Unknown')
-        loc_B = area_types.get(player_B_loc_valid[i], 'Unknown')
-        hit = area_types.get(hit_area_valid[i], 'Unknown')
-        plt.text(shot_idx - 0.2, attention_A[i] + 0.01, f"{shot_name}\nA:{loc_A}", ha='center', fontsize=8)
-        plt.text(shot_idx + 0.2, attention_B[i] + 0.01, f"B:{loc_B}\nHit:{hit}", ha='center', fontsize=8)
+        if i % 2 == 0:  # First hitter's turn (0, 2, 4, ...)
+            plt.text(shot_idx - 0.2, attention_firstHitter[i] + 0.01, f"{shot_name}", ha='center', fontsize=8)
+        else:  # Second hitter's turn (1, 3, 5, ...)
+            plt.text(shot_idx + 0.2, attention_secondHitter[i] + 0.01, f"{shot_name}", ha='center', fontsize=8)
 
-    plt.savefig(os.path.join(output_folder, f'shot_importance_rally_{rally_id}.png'))
+
+    plt.savefig(os.path.join(output_folder, f'shot_importance_rally.png'))
     plt.close()
 
-    print(f"Visualized rally {rally_id} with {len(shots)} shots.")
+    # 計算累積注意差異 (Player A - Player B)
+    cumulative_diff = np.cumsum(attention_A - attention_B)
+
+    # 正規化到 0-1 範圍 (假設最大差異範圍為 data 範圍的兩倍，中心為 0)
+    min_diff = np.min(cumulative_diff)
+    max_diff = np.max(cumulative_diff)
+    range_diff = max(max_diff - min_diff, 1e-10)  # 避免除以零
+    win_prob = 0.5 + (cumulative_diff - min_diff) / (2 * range_diff)  # 中心在 0.5
+
+    # 繪製 Win Probability 折線圖
+    plt.figure(figsize=(10, 6))
+    plt.plot(shots, win_prob, color='red', label='Win Prob (Player A)', marker='o')
+    plt.xlabel('Shot Number')
+    plt.ylabel('Win Probability (Player A)')
+    plt.title(f'Rally {rally_id} Win Probability (Player A)')
+    plt.ylim(0, 1)
+    plt.legend()
+    plt.grid(True)
+
+    plt.savefig(os.path.join(output_folder, f'win_prob_rally_{rally_id}.png'))
+    plt.close()
+
+    print(f"Visualized rally with {len(shots)} shots.")
 
 def save(encoder, decoder, args):
     output_folder_name = args['model_folder']

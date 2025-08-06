@@ -415,17 +415,17 @@ class Encoder(nn.Module):
                 player,     
                 shot_type,     
                 adjacency_matrix,
-                player_A_loc,
-                player_B_loc,
+                player_firstHit_loc,
+                player_SecondHit_loc,
                 mask,
                 encode_length, 
     ):#player, shot_type,adj,player_A_loc,player_B_loc,mask
         
         batch_size = player.size(0)
 
-        AB = player_A_loc.new_zeros((batch_size, encode_length*2))  
-        AB[:, 0::2] = player_A_loc   
-        AB[:, 1::2] = player_B_loc    
+        AB = player_firstHit_loc.new_zeros((batch_size, encode_length*2))  
+        AB[:, 0::2] = player_firstHit_loc   #who hit first the location is player_firstHit_loc
+        AB[:, 1::2] = player_SecondHit_loc    
         AB = AB.long()
         embedded_player_area=self.area_embedding(AB)
 
