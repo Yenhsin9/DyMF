@@ -426,7 +426,9 @@ class Encoder(nn.Module):
         AB = player_firstHit_loc.new_zeros((batch_size, encode_length*2))  
         AB[:, 0::2] = player_firstHit_loc   #who hit first the location is player_firstHit_loc
         AB[:, 1::2] = player_SecondHit_loc    
-        AB = AB.long()
+        AB = AB.long()   
+        AB = torch.where(AB <= 0, torch.zeros_like(AB), AB)
+
         embedded_player_area=self.area_embedding(AB)
 
         shot_type = shot_type.repeat_interleave(2, dim=1)

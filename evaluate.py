@@ -100,7 +100,7 @@ def main():
     if args['model_folder'] == None:
         args['model_folder'] = '/content/drive/MyDrive/DyMF_2025-07-22-02:32/fold_3' 
 
-    test_dataloader, used_column = prepare_testCase_datasets(args)
+    test_dataloader, used_column = prepare_test_datasets(args)
 
 
     if args['model_type'] == 'DNRI':

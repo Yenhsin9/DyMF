@@ -13,6 +13,9 @@ import pickle
 import json
 from prepare_dataset import get_fold_dataloader
 import gc
+import matplotlib.pyplot as plt
+from scipy.stats import pearsonr
+
 try:
     import seaborn as sns
     import matplotlib.pyplot as plt
@@ -236,8 +239,8 @@ def evaluate(test_dataloader, encoder, args, device="cpu"):
                     # 'edge_indices': edge_indices[i].detach().cpu().numpy().tolist(),
                     'playerID': rally_batch[0][i].detach().cpu().numpy().tolist(),
                     'shot_type': rally_batch[1][i].detach().cpu().numpy().tolist(),
-                    'player_A_loc': rally_batch[10][i].detach().cpu().numpy().tolist(),
-                    'player_B_loc': rally_batch[11][i].detach().cpu().numpy().tolist(),
+                    'player_A_loc': rally_batch[3][i].detach().cpu().numpy().tolist(),
+                    'player_B_loc': rally_batch[4][i].detach().cpu().numpy().tolist(),
                     'win_prob': torch.sigmoid(win_logit[i]).detach().cpu().numpy().item(),
                 }
                 rally_analysis.append(rally_data)
@@ -358,6 +361,56 @@ def visualize_shot_importance(rally_analysis, output_folder):
     # plt.close()
 
     print(f"Visualized rally with {len(shots)} shots.")
+
+
+def visualize_final_shot_correlation(rally_analysis, output_folder):
+
+    final_cum_diffs = []
+    win_probs = []
+
+    for rally in rally_analysis:
+        node_attention = np.array(rally['node_attention'])
+        playerID = np.array(rally['playerID'])
+        win_prob = rally['win_prob']
+
+        # 每一拍：先攻 / 後攻 attention
+        att_first = node_attention[0::2]
+        att_second = node_attention[1::2]
+
+        # 判斷誰是 Player A
+        first_hitter = playerID[0]
+        if first_hitter == 1:
+            attention_A = att_first
+            attention_B = att_second
+        else:
+            attention_A = att_second
+            attention_B = att_first
+
+        # 累積差
+        cumulative_diffA = np.cumsum(attention_A - attention_B)
+
+        # 取最後一拍
+        final_cum_diffs.append(cumulative_diffA[-1])
+        win_probs.append(win_prob)
+
+    final_cum_diffs = np.array(final_cum_diffs)
+    win_probs = np.array(win_probs)
+
+    # 計算 Pearson correlation
+    r, p = pearsonr(final_cum_diffs, win_probs)
+
+    # Scatter plot
+    plt.figure(figsize=(7, 6))
+    plt.scatter(final_cum_diffs, win_probs, alpha=0.6)
+    plt.xlabel('Final Cumulative Attention Difference (A - B)')
+    plt.ylabel('Predicted Win Probability')
+    plt.title(f'Final Shot Attention vs Win Probability\nPearson r = {r:.3f}, p = {p:.3g}')
+    plt.grid(True)
+
+    plt.savefig(os.path.join(output_folder, 'final_shot_cumdiff_vs_winprob.png'))
+    plt.close()
+
+    print(f"Pearson r = {r:.4f}, p-value = {p:.4e}")
 
 def save(encoder, decoder, args):
     output_folder_name = args['model_folder']
