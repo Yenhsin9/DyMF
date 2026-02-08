@@ -266,8 +266,8 @@ def evaluate(test_dataloader, encoder, args, device="cpu"):
     # # 可視化選手互動和擊球重要度
     # visualize_player_influence(rally_analysis, output_folder_name)
     #visualize_shot_importance(rally_analysis, output_folder_name)
-    visualize_final_shot_correlation(rally_analysis, output_folder_name)
-    
+    #visualize_final_shot_correlation(rally_analysis, output_folder_name)
+    print_winPro(rally_analysis,  output_folder_name)
     return avg_test_loss, auc, brier, acc
 
 def visualize_shot_importance(rally_analysis, output_folder):
@@ -343,24 +343,6 @@ def visualize_shot_importance(rally_analysis, output_folder):
     plt.savefig(os.path.join(output_folder, f'shot_importance_rally.png'))
     plt.close()
 
-    
-
-    # # 繪製 Win Influence 圖表
-    # plt.figure(figsize=(10, 6))
-    # plt.bar(shots, cumulative_diffA, width=0.4, label='Cumulative Diff (A - B)', color='blue', alpha=0.6)
-    # plt.plot(shots,attention_firstHitter,  label=label_first, color=color_first, marker='o')
-    # plt.plot(shots,attention_secondHitter, label=label_second, color=color_second, marker='o')
-    # plt.xlabel('Shot Number')
-    # plt.ylabel('Attention Score')
-    # plt.title(f'Rally Win Influence (Player A Perspective)')
-    # plt.grid(True)
-    # plt.legend()
-    # plt.xticks(shots)  # 確保 X 軸標籤從 1 開始
-    # plt.ylim(-0.1, 0.1)  # 固定 Y 軸範圍
-
-    # plt.savefig(os.path.join(output_folder, f'win_influence_rally.png'))
-    # plt.close()
-
     print(f"Visualized rally with {len(shots)} shots.")
 
 
@@ -369,11 +351,6 @@ def visualize_final_shot_correlation(rally_analysis, output_folder):
     final_cum_diffs = []
     win_probs = []
     
-
-    
-    
-    
-
     for rally in rally_analysis:
         rally_id = rally['rally_id']
         node_attention = np.array(rally['node_attention'])
@@ -426,28 +403,40 @@ def visualize_final_shot_correlation(rally_analysis, output_folder):
     print(f"Pearson r = {r:.4f}, p-value = {p:.4e}")
 
 def print_winPro(rally_analysis, output_folder):
-  rally_ids = []
-  win_probs = []
+    rally_ids = []
+    win_probs = []
 
-  for rally in rally_analysis:
-      rally_ids.append(rally['rally_id'])
-      win_probs.append(rally['win_prob'])
+    for rally in rally_analysis:
+        rally_ids.append(rally['rally_id'])
+        win_probs.append(rally['win_prob'])
 
-  rally_ids = np.array(rally_ids)
-  win_probs = np.array(win_probs)
+    rally_ids = np.array(rally_ids)
+    win_probs = np.array(win_probs)
 
-  plt.figure(figsize=(10, 4))
-  plt.plot(rally_ids, win_probs, marker='o')
-  plt.axhline(0.5, linestyle='--', alpha=0.6, label='Decision Boundary (0.5)')
-  plt.xlabel('Rally Index')
-  plt.ylabel('Predicted Win Probability (Player A)')
-  plt.title('Win Probability per Rally (Test Set)')
-  plt.grid(True)
-  plt.legend()
+    # Δp_t = p_t - p_{t-1}，第一拍設 0
+    delta = np.zeros_like(win_probs)
+    delta[1:] = win_probs[1:] - win_probs[:-1]
 
-  plt.savefig(os.path.join(output_folder, 'winprob_per_rally.png'), bbox_inches='tight')
-  plt.close()
-  
+    plt.figure(figsize=(10, 4))
+
+    # 柱狀：Δ
+    plt.bar(rally_ids, delta, alpha=0.4, label='Δp (p_t - p_{t-1})')
+
+    # 折線：win_prob
+    plt.plot(rally_ids, win_probs, marker='o', label='Win Probability')
+
+    plt.axhline(0.0, linestyle='--', alpha=0.4)  # Δ 的 0 線
+    plt.xlabel('Shot (1..T)')
+    plt.ylabel('Value')
+    plt.title('Win Probability (line) + Per-shot Change Δp (bar)')
+    plt.grid(True)
+    plt.ylim(-1, 1)
+    plt.legend()
+
+    os.makedirs(output_folder, exist_ok=True)
+    plt.savefig(os.path.join(output_folder, 'winprob_and_delta.png'), bbox_inches='tight')
+    plt.close()
+
 def save(encoder, decoder, args):
     output_folder_name = args['model_folder']
     if not os.path.exists(output_folder_name):
