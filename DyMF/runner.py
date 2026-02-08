@@ -375,14 +375,13 @@ def visualize_final_shot_correlation(rally_analysis, output_folder):
 
     for rally in rally_analysis:
         rally_id = rally['rally_id']
-
+        node_attention = np.array(rally['node_attention'])
         # 過濾注意力權重 > 0 的擊球
         valid_indices = np.where((node_attention[0::2] > 0) | (node_attention[1::2] > 0))[0]
         if len(valid_indices) == 0:
             print(f"No shots with attention > 0 in rally {rally_id}, skipping visualization.")
             return
     
-        node_attention = np.array(rally['node_attention'])
         playerID = np.array(rally['playerID'])
         win_prob = rally['win_prob']
 
