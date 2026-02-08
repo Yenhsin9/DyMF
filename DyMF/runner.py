@@ -367,24 +367,37 @@ def visualize_final_shot_correlation(rally_analysis, output_folder):
 
     final_cum_diffs = []
     win_probs = []
+    
+
+    
+    
+    
 
     for rally in rally_analysis:
+        rally_id = rally['rally_id']
+
+        # 過濾注意力權重 > 0 的擊球
+        valid_indices = np.where((node_attention[0::2] > 0) | (node_attention[1::2] > 0))[0]
+        if len(valid_indices) == 0:
+            print(f"No shots with attention > 0 in rally {rally_id}, skipping visualization.")
+            return
+    
         node_attention = np.array(rally['node_attention'])
         playerID = np.array(rally['playerID'])
         win_prob = rally['win_prob']
 
-        # 每一拍：先攻 / 後攻 attention
-        att_first = node_attention[0::2]
-        att_second = node_attention[1::2]
+        shots = valid_indices+1
+        attention_firstHitter = node_attention[0::2][valid_indices]  # 先攻者的注意力
+        attention_secondHitter = node_attention[1::2][valid_indices]  # 後攻者的注意力
 
         # 判斷誰是 Player A
         first_hitter = playerID[0]
         if first_hitter == 1:
-            attention_A = att_first
-            attention_B = att_second
+            attention_A = attention_firstHitter
+            attention_B = attention_secondHitter
         else:
-            attention_A = att_second
-            attention_B = att_first
+            attention_A = attention_secondHitter
+            attention_B = attention_firstHitter
 
         # 累積差
         cumulative_diffA = np.cumsum(attention_A - attention_B)
