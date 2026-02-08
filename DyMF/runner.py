@@ -265,7 +265,8 @@ def evaluate(test_dataloader, encoder, args, device="cpu"):
 
     # # 可視化選手互動和擊球重要度
     # visualize_player_influence(rally_analysis, output_folder_name)
-    visualize_shot_importance(rally_analysis, output_folder_name)
+    #visualize_shot_importance(rally_analysis, output_folder_name)
+    visualize_final_shot_correlation(rally_analysis, output_folder_name)
     
     return avg_test_loss, auc, brier, acc
 
