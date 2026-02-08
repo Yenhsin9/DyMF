@@ -425,6 +425,29 @@ def visualize_final_shot_correlation(rally_analysis, output_folder):
 
     print(f"Pearson r = {r:.4f}, p-value = {p:.4e}")
 
+def print_winPro(rally_analysis, output_folder):
+  rally_ids = []
+  win_probs = []
+
+  for rally in rally_analysis:
+      rally_ids.append(rally['rally_id'])
+      win_probs.append(rally['win_prob'])
+
+  rally_ids = np.array(rally_ids)
+  win_probs = np.array(win_probs)
+
+  plt.figure(figsize=(10, 4))
+  plt.plot(rally_ids, win_probs, marker='o')
+  plt.axhline(0.5, linestyle='--', alpha=0.6, label='Decision Boundary (0.5)')
+  plt.xlabel('Rally Index')
+  plt.ylabel('Predicted Win Probability (Player A)')
+  plt.title('Win Probability per Rally (Test Set)')
+  plt.grid(True)
+  plt.legend()
+
+  plt.savefig(os.path.join(output_folder, 'winprob_per_rally.png'), bbox_inches='tight')
+  plt.close()
+  
 def save(encoder, decoder, args):
     output_folder_name = args['model_folder']
     if not os.path.exists(output_folder_name):
