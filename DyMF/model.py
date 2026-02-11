@@ -487,6 +487,8 @@ class Encoder(nn.Module):
         node_attention_scores = node_attention_scores.masked_fill(node_mask.squeeze(-1) == 0, -float('inf'))
         node_attention_weights = self.softmax(node_attention_scores)  # [batch_size, seq_len]
 
+        full_graph_node_embedding = full_graph_node_embedding * node_attention_weights.unsqueeze(-1)
+
         player_A_embedding = model_input[:, 0::2, :].clone()
         player_B_embedding = model_input[:, 1::2, :].clone()
         
