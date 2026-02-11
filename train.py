@@ -5,7 +5,7 @@ import random
 import torch.nn as nn
 from datetime import datetime
 import os
-from prepare_dataset import prepare_kfold_datasets
+from prepare_dataset import prepare_test_datasets
 from utils import save_args_file
 import csv
 def main():
@@ -100,7 +100,7 @@ def main():
 
     #train_dataloader, valid_dataloader, test_dataloader, args = prepare_dataset(args)
     # 獲取 k-fold 數據集
-    test_dataloader, data_dir, used_column = prepare_kfold_datasets(args)
+    test_dataloader, data_dir, used_column = prepare_test_datasets(args)
 
 
     if args['model_type'] == 'DNRI':
