@@ -2,7 +2,6 @@ import torch
 import torch.nn as nn
 import numpy as np
 import torch.nn.functional as F
-
 from torch import Tensor
 
 from typing import Dict, Optional
@@ -480,14 +479,34 @@ class Encoder(nn.Module):
         
         # fixed node embedding in decoder
         full_graph_node_embedding = self.rGCN(model_input, adjacency_matrix)
-        full_graph_node_embedding = full_graph_node_embedding*node_mask
+        full_graph_node_embedding = full_graph_node_embedding * node_mask  # [B, 2T, D]
 
-        # 計算節點注意力權重
-        node_attention_scores = self.node_attention(full_graph_node_embedding).squeeze(-1)  # [batch_size, seq_len]
-        node_attention_scores = node_attention_scores.masked_fill(node_mask.squeeze(-1) == 0, -float('inf'))
-        node_attention_weights = self.softmax(node_attention_scores)  # [batch_size, seq_len]
+        # ===== Player-wise node attention (A/B separate) =====
+        H_A = full_graph_node_embedding[:, 0::2, :]          # [B, T, D]
+        H_B = full_graph_node_embedding[:, 1::2, :]          # [B, T, D]
+        m = mask                                              # [B, T]  (你本來的 mask)
+        # 這裡不用 -inf，避免後面數值問題
+        scores_A = self.node_attention(H_A).squeeze(-1).masked_fill(m == 0, -1e9)  # [B, T]
+        scores_B = self.node_attention(H_B).squeeze(-1).masked_fill(m == 0, -1e9)  # [B, T]
 
-        full_graph_node_embedding = full_graph_node_embedding * node_attention_weights.unsqueeze(-1)
+        attn_A = F.softmax(scores_A, dim=1)                   # [B, T], sum=1
+        attn_B = F.softmax(scores_B, dim=1)                   # [B, T], sum=1
+        
+        # 保險：把 padding 清掉並重新正規化
+        attn_A = attn_A * m
+        attn_B = attn_B * m
+        attn_A = attn_A / (attn_A.sum(dim=1, keepdim=True) + 1e-9)
+        attn_B = attn_B / (attn_B.sum(dim=1, keepdim=True) + 1e-9)
+
+        # (1) attention pooling → rally-level representation
+        rgcn_pool_A = torch.sum(H_A * attn_A.unsqueeze(-1), dim=1)  # [B, D]
+        rgcn_pool_B = torch.sum(H_B * attn_B.unsqueeze(-1), dim=1)  # [B, D]
+
+
+        # (2) reweight the RGCN sequence embeddings (讓融合真的吃到 attention)
+        full_graph_node_embedding_att = full_graph_node_embedding.clone()
+        full_graph_node_embedding_att[:, 0::2, :] = H_A * attn_A.unsqueeze(-1)
+        full_graph_node_embedding_att[:, 1::2, :] = H_B * attn_B.unsqueeze(-1)
 
         player_A_embedding = model_input[:, 0::2, :].clone()
         player_B_embedding = model_input[:, 1::2, :].clone()
@@ -518,8 +537,8 @@ class Encoder(nn.Module):
         idx = (thisRallyL).squeeze(-1).long()   # shape [32]
         batch_idx = torch.arange(full_graph_node_embedding.size(0), device=full_graph_node_embedding.device)  # [32]
         
-        rgcn_embedding_A = full_graph_node_embedding.clone()[batch_idx, idx-2, :]
-        rgcn_embedding_B = full_graph_node_embedding.clone()[batch_idx, idx-1, :]
+        rgcn_embedding_A = rgcn_pool_A
+        rgcn_embedding_B = rgcn_pool_B
         
         batch_idx = torch.arange(player_A_node_embedding.size(0), device=player_A_node_embedding.device)  # [32]
         gcn_embedding_A = player_A_node_embedding.clone()[batch_idx, idx//2-1, :]
@@ -535,8 +554,8 @@ class Encoder(nn.Module):
         w_rgcn_B = self.sigmoid(rgcn_weight_B)
         w_gcn_B = self.sigmoid(gcn_weight_B)
         
-        node_embedding[:, 0::2, :] = full_graph_node_embedding[:, 0::2, :] * w_rgcn_A.unsqueeze(1) + player_A_node_embedding * w_gcn_A.unsqueeze(1)
-        node_embedding[:, 1::2, :] = full_graph_node_embedding[:, 1::2, :] * w_rgcn_B.unsqueeze(1) + player_B_node_embedding * w_gcn_B.unsqueeze(1)
+        node_embedding[:, 0::2, :] = full_graph_node_embedding_att[:, 0::2, :] * w_rgcn_A.unsqueeze(1) + player_A_node_embedding * w_gcn_A.unsqueeze(1)
+        node_embedding[:, 1::2, :] = full_graph_node_embedding_att[:, 1::2, :] * w_rgcn_B.unsqueeze(1) + player_B_node_embedding * w_gcn_B.unsqueeze(1)
 
         idx = (thisRallyL).squeeze(-1).long()   # shape [32]
         batch_idx = torch.arange(node_embedding.size(0), device=node_embedding.device)  # [32]
@@ -547,4 +566,4 @@ class Encoder(nn.Module):
         logits = self.win_head(combineLast).squeeze(-1)       
         
         # return logits, node_attention_weights, edge_attention_weights
-        return logits, node_attention_weights
+        return logits

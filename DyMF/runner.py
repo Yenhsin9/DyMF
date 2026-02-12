@@ -218,7 +218,7 @@ def evaluate(test_dataloader, encoder, args, device="cpu"):
         for rally_batch, target in test_dataloader:
             target = target.to(device).float()
             #player, shot_type,adj,player_A_loc,player_B_loc,mask
-            win_logit, node_attention_weights = encoder(
+            win_logit, _ = encoder(
                 rally_batch[0].to(device), rally_batch[1].to(device), rally_batch[2].to(device),
                 rally_batch[3].to(device), rally_batch[4].to(device), rally_batch[5].to(device),
                 max_length
@@ -233,7 +233,7 @@ def evaluate(test_dataloader, encoder, args, device="cpu"):
             for i in range(rally_batch[0].size(0)):
                 rally_data = {
                     'rally_id': i,
-                    'node_attention': node_attention_weights[i].detach().cpu().numpy().tolist(),
+                    #'node_attention': node_attention_weights[i].detach().cpu().numpy().tolist(),
                     # 'edge_attention': edge_attention_weights[i].detach().cpu().numpy().tolist(),
                     # 'edge_types': edge_types[i].detach().cpu().numpy().tolist(),
                     # 'edge_indices': edge_indices[i].detach().cpu().numpy().tolist(),
@@ -267,7 +267,7 @@ def evaluate(test_dataloader, encoder, args, device="cpu"):
     # visualize_player_influence(rally_analysis, output_folder_name)
     #visualize_shot_importance(rally_analysis, output_folder_name)
     #visualize_final_shot_correlation(rally_analysis, output_folder_name)
-    print_winPro(rally_analysis,  output_folder_name)
+    #print_winPro(rally_analysis,  output_folder_name)
     return avg_test_loss, auc, brier, acc
 
 def visualize_shot_importance(rally_analysis, output_folder):
