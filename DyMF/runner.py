@@ -81,7 +81,7 @@ def train_kfold(data_dir, used_column, k_folds, test_dataloader, encoder, locati
                 target = target.to(device).float()
                 encoder_optimizer.zero_grad()
                 #player, shot_type,adj,player_A_loc,player_B_loc,mask
-                win_logit,_ = encoder(
+                win_logit= encoder(
                     rally_batch[0].to(device), rally_batch[1].to(device), rally_batch[2].to(device),
                     rally_batch[3].to(device), rally_batch[4].to(device), rally_batch[5].to(device),
                     max_length
@@ -218,7 +218,7 @@ def evaluate(test_dataloader, encoder, args, device="cpu"):
         for rally_batch, target in test_dataloader:
             target = target.to(device).float()
             #player, shot_type,adj,player_A_loc,player_B_loc,mask
-            win_logit, _ = encoder(
+            win_logit = encoder(
                 rally_batch[0].to(device), rally_batch[1].to(device), rally_batch[2].to(device),
                 rally_batch[3].to(device), rally_batch[4].to(device), rally_batch[5].to(device),
                 max_length

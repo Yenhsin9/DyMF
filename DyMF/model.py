@@ -559,13 +559,41 @@ class Encoder(nn.Module):
         node_embedding[:, 0::2, :] = full_graph_node_embedding_att[:, 0::2, :] * w_rgcn_A.unsqueeze(1) + player_A_node_embedding * w_gcn_A.unsqueeze(1)
         node_embedding[:, 1::2, :] = full_graph_node_embedding_att[:, 1::2, :] * w_rgcn_B.unsqueeze(1) + player_B_node_embedding * w_gcn_B.unsqueeze(1)
 
-        idx = (thisRallyL).squeeze(-1).long()   # shape [32]
-        batch_idx = torch.arange(node_embedding.size(0), device=node_embedding.device)  # [32]
-        lastNode1 = node_embedding[batch_idx, idx-1, :] #[32,16]
-        lastNode2 = node_embedding[batch_idx, idx-2, :] #[32 16]
+        # ===== Last-K head (K shots) =====
+        K = 6  # 改成 10 就是 K = 10
 
-        combineLast = torch.cat([lastNode1,lastNode2], dim=-1) #[32,32]
-        logits = self.win_head(combineLast).squeeze(-1)       
-        
-        # return logits, node_attention_weights, edge_attention_weights
+        idx = (thisRallyL).squeeze(-1).long()                      # [B] = 2*k (node length)
+        B, L, D = node_embedding.shape                              # L = 2*encode_length
+
+        # 我們要取最後 K 個 shot pair => 2K 個 node: indices = idx-2K ... idx-1
+        t = torch.arange(2 * K, device=node_embedding.device)       # [2K]
+        pos = idx.unsqueeze(1) - 2 * K + t.unsqueeze(0)             # [B, 2K]
+
+        # 有些 rally 長度可能 < K => pos 會 <0；我們用 valid mask 避免污染
+        valid = (pos >= 0) & (pos < L)                              # [B, 2K]
+        pos_clamped = pos.clamp(min=0, max=L - 1)                   # [B, 2K]
+
+        # gather: [B, 2K, D]
+        gathered = node_embedding.gather(
+            dim=1,
+            index=pos_clamped.unsqueeze(-1).expand(-1, -1, D)
+        )
+
+        # 把無效位置清零
+        gathered = gathered * valid.unsqueeze(-1).float()
+
+        # 在這個 2K 片段中，起點一定是偶數 index（因為 idx 和 2K 都是偶數）
+        # 所以 gathered[:, 0::2] 對應 player A nodes, gathered[:, 1::2] 對應 player B nodes
+        gA = gathered[:, 0::2, :]                                   # [B, K, D]
+        gB = gathered[:, 1::2, :]                                   # [B, K, D]
+        vA = valid[:, 0::2].float()                                 # [B, K]
+        vB = valid[:, 1::2].float()                                 # [B, K]
+
+        # masked mean pooling => [B, D]
+        pool_A = (gA * vA.unsqueeze(-1)).sum(dim=1) / (vA.sum(dim=1, keepdim=True) + 1e-9)
+        pool_B = (gB * vB.unsqueeze(-1)).sum(dim=1) / (vB.sum(dim=1, keepdim=True) + 1e-9)
+
+        combineLastK = torch.cat([pool_A, pool_B], dim=-1)           # [B, 2D]
+        logits = self.win_head(combineLastK).squeeze(-1)
+
         return logits
