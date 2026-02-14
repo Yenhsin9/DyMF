@@ -472,20 +472,20 @@ class Encoder(nn.Module):
         shotEnhanced = self.sigmoid(shotEnhanced)
         enhanced_shot_features = torch.mul(shot_emb , shotEnhanced)
        
-        if score_diff.dim() == 1:
-            score_diff = score_diff.unsqueeze(1)
-        if conpoint.dim() == 1:
-            conpoint = conpoint.unsqueeze(1)
+        # score_diff: [B,T] or [B,T,1]  (T 可能是 70)
+        if score_diff.dim() == 2:          # [B,T]
+            score_diff = score_diff.unsqueeze(-1)  # [B,T,1]
+        score_diff = score_diff.float().to(player.device)
 
-        score_diff = score_diff.float().to(player.device)   # [B,1]
-        conpoint  = conpoint.float().to(player.device)      # [B,1]
+        score_diff_node = score_diff.repeat_interleave(2, dim=1)  # [B,2T,1]
+        sd_emb = self.score_diff_fc(score_diff_node)              # [B,2T,8]
 
-        sd_emb = self.score_diff_fc(score_diff)             # [B,8]
-        cp_emb = self.consec_score_fc(conpoint)             # [B,8]
+        if conpoint.dim() == 2:          # [B,T]
+            conpoint = conpoint.unsqueeze(-1)  # [B,T,1]
+        conpoint = conpoint.float().to(player.device)
 
-        # expand to node-level: [B, 2T, 8]
-        sd_emb = sd_emb.unsqueeze(1).expand(-1, encode_length * 2, -1)
-        cp_emb = cp_emb.unsqueeze(1).expand(-1, encode_length * 2, -1)
+        conpoint_node = conpoint.repeat_interleave(2, dim=1)  # [B,2T,1]
+        cp_emb = self.consec_score_fc(conpoint_node)              # [B,2T,8]
 
         rally_information = torch.cat(
             (embedded_player_area, player, enhanced_shot_features, sd_emb, cp_emb),
