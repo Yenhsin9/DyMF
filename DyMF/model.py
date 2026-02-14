@@ -378,7 +378,7 @@ class Encoder(nn.Module):
             padding_idx=0                     
         )
 
-        self.model_input_linear = nn.Linear(1 + location_dim + type_dim , hidden_size)
+        self.model_input_linear = nn.Linear(1 + location_dim + type_dim + 16, hidden_size)
 
         self.rGCN = relational_GCN(hidden_size, type_num, args['num_basis'], num_layer,args, device) # into 2 type (passive and active) and padding
         self.gcn = GCN(args['hidden_size'], args['hidden_size'], args['dropout'], num_layer, args, device)
@@ -397,7 +397,7 @@ class Encoder(nn.Module):
         self.consec_score_fc  = nn.Linear(1, 8)
 
         self.linear_for_dynmaic_gcn = nn.Linear(1+ args['hidden_size'], args['hidden_size'])
-        self.win_head = nn.Linear(args['hidden_size']*2+16, 1) 
+        self.win_head = nn.Linear(args['hidden_size']*2, 1) 
 
         # 添加注意力層用於節點重要性
         self.node_attention = nn.Linear(hidden_size, 1)
@@ -472,7 +472,25 @@ class Encoder(nn.Module):
         shotEnhanced = self.sigmoid(shotEnhanced)
         enhanced_shot_features = torch.mul(shot_emb , shotEnhanced)
        
-        rally_information = torch.cat((embedded_player_area, player,enhanced_shot_features), dim=-1)
+        if score_diff.dim() == 1:
+            score_diff = score_diff.unsqueeze(1)
+        if conpoint.dim() == 1:
+            conpoint = conpoint.unsqueeze(1)
+
+        score_diff = score_diff.float().to(player.device)   # [B,1]
+        conpoint  = conpoint.float().to(player.device)      # [B,1]
+
+        sd_emb = self.score_diff_fc(score_diff)             # [B,8]
+        cp_emb = self.consec_score_fc(conpoint)             # [B,8]
+
+        # expand to node-level: [B, 2T, 8]
+        sd_emb = sd_emb.unsqueeze(1).expand(-1, encode_length * 2, -1)
+        cp_emb = cp_emb.unsqueeze(1).expand(-1, encode_length * 2, -1)
+
+        rally_information = torch.cat(
+            (embedded_player_area, player, enhanced_shot_features, sd_emb, cp_emb),
+            dim=-1
+        )
         model_input = self.model_input_linear(rally_information)
 
         node_mask = mask.repeat_interleave(2, dim=1)    #[32,120]
@@ -537,11 +555,6 @@ class Encoder(nn.Module):
         lastNode1 = node_embedding[batch_idx, idx-1, :] #[32,16]
         lastNode2 = node_embedding[batch_idx, idx-2, :] #[32 16]
 
-        score_diff = score_diff[:, 0].float().unsqueeze(1)  # shape: [64] → [64, 1]
-        conpoint = conpoint[:, 0].float().unsqueeze(1)  # shape: [64] → [64, 1]
-        score_diff = self.score_diff_fc(score_diff)
-        conpoint = self.consec_score_fc(conpoint)
-
-        combineLast = torch.cat([lastNode1,lastNode2,score_diff,conpoint], dim=-1) #[32,32]    
+        combineLast = torch.cat([lastNode1,lastNode2], dim=-1) #[32,32]    
         logits = self.win_head(combineLast).squeeze(-1) 
         return logits
