@@ -505,8 +505,9 @@ class Encoder(nn.Module):
 
         # (2) reweight the RGCN sequence embeddings (讓融合真的吃到 attention)
         full_graph_node_embedding_att = full_graph_node_embedding.clone()
-        full_graph_node_embedding_att[:, 0::2, :] = H_A * attn_A.unsqueeze(-1)
-        full_graph_node_embedding_att[:, 1::2, :] = H_B * attn_B.unsqueeze(-1)
+        full_graph_node_embedding_att[:, 0::2, :] = H_A * (1.0 + attn_A.unsqueeze(-1))
+        full_graph_node_embedding_att[:, 1::2, :] = H_B * (1.0 + attn_B.unsqueeze(-1))
+
 
         player_A_embedding = model_input[:, 0::2, :].clone()
         player_B_embedding = model_input[:, 1::2, :].clone()
@@ -544,15 +545,16 @@ class Encoder(nn.Module):
         gcn_embedding_A = player_A_node_embedding.clone()[batch_idx, idx//2-1, :]
         gcn_embedding_B = player_B_node_embedding.clone()[batch_idx, idx//2-1, :]
         
-        rgcn_weight_A = self.rgcn_weight(rgcn_embedding_A)
-        rgcn_weight_B = self.rgcn_weight(rgcn_embedding_B)
-        gcn_weight_A = self.gcn_weight(gcn_embedding_A)
-        gcn_weight_B = self.gcn_weight(gcn_embedding_B)
-        
-        w_rgcn_A = self.sigmoid(rgcn_weight_A)
-        w_gcn_A = self.sigmoid(gcn_weight_A)
-        w_rgcn_B = self.sigmoid(rgcn_weight_B)
-        w_gcn_B = self.sigmoid(gcn_weight_B)
+        rgcn_weight_A = self.rgcn_weight(rgcn_embedding_A)   # [B,1]
+        gcn_weight_A  = self.gcn_weight(gcn_embedding_A)     # [B,1]
+        rgcn_weight_B = self.rgcn_weight(rgcn_embedding_B)   # [B,1]
+        gcn_weight_B  = self.gcn_weight(gcn_embedding_B)     # [B,1]
+
+        gate_A = F.softmax(torch.cat([rgcn_weight_A, gcn_weight_A], dim=-1), dim=-1)  # [B,2]
+        gate_B = F.softmax(torch.cat([rgcn_weight_B, gcn_weight_B], dim=-1), dim=-1)  # [B,2]
+
+        w_rgcn_A, w_gcn_A = gate_A[:, 0:1], gate_A[:, 1:2]   # [B,1]
+        w_rgcn_B, w_gcn_B = gate_B[:, 0:1], gate_B[:, 1:2]   # [B,1]
         
         node_embedding[:, 0::2, :] = full_graph_node_embedding_att[:, 0::2, :] * w_rgcn_A.unsqueeze(1) + player_A_node_embedding * w_gcn_A.unsqueeze(1)
         node_embedding[:, 1::2, :] = full_graph_node_embedding_att[:, 1::2, :] * w_rgcn_B.unsqueeze(1) + player_B_node_embedding * w_gcn_B.unsqueeze(1)
