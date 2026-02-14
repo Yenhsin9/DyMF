@@ -80,11 +80,11 @@ def train_kfold(data_dir, used_column, k_folds, test_dataloader, encoder, locati
                 rally_batch = [b.to(device) for b in rally_batch]
                 target = target.to(device).float()
                 encoder_optimizer.zero_grad()
-                #player, shot_type,adj,player_A_loc,player_B_loc,mask
-                win_logit,_ = encoder(
+                #player, shot_type,adj,player_A_loc,player_B_loc,mask,score_diff,conpoint,
+                win_logit = encoder(
                     rally_batch[0].to(device), rally_batch[1].to(device), rally_batch[2].to(device),
                     rally_batch[3].to(device), rally_batch[4].to(device), rally_batch[5].to(device),
-                    max_length
+                    max_length,rally_batch[6].to(device), rally_batch[7].to(device)
                 )
                 loss = bce_loss(win_logit, target)
                 loss.backward()
@@ -218,11 +218,11 @@ def evaluate(test_dataloader, encoder, args, device="cpu"):
         for rally_batch, target in test_dataloader:
             target = target.to(device).float()
             #player, shot_type,adj,player_A_loc,player_B_loc,mask
-            win_logit, _ = encoder(
-                rally_batch[0].to(device), rally_batch[1].to(device), rally_batch[2].to(device),
-                rally_batch[3].to(device), rally_batch[4].to(device), rally_batch[5].to(device),
-                max_length
-            )
+            win_logit = encoder(
+                    rally_batch[0].to(device), rally_batch[1].to(device), rally_batch[2].to(device),
+                    rally_batch[3].to(device), rally_batch[4].to(device), rally_batch[5].to(device),
+                    max_length,rally_batch[6].to(device), rally_batch[7].to(device)
+                )
             y_prob.extend(torch.sigmoid(win_logit).detach().cpu().numpy())
             y_true.extend(target.cpu().numpy())
             l = bce_loss(win_logit, target)

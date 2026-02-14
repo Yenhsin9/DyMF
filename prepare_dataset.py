@@ -15,7 +15,7 @@ def prepare_test_datasets(args):
         'rally_id', 'player', 'type',
         'player_location_area', 'opponent_location_area',
         'ball_round', 'set', 'match_id',
-        'getpoint_player',
+        'getpoint_player','consecutive_points','score_diff'
     ]
 
     matches = matches[used_column]
