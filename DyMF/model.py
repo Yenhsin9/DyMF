@@ -7,7 +7,7 @@ from torch import Tensor
 from typing import Dict, Optional
 PAD = 0
 
-def masked_softmax(scores, lengths):
+def masked_softmax_smp(scores, lengths):
     """
     scores: [B, T]
     lengths: [B]  (actual valid length for each sample)
@@ -578,8 +578,8 @@ class Encoder(nn.Module):
         score_B = score_B / tau
 
         # Masked softmax over valid length (prevent padding attending)
-        alpha_A = masked_softmax(score_A, lengths)
-        alpha_B = masked_softmax(score_B, lengths)
+        alpha_A = masked_softmax_smp(score_A, lengths)
+        alpha_B = masked_softmax_smp(score_B, lengths)
 
         # Weighted sum -> [B, H]
         pooled_A = torch.sum(alpha_A.unsqueeze(-1) * node_A, dim=1)
