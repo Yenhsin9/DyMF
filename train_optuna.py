@@ -5,8 +5,7 @@ import random
 import torch.nn as nn
 from datetime import datetime
 import os
-from prepare_dataset import prepare_dataset
-from prepare_dataset import prepare_kfold_datasets
+from prepare_dataset import prepare_test_datasets
 from utils import save_args_file
 import csv
 import optuna
@@ -104,7 +103,7 @@ def main():
             if args['model_folder'] is None:
                 args['model_folder'] = './model/' + args['model_type'] + '_' + str(datetime.now().strftime("%Y-%m-%d-%H:%M"))
 
-            fold_datasets, test_dataloader = prepare_kfold_datasets(args, k_folds=args['k_folds'])
+            test_dataloader, data_dir, used_column = prepare_test_datasets(args)
 
             # 加載 DyMF 專用 model
             from DyMF.model import Encoder
@@ -120,12 +119,12 @@ def main():
 
             encoder.to(device), location_criterion.to(device), shot_type_criterion.to(device)
 
-            avg_val_loss, avg_val_auc, avg_val_brier, avg_val_acc, test_loss, test_auc, test_brier, test_acc= train_kfold(
-                fold_datasets, test_dataloader, encoder, location_criterion,
-                shot_type_criterion, encoder_optimizer, args, device=device
+            avg_val_loss, avg_val_auc, avg_val_brier, avg_val_acc, test_loss, test_auc, test_brier, test_acc = train_kfold(
+                data_dir, used_column, args['k_folds'], test_dataloader, encoder, location_criterion, shot_type_criterion, 
+                encoder_optimizer, args, device=device
             )
 
-            return avg_val_auc
+            return avg_val_auc 
 
         study = optuna.create_study(direction='maximize')
         study.optimize(objective, n_trials=30)
