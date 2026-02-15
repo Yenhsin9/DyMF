@@ -419,9 +419,20 @@ class Encoder(nn.Module):
         self.win_head = nn.Linear(args['hidden_size']*2, 1) 
 
         # 添加注意力層用於節點重要性
-        self.node_attention = nn.Linear(hidden_size, 1)
-        nn.init.xavier_uniform_(self.node_attention.weight)
-        nn.init.constant_(self.node_attention.bias, 0)
+        #self.node_attention = nn.Linear(hidden_size, 1)
+        H = args['hidden_size']
+        self.node_attention = nn.Sequential(
+            nn.Linear(H, H),
+            nn.ReLU(),
+            nn.Dropout(p=0.2),
+            nn.Linear(H, 1)
+        )
+
+        nn.init.xavier_uniform_(self.node_attention[0].weight)
+        nn.init.constant_(self.node_attention[0].bias, 0)
+        nn.init.xavier_uniform_(self.node_attention[3].weight)
+        nn.init.constant_(self.node_attention[3].bias, 0)
+
         self.softmax = nn.Softmax(dim=1)
 
         # 添加邊注意力層
@@ -562,16 +573,13 @@ class Encoder(nn.Module):
         score_A = self.node_attention(node_A).squeeze(-1)
         score_B = self.node_attention(node_B).squeeze(-1)
 
+        tau = 2.0
+        score_A = score_A / tau
+        score_B = score_B / tau
+
         # Masked softmax over valid length (prevent padding attending)
         alpha_A = masked_softmax(score_A, lengths)
         alpha_B = masked_softmax(score_B, lengths)
-
-        # ---- Debug print only once during training ----
-        if self.training and not hasattr(self, "_debug_printed"):
-            print("score_A shape:", score_A.shape)
-            print("lengths sample:", lengths[:5])
-            print("alpha_A sum sample:", alpha_A.sum(dim=1)[:5])
-            self._debug_printed = True
 
         # Weighted sum -> [B, H]
         pooled_A = torch.sum(alpha_A.unsqueeze(-1) * node_A, dim=1)
@@ -580,9 +588,5 @@ class Encoder(nn.Module):
         # Final rally embedding -> [B, 2H]
         rally_emb = torch.cat([pooled_A, pooled_B], dim=-1)
         logits = self.win_head(rally_emb).squeeze(-1)
-        print("score_A shape:", score_A.shape)
-        print("lengths:", lengths[:5])
-        print("alpha_A sum:", alpha_A.sum(dim=1)[:5])
-
-
+        
         return logits
