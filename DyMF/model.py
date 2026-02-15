@@ -6,6 +6,25 @@ from torch import Tensor
 
 from typing import Dict, Optional
 PAD = 0
+
+def masked_softmax(scores, lengths):
+    """
+    scores: [B, T]
+    lengths: [B]  (actual valid length for each sample)
+    return: [B, T] softmax with padding masked out
+    """
+    B, T = scores.size()
+    device = scores.device
+
+    # Create mask [B, T]
+    range_tensor = torch.arange(T, device=device).unsqueeze(0).expand(B, T)
+    mask = range_tensor < lengths.unsqueeze(1)  # True for valid positions
+
+    # Very negative value for padding positions
+    scores = scores.masked_fill(~mask, -1e9)
+
+    return torch.softmax(scores, dim=-1)
+
 # make adjacency matrix according to encode length which number of row is encode length times 2
 def initialize_adjacency_matrix(batch_size, encode_length, shot_type):
     adjacency_matrix = torch.zeros((13, encode_length * 2, encode_length * 2), dtype=int).to(shot_type.device)
@@ -530,13 +549,40 @@ class Encoder(nn.Module):
         node_embedding[:, 0::2, :] = full_graph_node_embedding[:, 0::2, :] * w_rgcn_A.unsqueeze(1) + player_A_node_embedding * w_gcn_A.unsqueeze(1)
         node_embedding[:, 1::2, :] = full_graph_node_embedding[:, 1::2, :] * w_rgcn_B.unsqueeze(1) + player_B_node_embedding * w_gcn_B.unsqueeze(1)
 
-        idx = (thisRallyL).squeeze(-1).long()   # shape [32]
-        batch_idx = torch.arange(node_embedding.size(0), device=node_embedding.device)  # [32]
-        lastNode1 = node_embedding[batch_idx, idx-1, :] #[32,16]
-        lastNode2 = node_embedding[batch_idx, idx-2, :] #[32 16]
+        # ===== Learnable attention pooling readout (player-aware) =====
+        T = encode_length
+        lengths = (thisRallyL // 2).long().squeeze(-1)   # [B] actual rally length in strokes (not padded)
+        lengths = lengths.clamp(min=1, max=encode_length)
 
-        combineLast = torch.cat([lastNode1,lastNode2], dim=-1) #[32,32]
-        logits = self.win_head(combineLast).squeeze(-1)       
-        
-        # return logits, node_attention_weights, edge_attention_weights
+        # Split A/B nodes: [B, T, H]
+        node_A = node_embedding[:, 0::2, :]   # A at each stroke
+        node_B = node_embedding[:, 1::2, :]   # B at each stroke
+
+        # Attention scores: [B, T]
+        score_A = self.node_attention(node_A).squeeze(-1)
+        score_B = self.node_attention(node_B).squeeze(-1)
+
+        # Masked softmax over valid length (prevent padding attending)
+        alpha_A = masked_softmax(score_A, lengths)
+        alpha_B = masked_softmax(score_B, lengths)
+
+        # ---- Debug print only once during training ----
+        if self.training and not hasattr(self, "_debug_printed"):
+            print("score_A shape:", score_A.shape)
+            print("lengths sample:", lengths[:5])
+            print("alpha_A sum sample:", alpha_A.sum(dim=1)[:5])
+            self._debug_printed = True
+
+        # Weighted sum -> [B, H]
+        pooled_A = torch.sum(alpha_A.unsqueeze(-1) * node_A, dim=1)
+        pooled_B = torch.sum(alpha_B.unsqueeze(-1) * node_B, dim=1)
+
+        # Final rally embedding -> [B, 2H]
+        rally_emb = torch.cat([pooled_A, pooled_B], dim=-1)
+        logits = self.win_head(rally_emb).squeeze(-1)
+        print("score_A shape:", score_A.shape)
+        print("lengths:", lengths[:5])
+        print("alpha_A sum:", alpha_A.sum(dim=1)[:5])
+
+
         return logits
