@@ -26,7 +26,7 @@ except ImportError:
 
 def train_kfold(data_dir, used_column, k_folds, test_dataloader, encoder, location_criterion, shot_type_criterion, encoder_optimizer, args, device="cpu"):
     bce_loss = BCEWithLogitsLoss()
-    patience = args.get('patience', 5)
+    patience = args.get('patience', 10)
     encoder.to(device)  # Ensure model is on correct device
 
     # Store metrics for all folds
@@ -45,6 +45,7 @@ def train_kfold(data_dir, used_column, k_folds, test_dataloader, encoder, locati
     fold_val_briers = []
     fold_val_acc = []
     best_val_loss = float('inf')
+    best_val_auc = float('-inf')
     best_fold = 0
     
     for fold in range(k_folds):
@@ -70,6 +71,7 @@ def train_kfold(data_dir, used_column, k_folds, test_dataloader, encoder, locati
         train_loss_list, val_loss_list = [], []
         train_acc_list, val_acc_list = [], []
         best_fold_val_loss = float('inf')
+        best_fold_val_auc = float('-inf')
         no_improve = 0
         max_length = train_dataloader.dataset.encode_length
         
@@ -115,8 +117,8 @@ def train_kfold(data_dir, used_column, k_folds, test_dataloader, encoder, locati
             print(f'Fold {fold + 1} Epoch {epoch + 1} - Val Loss: {val_loss:.4f}, Val AUC: {val_auc:.4f}, Val Brier: {val_brier:.4f}, Val Acc: {val_acc:.4f}')
             
             # Early stopping
-            if val_loss < best_fold_val_loss:
-                best_fold_val_loss = val_loss
+            if val_auc > best_fold_val_auc:
+                best_fold_val_auc = val_auc
                 no_improve = 0
                 output_folder_name = os.path.join(args['model_folder'], f'fold_{fold + 1}')
                 if not os.path.exists(output_folder_name):
@@ -125,8 +127,8 @@ def train_kfold(data_dir, used_column, k_folds, test_dataloader, encoder, locati
                 torch.save(encoder.state_dict(), save_path)
                 print(f"  ✔ Fold {fold + 1} New best model saved at: {save_path}")
                 
-                if best_fold_val_loss < best_val_loss:
-                    best_val_loss = best_fold_val_loss
+                if best_fold_val_auc > best_val_auc:
+                    best_val_auc = best_fold_val_auc
                     best_fold = fold + 1
             else:
                 no_improve += 1

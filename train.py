@@ -39,7 +39,7 @@ def main():
 
     args.add_argument("--epochs", type=int, default=50)
     #args.add_argument("--encode_length", type=int, required=True)
-    args.add_argument("--dropout", type=float, default=0.69723)
+    args.add_argument("--dropout", type=float, default=0.6)
 
     args.add_argument("--num_basis", type=int, default=3)
 
