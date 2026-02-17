@@ -560,7 +560,7 @@ class Encoder(nn.Module):
         sd_node = torch.tanh(score_diff / 15.0)
         cp_node = torch.tanh(conpoint / 10.0)
         
-        ctx = torch.stack([sd_node, cp_node], dim=1)   # [B, 2]
+        ctx = torch.cat([sd_node, cp_node], dim=1)   # [B, 2]
 
         ctx_vec = self.ctx_mlp(ctx)          # [B, 2H]
         g = self.ctx_gate(torch.cat([base_emb, ctx_vec], dim=-1))  
@@ -568,5 +568,5 @@ class Encoder(nn.Module):
         final_emb = base_emb + g * ctx_vec   # [B, 2H]
 
         logits = self.win_head(final_emb).squeeze(-1)
-        
+
         return logits
