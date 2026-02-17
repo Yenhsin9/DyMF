@@ -384,9 +384,8 @@ class Encoder(nn.Module):
         self.gcn = GCN(args['hidden_size'], args['hidden_size'], args['dropout'], num_layer, args, device)
         
         H = args["hidden_size"]
-        self.rgcn_weight = nn.Linear(H + 2, 1)
-        self.gcn_weight  = nn.Linear(H + 2, 1)
-
+        self.rgcn_weight = nn.Linear(H , 1)
+        self.gcn_weight  = nn.Linear(H , 1)
 
 
         self.co_attention = ParallelCoAttentionNetwork(args['hidden_size'], args['hidden_size'], src_length_masking=True)
@@ -397,11 +396,12 @@ class Encoder(nn.Module):
         self.relu = nn.ReLU()
 
         self.win_head = nn.Sequential(
-            nn.Linear(2 * H , H),
+            nn.Linear(2 * H + 2, H),
             nn.ReLU(),
             nn.Dropout(args['dropout']),
             nn.Linear(H, 1)
         )
+
 
         self.linear_for_dynmaic_gcn = nn.Linear(1+ args['hidden_size'], args['hidden_size'])
         #self.win_head = nn.Linear(args['hidden_size']*2+16, 1) 
@@ -411,6 +411,11 @@ class Encoder(nn.Module):
         nn.init.xavier_uniform_(self.node_attention.weight)
         nn.init.constant_(self.node_attention.bias, 0)
         self.softmax = nn.Softmax(dim=1)
+
+        # 添加邊注意力層
+        self.edge_attention = nn.Linear(hidden_size * 2, 1)
+        nn.init.xavier_uniform_(self.edge_attention.weight)
+        nn.init.constant_(self.edge_attention.bias, 0)
 
     def forward(self,
                 player,     
@@ -523,16 +528,10 @@ class Encoder(nn.Module):
         gcn_embedding_A = player_A_node_embedding.clone()[batch_idx, idx//2-1, :]
         gcn_embedding_B = player_B_node_embedding.clone()[batch_idx, idx//2-1, :]
         
-        score_diff = score_diff[:, 0].float().unsqueeze(1)  # shape: [64] → [64, 1]
-        conpoint = conpoint[:, 0].float().unsqueeze(1)  # shape: [64] → [64, 1]
-        sd_node = score_diff.clamp(-15, 15) / 15.0
-        cp_node = conpoint.clamp(0, 10) / 10.0
-        ctx = torch.cat([sd_node, cp_node], dim=1)  # [B,2]
-
-        rgcn_weight_A = self.rgcn_weight(torch.cat([rgcn_embedding_A, ctx], dim=1))
-        gcn_weight_A  = self.gcn_weight(torch.cat([gcn_embedding_A,  ctx], dim=1))
-        rgcn_weight_B = self.rgcn_weight(torch.cat([rgcn_embedding_B, ctx], dim=1))
-        gcn_weight_B  = self.gcn_weight(torch.cat([gcn_embedding_B,  ctx], dim=1))
+        rgcn_weight_A = self.rgcn_weight(rgcn_embedding_A)
+        rgcn_weight_B = self.rgcn_weight(rgcn_embedding_B)
+        gcn_weight_A = self.gcn_weight(gcn_embedding_A)
+        gcn_weight_B = self.gcn_weight(gcn_embedding_B)
         
         w_rgcn_A = self.sigmoid(rgcn_weight_A)
         w_gcn_A = self.sigmoid(gcn_weight_A)
@@ -548,7 +547,12 @@ class Encoder(nn.Module):
         lastNode2 = node_embedding[batch_idx, idx-2, :] #[32 16]
         base_emb = torch.cat([lastNode1, lastNode2], dim=-1)
 
-        final = torch.cat([base_emb], dim=1)  # [B, 2H]
+        score_diff = score_diff[:, 0].float().unsqueeze(1)  # shape: [64] → [64, 1]
+        conpoint = conpoint[:, 0].float().unsqueeze(1)  # shape: [64] → [64, 1]
+        sd_node = score_diff.clamp(-15, 15) / 15.0
+        cp_node = conpoint.clamp(0, 10) / 10.0
+
+        final = torch.cat([base_emb, sd_node, cp_node], dim=1)  # [B, 2H+2]
         logits = self.win_head(final).squeeze(-1)
 
         return logits
