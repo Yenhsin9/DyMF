@@ -395,7 +395,13 @@ class Encoder(nn.Module):
 
         H = args["hidden_size"]
 
-        self.ctx_film = nn.Linear(2, 4 * H)   # gamma(2H) + beta(2H)
+        self.ctx_film = nn.Sequential(
+            nn.Linear(2, H),
+            nn.ReLU(),
+            nn.Dropout(0.1),
+            nn.Linear(H, 4 * H),
+        )
+
         self.win_head = nn.Linear(2 * H, 1)
 
         self.linear_for_dynmaic_gcn = nn.Linear(1+ args['hidden_size'], args['hidden_size'])
