@@ -395,13 +395,6 @@ class Encoder(nn.Module):
         self.sigmoid = nn.Sigmoid()
         self.relu = nn.ReLU()
 
-        self.ctx_film = nn.Sequential(
-            nn.Linear(2, H),
-            nn.ReLU(),
-            nn.Dropout(0.1),
-            nn.Linear(H, 4 * H),
-        )
-
         self.win_head = nn.Sequential(
             nn.Linear(2 * H + 2, H),
             nn.ReLU(),
@@ -520,8 +513,8 @@ class Encoder(nn.Module):
         A_weight = self.sigmoid(self.co_attention_linear_A(A_weight))
         B_weight = self.sigmoid(self.co_attention_linear_B(B_weight))     
         
-        old_A = player_A_node_embedding
-        old_B = player_B_node_embedding
+        old_A = player_A_node_embedding.clone()
+        old_B = player_B_node_embedding.clone()
         player_A_node_embedding = old_A + B_weight.unsqueeze(1) * old_B
         player_B_node_embedding = old_B + A_weight.unsqueeze(1) * old_A
 
