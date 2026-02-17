@@ -565,7 +565,8 @@ class Encoder(nn.Module):
 
         ctx_vec = self.ctx_mlp(ctx)          # [B, 2H]
         g = self.ctx_gate(torch.cat([base_emb, ctx_vec], dim=-1))  
-        print("gate mean/std:", g.mean().item(), g.std().item())
+        print("g mean/std:", g.mean().item(), g.std().item())
+        print("ctx_vec norm:", ctx_vec.norm(dim=1).mean().item())
 
         final_emb = base_emb + g * ctx_vec   # [B, 2H]
 
