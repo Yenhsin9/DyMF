@@ -383,8 +383,10 @@ class Encoder(nn.Module):
         self.rGCN = relational_GCN(hidden_size, type_num, args['num_basis'], num_layer,args, device) # into 2 type (passive and active) and padding
         self.gcn = GCN(args['hidden_size'], args['hidden_size'], args['dropout'], num_layer, args, device)
         
-        self.rgcn_weight = nn.Linear(args['hidden_size'], 1)
-        self.gcn_weight = nn.Linear(args['hidden_size'], 1)
+        H = args["hidden_size"]
+        self.rgcn_weight = nn.Linear(H , 1)
+        self.gcn_weight  = nn.Linear(H , 1)
+
 
         self.co_attention = ParallelCoAttentionNetwork(args['hidden_size'], args['hidden_size'], src_length_masking=True)
         self.co_attention_linear_A = nn.Linear(args['hidden_size'], 1)
@@ -393,8 +395,6 @@ class Encoder(nn.Module):
         self.sigmoid = nn.Sigmoid()
         self.relu = nn.ReLU()
 
-        H = args["hidden_size"]
-
         self.ctx_film = nn.Sequential(
             nn.Linear(2, H),
             nn.ReLU(),
@@ -402,7 +402,13 @@ class Encoder(nn.Module):
             nn.Linear(H, 4 * H),
         )
 
-        self.win_head = nn.Linear(2 * H, 1)
+        self.win_head = nn.Sequential(
+            nn.Linear(2 * H + 2, H),
+            nn.ReLU(),
+            nn.Dropout(args['dropout']),
+            nn.Linear(H, 1)
+        )
+
 
         self.linear_for_dynmaic_gcn = nn.Linear(1+ args['hidden_size'], args['hidden_size'])
         #self.win_head = nn.Linear(args['hidden_size']*2+16, 1) 
@@ -514,8 +520,10 @@ class Encoder(nn.Module):
         A_weight = self.sigmoid(self.co_attention_linear_A(A_weight))
         B_weight = self.sigmoid(self.co_attention_linear_B(B_weight))     
         
-        player_A_node_embedding = player_A_node_embedding + B_weight.unsqueeze(1) * player_B_node_embedding
-        player_B_node_embedding = player_B_node_embedding + A_weight.unsqueeze(1) * player_A_node_embedding
+        old_A = player_A_node_embedding
+        old_B = player_B_node_embedding
+        player_A_node_embedding = old_A + B_weight.unsqueeze(1) * old_B
+        player_B_node_embedding = old_B + A_weight.unsqueeze(1) * old_A
 
         idx = (thisRallyL).squeeze(-1).long()   # shape [32]
         batch_idx = torch.arange(full_graph_node_embedding.size(0), device=full_graph_node_embedding.device)  # [32]
@@ -551,27 +559,7 @@ class Encoder(nn.Module):
         sd_node = score_diff.clamp(-15, 15) / 15.0
         cp_node = conpoint.clamp(0, 10) / 10.0
 
-        
-        ctx = torch.cat([sd_node, cp_node], dim=1)   # [B, 2]
- 
-        film = self.ctx_film(ctx)                       # [B, 2*(2H)] = [B, 4H]
-        d = base_emb.size(-1)                           # d = 2H
-        gamma, beta = film[:, :d], film[:, d:]          # each [B, 2H]
-        final_emb = base_emb * (1 + gamma) + beta
-
-        # ===== DEBUG PRINT (只印一次) =====
-        if self.training and not hasattr(self, "_film_debug"):
-            print("gamma mean/std:",
-                gamma.mean().item(),
-                gamma.std().item())
-            print("beta mean/std:",
-                beta.mean().item(),
-                beta.std().item())
-            delta = (final_emb - base_emb).norm(dim=1).mean()
-            print("mean modulation magnitude:", delta.item())
-            self._film_debug = True
-        # ===================================
-
-        logits = self.win_head(final_emb).squeeze(-1)
+        final = torch.cat([base_emb, sd_node, cp_node], dim=1)  # [B, 2H+2]
+        logits = self.win_head(final).squeeze(-1)
 
         return logits
