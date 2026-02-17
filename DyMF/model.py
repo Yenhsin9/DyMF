@@ -557,13 +557,15 @@ class Encoder(nn.Module):
 
         score_diff = score_diff[:, 0].float().unsqueeze(1)  # shape: [64] → [64, 1]
         conpoint = conpoint[:, 0].float().unsqueeze(1)  # shape: [64] → [64, 1]
-        sd_node = torch.tanh(score_diff / 15.0)
-        cp_node = torch.tanh(conpoint / 10.0)
+        sd_node = score_diff.clamp(-15, 15) / 15.0
+        cp_node = conpoint.clamp(0, 10) / 10.0
+
         
         ctx = torch.cat([sd_node, cp_node], dim=1)   # [B, 2]
 
         ctx_vec = self.ctx_mlp(ctx)          # [B, 2H]
         g = self.ctx_gate(torch.cat([base_emb, ctx_vec], dim=-1))  
+        print("gate mean/std:", g.mean().item(), g.std().item())
 
         final_emb = base_emb + g * ctx_vec   # [B, 2H]
 
