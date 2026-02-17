@@ -393,11 +393,28 @@ class Encoder(nn.Module):
         self.sigmoid = nn.Sigmoid()
         self.relu = nn.ReLU()
 
-        self.score_diff_fc    = nn.Linear(1, 8)
-        self.consec_score_fc  = nn.Linear(1, 8)
+        H = args["hidden_size"]
+
+        # 2 scalars -> ctx_vec (2H)
+        self.ctx_mlp = nn.Sequential(
+            nn.Linear(2, H),
+            nn.ReLU(),
+            nn.Dropout(p=0.1),
+            nn.Linear(H, 2 * H),
+        )
+
+        # gate: decide how much ctx to inject
+        self.ctx_gate = nn.Sequential(
+            nn.Linear(4 * H, 2 * H),  # concat([base_emb, ctx_vec]) -> 4H
+            nn.Sigmoid()
+        )
+
+        # IMPORTANT: now win_head only takes 2H
+        self.win_head = nn.Linear(2 * H, 1)
+
 
         self.linear_for_dynmaic_gcn = nn.Linear(1+ args['hidden_size'], args['hidden_size'])
-        self.win_head = nn.Linear(args['hidden_size']*2+16, 1) 
+        #self.win_head = nn.Linear(args['hidden_size']*2+16, 1) 
 
         # 添加注意力層用於節點重要性
         self.node_attention = nn.Linear(hidden_size, 1)
@@ -536,14 +553,20 @@ class Encoder(nn.Module):
         batch_idx = torch.arange(node_embedding.size(0), device=node_embedding.device)  # [32]
         lastNode1 = node_embedding[batch_idx, idx-1, :] #[32,16]
         lastNode2 = node_embedding[batch_idx, idx-2, :] #[32 16]
+        base_emb = torch.cat([lastNode1, lastNode2], dim=-1)
 
         score_diff = score_diff[:, 0].float().unsqueeze(1)  # shape: [64] → [64, 1]
         conpoint = conpoint[:, 0].float().unsqueeze(1)  # shape: [64] → [64, 1]
         sd_node = torch.tanh(score_diff / 15.0)
         cp_node = torch.tanh(conpoint / 10.0)
-        score_diff = self.score_diff_fc(sd_node)
-        conpoint = self.consec_score_fc(cp_node )
+        
+        ctx = torch.stack([sd_node, cp_node], dim=1)   # [B, 2]
 
-        combineLast = torch.cat([lastNode1,lastNode2,score_diff,conpoint], dim=-1) #[32,32]    
-        logits = self.win_head(combineLast).squeeze(-1) 
+        ctx_vec = self.ctx_mlp(ctx)          # [B, 2H]
+        g = self.ctx_gate(torch.cat([base_emb, ctx_vec], dim=-1))  
+
+        final_emb = base_emb + g * ctx_vec   # [B, 2H]
+
+        logits = self.win_head(final_emb).squeeze(-1)
+        
         return logits
