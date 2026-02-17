@@ -395,23 +395,8 @@ class Encoder(nn.Module):
 
         H = args["hidden_size"]
 
-        # 2 scalars -> ctx_vec (2H)
-        self.ctx_mlp = nn.Sequential(
-            nn.Linear(2, H),
-            nn.ReLU(),
-            nn.Dropout(p=0.1),
-            nn.Linear(H, 2 * H),
-        )
-
-        # gate: decide how much ctx to inject
-        self.ctx_gate = nn.Sequential(
-            nn.Linear(4 * H, 2 * H),  # concat([base_emb, ctx_vec]) -> 4H
-            nn.Sigmoid()
-        )
-
-        # IMPORTANT: now win_head only takes 2H
+        self.ctx_film = nn.Linear(2, 4 * H)   # gamma(2H) + beta(2H)
         self.win_head = nn.Linear(2 * H, 1)
-
 
         self.linear_for_dynmaic_gcn = nn.Linear(1+ args['hidden_size'], args['hidden_size'])
         #self.win_head = nn.Linear(args['hidden_size']*2+16, 1) 
@@ -562,13 +547,24 @@ class Encoder(nn.Module):
 
         
         ctx = torch.cat([sd_node, cp_node], dim=1)   # [B, 2]
+ 
+        film = self.ctx_film(ctx)                       # [B, 2*(2H)] = [B, 4H]
+        d = base_emb.size(-1)                           # d = 2H
+        gamma, beta = film[:, :d], film[:, d:]          # each [B, 2H]
+        final_emb = base_emb * (1 + gamma) + beta
 
-        ctx_vec = self.ctx_mlp(ctx)          # [B, 2H]
-        g = self.ctx_gate(torch.cat([base_emb, ctx_vec], dim=-1))  
-        print("g mean/std:", g.mean().item(), g.std().item())
-        print("ctx_vec norm:", ctx_vec.norm(dim=1).mean().item())
-
-        final_emb = base_emb + g * ctx_vec   # [B, 2H]
+        # ===== DEBUG PRINT (只印一次) =====
+        if self.training and not hasattr(self, "_film_debug"):
+            print("gamma mean/std:",
+                gamma.mean().item(),
+                gamma.std().item())
+            print("beta mean/std:",
+                beta.mean().item(),
+                beta.std().item())
+            delta = (final_emb - base_emb).norm(dim=1).mean()
+            print("mean modulation magnitude:", delta.item())
+            self._film_debug = True
+        # ===================================
 
         logits = self.win_head(final_emb).squeeze(-1)
 
