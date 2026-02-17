@@ -539,8 +539,8 @@ class Encoder(nn.Module):
 
         score_diff = score_diff[:, 0].float().unsqueeze(1)  # shape: [64] → [64, 1]
         conpoint = conpoint[:, 0].float().unsqueeze(1)  # shape: [64] → [64, 1]
-        sd_node = torch.tanh(score_diff / 10.0)
-        cp_node = torch.tanh(conpoint / 5.0)
+        sd_node = torch.tanh(score_diff / 15.0)
+        cp_node = torch.tanh(conpoint / 10.0)
         score_diff = self.score_diff_fc(sd_node)
         conpoint = self.consec_score_fc(cp_node )
 
